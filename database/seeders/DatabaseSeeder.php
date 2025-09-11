@@ -32,5 +32,7 @@ class DatabaseSeeder extends Seeder
                 ->has(Employment::factory()->count(2))
                 ->create(['user_id' => $user->id, 'email' => $user->email]);
         });
+
+        $this->call(ClientSeeder::class);
     }
 }

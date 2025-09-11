@@ -1,0 +1,388 @@
+{
+	"info": {
+		"_postman_id": "a8a0c6d8-e3a8-4f3d-8b1e-7a2e4a0e3b1a",
+		"name": "Onboarding API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employees",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"dob\": \"1990-01-01\",\n    \"gender\": \"male\",\n    \"marital_status\": \"single\",\n    \"nationality\": \"American\",\n    \"place_of_birth\": \"New York\",\n    \"email\": \"john.doe@example.com\",\n    \"mobile\": \"1234567890\",\n    \"status\": 1,\n    \"offer_letter_status\": 1,\n    \"division\": 0\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/employees",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Employee",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/employees/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\": \"Jane\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/employees/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Employee",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/employees/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Address to Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"line1\": \"123 Main St\",\n    \"country\": \"USA\",\n    \"state\": \"CA\",\n    \"pin\": \"12345\",\n    \"duration_of_stay\": \"5 years\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/employees/1/addresses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1",
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Document to Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"type\": \"passport\",\n    \"number\": \"A1234567\",\n    \"name_on_doc\": \"John Doe\",\n    \"file_path\": \"/path/to/file\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/employees/1/documents",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1",
+								"documents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Education to Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"board\": \"CBSE\",\n    \"school\": \"ABC School\",\n    \"specialization\": \"Science\",\n    \"percentage\": \"90%\",\n    \"from_date\": \"2010-01-01\",\n    \"to_date\": \"2012-01-01\",\n    \"mode_of_education\": \"Full Time\",\n    \"certificate_path\": \"/path/to/certificate\",\n    \"is_highest\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/employees/1/educations",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1",
+								"educations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Employment to Employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{auth_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"company_name\": \"Acme Corp\",\n    \"designation\": \"Software Engineer\",\n    \"location\": \"New York\",\n    \"mode_of_employment\": \"Full Time\",\n    \"start_date\": \"2022-01-01\",\n    \"is_current_org\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/employees/1/employments",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employees",
+								"1",
+								"employments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000"
+		},
+		{
+			"key": "auth_token",
+			"value": ""
+		}
+	]
+}
