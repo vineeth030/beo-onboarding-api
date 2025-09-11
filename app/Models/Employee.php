@@ -20,6 +20,9 @@ class Employee extends Model
     const OFFER_STATUS_ACCEPTED = 1;
     const OFFER_STATUS_REJECTED = 2;
 
+    const DIVISION_BEO_INDIA = 0;
+    const DIVISION_INDIA_4IT = 1;
+
     protected $fillable = [
         'user_id',
         'first_name',
@@ -37,11 +40,13 @@ class Employee extends Model
         'blood_group',
         'status',
         'offer_letter_status',
+        'division',
     ];
 
     protected $casts = [
         'status' => 'integer',
         'offer_letter_status' => 'integer',
+        'division' => 'integer',
     ];
 
     public function getStatusLabelAttribute()
@@ -62,6 +67,15 @@ class Employee extends Model
             self::OFFER_STATUS_PENDING => 'pending',
             self::OFFER_STATUS_ACCEPTED => 'accepted',
             self::OFFER_STATUS_REJECTED => 'rejected',
+            default => 'unknown',
+        };
+    }
+
+    public function getDivisionLabelAttribute()
+    {
+        return match ($this->division) {
+            self::DIVISION_BEO_INDIA => 'BEO-India',
+            self::DIVISION_INDIA_4IT => 'India-4IT',
             default => 'unknown',
         };
     }

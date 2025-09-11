@@ -33,6 +33,7 @@ class StoreEmployeeRequest extends FormRequest
             'mobile' => ['required', 'string', 'max:255', 'unique:employees'],
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
             'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
+            'division' => ['sometimes', 'integer', 'in:0,1'],
         ];
     }
 }

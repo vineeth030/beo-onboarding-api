@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('blood_group')->nullable();
             $table->integer('status')->default(0);
             $table->integer('offer_letter_status')->default(0);
+            $table->integer('division')->default(0);
             $table->timestamps();
         });
     }

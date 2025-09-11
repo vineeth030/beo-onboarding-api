@@ -35,6 +35,7 @@ class UpdateEmployeeRequest extends FormRequest
             'mobile' => ['sometimes', 'required', 'string', 'max:255', 'unique:employees,mobile,' . $employeeId],
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
             'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
+            'division' => ['sometimes', 'integer', 'in:0,1'],
         ];
     }
 }
