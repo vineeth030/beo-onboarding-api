@@ -30,6 +30,8 @@ class EmployeeFactory extends Factory
             'mobile' => $this->faker->unique()->phoneNumber,
             'photo_path' => null,
             'blood_group' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            'status' => $this->faker->randomElement([0, 1, 2, 3, 4]),
+            'offer_letter_status' => $this->faker->randomElement([0, 1, 2]),
         ];
     }
 }

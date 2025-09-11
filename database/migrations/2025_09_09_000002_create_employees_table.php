@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->string('photo_path')->nullable();
             $table->string('blood_group')->nullable();
+            $table->integer('status')->default(0);
+            $table->integer('offer_letter_status')->default(0);
             $table->timestamps();
         });
     }

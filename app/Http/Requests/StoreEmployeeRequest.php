@@ -31,6 +31,8 @@ class StoreEmployeeRequest extends FormRequest
             'place_of_birth' => ['required', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:employees'],
             'mobile' => ['required', 'string', 'max:255', 'unique:employees'],
+            'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
+            'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
         ];
     }
 }

@@ -33,6 +33,8 @@ class UpdateEmployeeRequest extends FormRequest
             'place_of_birth' => ['sometimes', 'required', 'string'],
             'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:employees,email,' . $employeeId],
             'mobile' => ['sometimes', 'required', 'string', 'max:255', 'unique:employees,mobile,' . $employeeId],
+            'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
+            'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
         ];
     }
 }
