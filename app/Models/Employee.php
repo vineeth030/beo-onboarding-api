@@ -23,6 +23,10 @@ class Employee extends Model
     const DIVISION_BEO_INDIA = 0;
     const DIVISION_INDIA_4IT = 1;
 
+    const CATEGORY_EXPERIENCED = 0;
+    const CATEGORY_FRESHER = 1;
+    const CATEGORY_INTERN = 2;
+
     protected $fillable = [
         'user_id',
         'first_name',
@@ -35,18 +39,21 @@ class Employee extends Model
         'nationality',
         'place_of_birth',
         'email',
+        'password',
         'mobile',
         'photo_path',
         'blood_group',
         'status',
         'offer_letter_status',
         'division',
+        'category'
     ];
 
     protected $casts = [
         'status' => 'integer',
         'offer_letter_status' => 'integer',
         'division' => 'integer',
+        'category' => 'integer',
     ];
 
     public function getStatusLabelAttribute()
@@ -76,6 +83,16 @@ class Employee extends Model
         return match ($this->division) {
             self::DIVISION_BEO_INDIA => 'BEO-India',
             self::DIVISION_INDIA_4IT => 'India-4IT',
+            default => 'unknown',
+        };
+    }
+
+    public function getCategoryLabelAttribute()
+    {
+        return match ($this->division) {
+            self::CATEGORY_EXPERIENCED => 'EXPERIENCED',
+            self::CATEGORY_FRESHER => 'FRESHER',
+            self::CATEGORY_INTERN => 'INTERN',
             default => 'unknown',
         };
     }

@@ -24,13 +24,13 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin'
         ]);
 
-        User::factory(10)->create(['role' => 'employee'])->each(function ($user) {
+        User::factory(10)->create(['role' => 'candidate'])->each(function ($user) {
             Employee::factory()
                 ->has(Address::factory()->count(2))
                 ->has(Document::factory()->count(3))
                 ->has(Education::factory()->count(2), 'educations')
                 ->has(Employment::factory()->count(2))
-                ->create(['user_id' => $user->id, 'email' => $user->email]);
+                ->create(['user_id' => $user->id, 'email' => $user->email, 'password' => 'password']);
         });
 
         $this->call(ClientSeeder::class);

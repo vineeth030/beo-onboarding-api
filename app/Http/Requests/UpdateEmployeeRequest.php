@@ -25,6 +25,7 @@ class UpdateEmployeeRequest extends FormRequest
 
         return [
             'first_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'middle_name' => ['sometimes', 'required', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required', 'string', 'max:255'],
             'dob' => ['sometimes', 'required', 'date'],
             'gender' => ['sometimes', 'required', 'string'],

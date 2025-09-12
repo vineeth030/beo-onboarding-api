@@ -6,7 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
 {
@@ -23,7 +26,21 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        $employee = Employee::create($request->validated());
+        $randomPassword = Str::random(8);
+
+        $employeeUser = User::create([
+            'name' => $request->get('first_name') . ' ' . $request->get('last_name'), 
+            'email' => $request->get('email'), 
+            'password' => Hash::make($randomPassword),
+            'role' => 'candidate'
+        ]);
+
+        $employee = Employee::create($request->validated() + [
+            'user_id' => $employeeUser->id, 
+            'password' => $randomPassword,
+            'client_id' => $request->get('client_id')
+        ]);
+        
         return response()->json($employee, 201);
     }
 

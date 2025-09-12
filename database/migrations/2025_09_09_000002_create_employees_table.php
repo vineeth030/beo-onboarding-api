@@ -14,22 +14,25 @@ return new class extends Migration
         Schema::create('employees', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
             $table->string('fathers_name')->nullable();
-            $table->date('dob');
-            $table->string('gender');
-            $table->string('marital_status');
-            $table->string('nationality');
-            $table->string('place_of_birth');
+            $table->date('dob')->nullable();
+            $table->string('gender')->nullable();
+            $table->string('marital_status')->nullable();
+            $table->string('nationality')->nullable();
+            $table->string('place_of_birth')->nullable();
             $table->string('email')->unique();
+            $table->string('password');
             $table->string('mobile')->unique();
             $table->string('photo_path')->nullable();
             $table->string('blood_group')->nullable();
             $table->integer('status')->default(0);
             $table->integer('offer_letter_status')->default(0);
             $table->integer('division')->default(0);
+            $table->integer('category')->default(0);
             $table->timestamps();
         });
     }
