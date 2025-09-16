@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateClientRequest extends FormRequest
+class UpdateOfferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,10 @@ class UpdateClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
-            'notice_period' => ['sometimes', 'integer', 'min:0'],
+            'content' => ['sometimes', 'string'],
+            'user_id' => ['sometimes', 'exists:users,id'],
+            'employee_id' => ['sometimes', 'exists:employees,id'],
+            'client_id' => ['sometimes', 'exists:clients,id'],
         ];
     }
 }

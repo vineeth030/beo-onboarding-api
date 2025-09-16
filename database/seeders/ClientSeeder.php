@@ -15,6 +15,10 @@ class ClientSeeder extends Seeder
     public function run(): void
     {
         Client::factory()
+            ->has(ClientEmail::factory()->count(rand(2, 3)), 'emails')
+            ->create(['name' => 'BEO', 'notice_period' => 3]);
+
+        Client::factory()
             ->count(10)
             ->has(ClientEmail::factory()->count(rand(2, 3)), 'emails')
             ->create();

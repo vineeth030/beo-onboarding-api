@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmploymentController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ClientEmailController;
+use App\Http\Controllers\Api\OfferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,4 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::post('/clients/{id}/emails', [ClientEmailController::class, 'store']);
     Route::delete('/client-emails/{id}', [ClientEmailController::class, 'destroy']);
+
+    // Offers routes
+    Route::apiResource('offers', OfferController::class);
 });

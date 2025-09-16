@@ -22,8 +22,9 @@ class StoreClientRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'notice_period' => 'required|integer',
+            'name' => ['required', 'string', 'max:255'],
+            'notice_period' => ['sometimes', 'integer', 'min:0'],
+            'emails.*' => 'email|max:255',
         ];
     }
 }

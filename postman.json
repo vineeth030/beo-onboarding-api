@@ -1,388 +1,1308 @@
 {
-	"info": {
-		"_postman_id": "a8a0c6d8-e3a8-4f3d-8b1e-7a2e4a0e3b1a",
-		"name": "Onboarding API",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Authentication",
-			"item": [
-				{
-					"name": "Register",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/register",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"register"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Login",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"test@example.com\",\n    \"password\": \"password\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/login",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Logout",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/logout",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"logout"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Employees",
-			"item": [
-				{
-					"name": "Get All Employees",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/employees",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create Employee",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"John\",\n    \"last_name\": \"Doe\",\n    \"dob\": \"1990-01-01\",\n    \"gender\": \"male\",\n    \"marital_status\": \"single\",\n    \"nationality\": \"American\",\n    \"place_of_birth\": \"New York\",\n    \"email\": \"john.doe@example.com\",\n    \"mobile\": \"1234567890\",\n    \"status\": 1,\n    \"offer_letter_status\": 1,\n    \"division\": 0\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/employees",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get Employee",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/employees/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Employee",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"first_name\": \"Jane\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/employees/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete Employee",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{base_url}}/api/employees/1",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Address to Employee",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"line1\": \"123 Main St\",\n    \"country\": \"USA\",\n    \"state\": \"CA\",\n    \"pin\": \"12345\",\n    \"duration_of_stay\": \"5 years\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/employees/1/addresses",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1",
-								"addresses"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Document to Employee",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"type\": \"passport\",\n    \"number\": \"A1234567\",\n    \"name_on_doc\": \"John Doe\",\n    \"file_path\": \"/path/to/file\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/employees/1/documents",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1",
-								"documents"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Education to Employee",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"board\": \"CBSE\",\n    \"school\": \"ABC School\",\n    \"specialization\": \"Science\",\n    \"percentage\": \"90%\",\n    \"from_date\": \"2010-01-01\",\n    \"to_date\": \"2012-01-01\",\n    \"mode_of_education\": \"Full Time\",\n    \"certificate_path\": \"/path/to/certificate\",\n    \"is_highest\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/employees/1/educations",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1",
-								"educations"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Employment to Employee",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{auth_token}}",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"company_name\": \"Acme Corp\",\n    \"designation\": \"Software Engineer\",\n    \"location\": \"New York\",\n    \"mode_of_employment\": \"Full Time\",\n    \"start_date\": \"2022-01-01\",\n    \"is_current_org\": true\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{base_url}}/api/employees/1/employments",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"api",
-								"employees",
-								"1",
-								"employments"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"variable": [
-		{
-			"key": "base_url",
-			"value": "http://localhost:8000"
-		},
-		{
-			"key": "auth_token",
-			"value": ""
-		}
-	]
+  "info": {
+    "name": "Laravel Onboarding API",
+    "description": "Complete API collection for Laravel employee onboarding system",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "User authentication endpoints",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/register",
+              "host": ["{{base_url}}"],
+              "path": ["register"]
+            },
+            "description": "Register a new user in the system"
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/login",
+              "host": ["{{base_url}}"],
+              "path": ["login"]
+            },
+            "description": "Login and receive authentication token"
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            },
+            "description": "Logout and invalidate current token"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employees",
+      "description": "Employee management endpoints",
+      "item": [
+        {
+          "name": "Get All Employees",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees",
+              "host": ["{{base_url}}"],
+              "path": ["employees"]
+            },
+            "description": "Get list of all employees with their related data (addresses, documents, educations, employments)"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Employee",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"first_name\": \"Jane\",\n    \"middle_name\": \"Marie\",\n    \"last_name\": \"Smith\",\n    \"client_id\": 1,\n    \"dob\": \"1990-05-15\",\n    \"gender\": \"female\",\n    \"marital_status\": \"single\",\n    \"nationality\": \"Indian\",\n    \"place_of_birth\": \"Mumbai\",\n    \"email\": \"jane.smith@example.com\",\n    \"mobile\": \"+91-9876543210\",\n    \"status\": 0,\n    \"offer_letter_status\": 0,\n    \"division\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employees",
+              "host": ["{{base_url}}"],
+              "path": ["employees"]
+            },
+            "description": "Create a new employee record. Status: 0=yet_to_start, 1=started, 2=in_progress, 3=success, 4=rejected. Offer Status: 0=pending, 1=accepted, 2=rejected. Division: 0=BEO-India, 1=India-4IT"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Employee",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees/1",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1"]
+            },
+            "description": "Get specific employee with all related data"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Employee",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"first_name\": \"Jane Updated\",\n    \"last_name\": \"Smith Updated\",\n    \"status\": 1,\n    \"offer_letter_status\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employees/1",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1"]
+            },
+            "description": "Update employee information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Employee",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees/1",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1"]
+            },
+            "description": "Delete an employee record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employee Addresses",
+      "description": "Employee address management endpoints",
+      "item": [
+        {
+          "name": "Get Employee Addresses",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees/1/addresses",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "addresses"]
+            },
+            "description": "Get all addresses for a specific employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Employee Address",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"line1\": \"123 Main Street, Apartment 4B\",\n    \"country\": \"India\",\n    \"state\": \"Maharashtra\",\n    \"pin\": \"400001\",\n    \"duration_of_stay\": \"5 years\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employees/1/addresses",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "addresses"]
+            },
+            "description": "Add a new address for an employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Address",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/addresses/1",
+              "host": ["{{base_url}}"],
+              "path": ["addresses", "1"]
+            },
+            "description": "Get specific address details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Address",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"line1\": \"456 Updated Street\",\n    \"country\": \"India\",\n    \"state\": \"Karnataka\",\n    \"pin\": \"560001\",\n    \"duration_of_stay\": \"3 years\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/addresses/1",
+              "host": ["{{base_url}}"],
+              "path": ["addresses", "1"]
+            },
+            "description": "Update address information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Address",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/addresses/1",
+              "host": ["{{base_url}}"],
+              "path": ["addresses", "1"]
+            },
+            "description": "Delete an address record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employee Documents",
+      "description": "Employee document management endpoints",
+      "item": [
+        {
+          "name": "Get Employee Documents",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees/1/documents",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "documents"]
+            },
+            "description": "Get all documents for a specific employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Employee Document",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"pan\",\n    \"number\": \"ABCDE1234F\",\n    \"name_on_doc\": \"Jane Marie Smith\",\n    \"file_path\": \"/uploads/documents/pan_card.pdf\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employees/1/documents",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "documents"]
+            },
+            "description": "Add a new document for an employee. Types: pan, aadhar, passport, driving_license, voter_id"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Document",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1"]
+            },
+            "description": "Get specific document details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Document",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"type\": \"aadhar\",\n    \"number\": \"1234-5678-9012\",\n    \"name_on_doc\": \"Jane Marie Smith\",\n    \"file_path\": \"/uploads/documents/aadhar_card.pdf\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/documents/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1"]
+            },
+            "description": "Update document information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Document",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/documents/1",
+              "host": ["{{base_url}}"],
+              "path": ["documents", "1"]
+            },
+            "description": "Delete a document record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employee Education",
+      "description": "Employee education management endpoints",
+      "item": [
+        {
+          "name": "Get Employee Education",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees/1/educations",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "educations"]
+            },
+            "description": "Get all education records for a specific employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Employee Education",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"board\": \"CBSE\",\n    \"school\": \"Delhi Public School\",\n    \"specialization\": \"Computer Science\",\n    \"percentage\": \"85.5\",\n    \"from_date\": \"2018-06-01\",\n    \"to_date\": \"2022-05-30\",\n    \"mode_of_education\": \"Regular\",\n    \"certificate_path\": \"/uploads/certificates/degree.pdf\",\n    \"is_highest\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employees/1/educations",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "educations"]
+            },
+            "description": "Add a new education record for an employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Education",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/educations/1",
+              "host": ["{{base_url}}"],
+              "path": ["educations", "1"]
+            },
+            "description": "Get specific education record details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Education",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"board\": \"Mumbai University\",\n    \"school\": \"K.J. Somaiya College\",\n    \"specialization\": \"Information Technology\",\n    \"percentage\": \"88.2\",\n    \"from_date\": \"2018-06-01\",\n    \"to_date\": \"2022-05-30\",\n    \"mode_of_education\": \"Regular\",\n    \"certificate_path\": \"/uploads/certificates/updated_degree.pdf\",\n    \"is_highest\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/educations/1",
+              "host": ["{{base_url}}"],
+              "path": ["educations", "1"]
+            },
+            "description": "Update education record information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Education",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/educations/1",
+              "host": ["{{base_url}}"],
+              "path": ["educations", "1"]
+            },
+            "description": "Delete an education record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Employee Employment",
+      "description": "Employee employment history management endpoints",
+      "item": [
+        {
+          "name": "Get Employee Employment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employees/1/employments",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "employments"]
+            },
+            "description": "Get all employment records for a specific employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Employee Employment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_name\": \"Tech Solutions Inc\",\n    \"designation\": \"Software Developer\",\n    \"location\": \"Bangalore\",\n    \"mode_of_employment\": \"Full-time\",\n    \"start_date\": \"2020-07-01\",\n    \"is_current_org\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employees/1/employments",
+              "host": ["{{base_url}}"],
+              "path": ["employees", "1", "employments"]
+            },
+            "description": "Add a new employment record for an employee"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Employment",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employments/1",
+              "host": ["{{base_url}}"],
+              "path": ["employments", "1"]
+            },
+            "description": "Get specific employment record details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Employment",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"company_name\": \"Advanced Tech Solutions\",\n    \"designation\": \"Senior Software Developer\",\n    \"location\": \"Mumbai\",\n    \"mode_of_employment\": \"Full-time\",\n    \"start_date\": \"2020-07-01\",\n    \"is_current_org\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/employments/1",
+              "host": ["{{base_url}}"],
+              "path": ["employments", "1"]
+            },
+            "description": "Update employment record information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Employment",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/employments/1",
+              "host": ["{{base_url}}"],
+              "path": ["employments", "1"]
+            },
+            "description": "Delete an employment record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Clients",
+      "description": "Client management endpoints",
+      "item": [
+        {
+          "name": "Get All Clients",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clients",
+              "host": ["{{base_url}}"],
+              "path": ["clients"]
+            },
+            "description": "Get list of all clients"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Acme Corporation\",\n    \"contact_person\": \"John Manager\",\n    \"phone\": \"+91-9876543210\",\n    \"email\": \"contact@acmecorp.com\",\n    \"address\": \"123 Business District, Mumbai\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/clients",
+              "host": ["{{base_url}}"],
+              "path": ["clients"]
+            },
+            "description": "Create a new client record"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Client",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clients/1",
+              "host": ["{{base_url}}"],
+              "path": ["clients", "1"]
+            },
+            "description": "Get specific client details"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Client",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Acme Corporation Ltd\",\n    \"contact_person\": \"Jane Manager\",\n    \"phone\": \"+91-9876543211\",\n    \"email\": \"info@acmecorp.com\",\n    \"address\": \"456 Updated Business District, Mumbai\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/clients/1",
+              "host": ["{{base_url}}"],
+              "path": ["clients", "1"]
+            },
+            "description": "Update client information"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Client",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/clients/1",
+              "host": ["{{base_url}}"],
+              "path": ["clients", "1"]
+            },
+            "description": "Delete a client record"
+          },
+          "response": []
+        },
+        {
+          "name": "Add Client Email",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"additional@acmecorp.com\",\n    \"type\": \"secondary\",\n    \"is_primary\": false\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/clients/1/emails",
+              "host": ["{{base_url}}"],
+              "path": ["clients", "1", "emails"]
+            },
+            "description": "Add additional email address for a client"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Client Email",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/client-emails/1",
+              "host": ["{{base_url}}"],
+              "path": ["client-emails", "1"]
+            },
+            "description": "Delete a client email record"
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Offers",
+      "description": "Offer letter management endpoints",
+      "item": [
+        {
+          "name": "Get All Offers",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/offers",
+              "host": ["{{base_url}}"],
+              "path": ["offers"]
+            },
+            "description": "Get list of all offer letters with related user, employee, and client data"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Offer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"<html><body><h1>Job Offer Letter</h1><p>Dear Candidate,</p><p>We are pleased to offer you the position of Software Developer at our company.</p><p><strong>Terms:</strong></p><ul><li>Position: Software Developer</li><li>Start Date: January 15, 2025</li><li>Salary: $75,000 per year</li><li>Benefits: Health insurance, 401k matching</li></ul><p>Please confirm your acceptance within 7 days.</p><p>Sincerely,<br>HR Department</p></body></html>\",\n    \"user_id\": 1,\n    \"employee_id\": 1,\n    \"client_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/offers",
+              "host": ["{{base_url}}"],
+              "path": ["offers"]
+            },
+            "description": "Create a new offer letter with HTML content"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Single Offer",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/offers/1",
+              "host": ["{{base_url}}"],
+              "path": ["offers", "1"]
+            },
+            "description": "Get specific offer letter with related user, employee, and client data"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Offer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"content\": \"<html><body><h1>Updated Job Offer Letter</h1><p>Dear Candidate,</p><p>We are pleased to offer you the position of Senior Software Developer at our company.</p><p><strong>Updated Terms:</strong></p><ul><li>Position: Senior Software Developer</li><li>Start Date: February 1, 2025</li><li>Salary: $85,000 per year</li><li>Benefits: Health insurance, 401k matching, stock options</li></ul><p>Please confirm your acceptance within 7 days.</p><p>Sincerely,<br>HR Department</p></body></html>\",\n    \"user_id\": 1,\n    \"employee_id\": 1,\n    \"client_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{base_url}}/offers/1",
+              "host": ["{{base_url}}"],
+              "path": ["offers", "1"]
+            },
+            "description": "Update offer letter content and relationships"
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Offer",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{auth_token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/offers/1",
+              "host": ["{{base_url}}"],
+              "path": ["offers", "1"]
+            },
+            "description": "Delete an offer letter record"
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
 }

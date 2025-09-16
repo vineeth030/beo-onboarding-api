@@ -18,7 +18,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return Employee::with(['addresses', 'documents', 'educations', 'employments'])->get();
+        return Employee::with(['addresses', 'documents', 'educations', 'employments'])->orderBy('id', 'desc')->get();
     }
 
     /**

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class StoreClientEmailRequest extends FormRequest
+class UpdateClientEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,14 +23,14 @@ class StoreClientEmailRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'client_id' => ['required', 'exists:clients,id'],
+            'client_id' => ['sometimes', 'exists:clients,id'],
             'email' => [
-                'required',
+                'sometimes',
                 'email',
                 'max:255',
                 Rule::unique('client_emails')->where(function ($query) {
-                    return $query->where('client_id', $this->client_id);
-                }),
+                    return $query->where('client_id', $this->client_id ?? $this->route('clientEmail')->client_id);
+                })->ignore($this->route('clientEmail')->id),
             ],
         ];
     }
