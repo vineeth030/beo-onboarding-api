@@ -1,7 +1,7 @@
 {
   "info": {
-    "name": "Laravel Onboarding API",
-    "description": "Complete API collection for Laravel employee onboarding system",
+    "name": "BEO Onboarding API",
+    "description": "Complete API collection for BEO employee onboarding system",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "version": "1.0.0"
   },
@@ -50,7 +50,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}",
+              "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -59,8 +59,12 @@
             },
             "url": {
               "raw": "{{base_url}}/register",
-              "host": ["{{base_url}}"],
-              "path": ["register"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "register"
+              ]
             },
             "description": "Register a new user in the system"
           },
@@ -93,8 +97,12 @@
             },
             "url": {
               "raw": "{{base_url}}/login",
-              "host": ["{{base_url}}"],
-              "path": ["login"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "login"
+              ]
             },
             "description": "Login and receive authentication token"
           },
@@ -118,8 +126,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/logout",
-              "host": ["{{base_url}}"],
-              "path": ["logout"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "logout"
+              ]
             },
             "description": "Logout and invalidate current token"
           },
@@ -149,8 +161,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees",
-              "host": ["{{base_url}}"],
-              "path": ["employees"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees"
+              ]
             },
             "description": "Get list of all employees with their related data (addresses, documents, educations, employments)"
           },
@@ -188,8 +204,12 @@
             },
             "url": {
               "raw": "{{base_url}}/employees",
-              "host": ["{{base_url}}"],
-              "path": ["employees"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees"
+              ]
             },
             "description": "Create a new employee record. Status: 0=yet_to_start, 1=started, 2=in_progress, 3=success, 4=rejected. Offer Status: 0=pending, 1=accepted, 2=rejected. Division: 0=BEO-India, 1=India-4IT"
           },
@@ -213,8 +233,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees/1",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1"
+              ]
             },
             "description": "Get specific employee with all related data"
           },
@@ -252,8 +277,13 @@
             },
             "url": {
               "raw": "{{base_url}}/employees/1",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1"
+              ]
             },
             "description": "Update employee information"
           },
@@ -277,8 +307,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees/1",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1"
+              ]
             },
             "description": "Delete an employee record"
           },
@@ -308,8 +343,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees/1/addresses",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "addresses"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "addresses"
+              ]
             },
             "description": "Get all addresses for a specific employee"
           },
@@ -347,8 +388,14 @@
             },
             "url": {
               "raw": "{{base_url}}/employees/1/addresses",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "addresses"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "addresses"
+              ]
             },
             "description": "Add a new address for an employee"
           },
@@ -372,8 +419,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/addresses/1",
-              "host": ["{{base_url}}"],
-              "path": ["addresses", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses",
+                "1"
+              ]
             },
             "description": "Get specific address details"
           },
@@ -411,8 +463,13 @@
             },
             "url": {
               "raw": "{{base_url}}/addresses/1",
-              "host": ["{{base_url}}"],
-              "path": ["addresses", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses",
+                "1"
+              ]
             },
             "description": "Update address information"
           },
@@ -436,8 +493,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/addresses/1",
-              "host": ["{{base_url}}"],
-              "path": ["addresses", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "addresses",
+                "1"
+              ]
             },
             "description": "Delete an address record"
           },
@@ -467,8 +529,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees/1/documents",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "documents"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "documents"
+              ]
             },
             "description": "Get all documents for a specific employee"
           },
@@ -506,8 +574,14 @@
             },
             "url": {
               "raw": "{{base_url}}/employees/1/documents",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "documents"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "documents"
+              ]
             },
             "description": "Add a new document for an employee. Types: pan, aadhar, passport, driving_license, voter_id"
           },
@@ -531,8 +605,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/documents/1",
-              "host": ["{{base_url}}"],
-              "path": ["documents", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "1"
+              ]
             },
             "description": "Get specific document details"
           },
@@ -570,8 +649,13 @@
             },
             "url": {
               "raw": "{{base_url}}/documents/1",
-              "host": ["{{base_url}}"],
-              "path": ["documents", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "1"
+              ]
             },
             "description": "Update document information"
           },
@@ -595,8 +679,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/documents/1",
-              "host": ["{{base_url}}"],
-              "path": ["documents", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "documents",
+                "1"
+              ]
             },
             "description": "Delete a document record"
           },
@@ -626,8 +715,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees/1/educations",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "educations"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "educations"
+              ]
             },
             "description": "Get all education records for a specific employee"
           },
@@ -665,8 +760,14 @@
             },
             "url": {
               "raw": "{{base_url}}/employees/1/educations",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "educations"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "educations"
+              ]
             },
             "description": "Add a new education record for an employee"
           },
@@ -690,8 +791,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/educations/1",
-              "host": ["{{base_url}}"],
-              "path": ["educations", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "educations",
+                "1"
+              ]
             },
             "description": "Get specific education record details"
           },
@@ -729,8 +835,13 @@
             },
             "url": {
               "raw": "{{base_url}}/educations/1",
-              "host": ["{{base_url}}"],
-              "path": ["educations", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "educations",
+                "1"
+              ]
             },
             "description": "Update education record information"
           },
@@ -754,8 +865,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/educations/1",
-              "host": ["{{base_url}}"],
-              "path": ["educations", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "educations",
+                "1"
+              ]
             },
             "description": "Delete an education record"
           },
@@ -785,8 +901,14 @@
             ],
             "url": {
               "raw": "{{base_url}}/employees/1/employments",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "employments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "employments"
+              ]
             },
             "description": "Get all employment records for a specific employee"
           },
@@ -824,8 +946,14 @@
             },
             "url": {
               "raw": "{{base_url}}/employees/1/employments",
-              "host": ["{{base_url}}"],
-              "path": ["employees", "1", "employments"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employees",
+                "1",
+                "employments"
+              ]
             },
             "description": "Add a new employment record for an employee"
           },
@@ -849,8 +977,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/employments/1",
-              "host": ["{{base_url}}"],
-              "path": ["employments", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employments",
+                "1"
+              ]
             },
             "description": "Get specific employment record details"
           },
@@ -888,8 +1021,13 @@
             },
             "url": {
               "raw": "{{base_url}}/employments/1",
-              "host": ["{{base_url}}"],
-              "path": ["employments", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employments",
+                "1"
+              ]
             },
             "description": "Update employment record information"
           },
@@ -913,8 +1051,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/employments/1",
-              "host": ["{{base_url}}"],
-              "path": ["employments", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "employments",
+                "1"
+              ]
             },
             "description": "Delete an employment record"
           },
@@ -944,8 +1087,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/clients",
-              "host": ["{{base_url}}"],
-              "path": ["clients"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clients"
+              ]
             },
             "description": "Get list of all clients"
           },
@@ -974,7 +1121,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"name\": \"Acme Corporation\",\n    \"contact_person\": \"John Manager\",\n    \"phone\": \"+91-9876543210\",\n    \"email\": \"contact@acmecorp.com\",\n    \"address\": \"123 Business District, Mumbai\"\n}",
+              "raw": "{\n    \"name\": \"Acme Corporation\",\n    \"contact_person\": \"John Manager\",\n    \"phone\": \"+91-9876543210\",\n    \"emails\": [\n        \"contact@acmecorp.com\",\n        \"support@acmecorp.com\",\n        \"sales@acmecorp.com\"\n    ],\n    \"address\": \"123 Business District, Mumbai\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -983,8 +1130,12 @@
             },
             "url": {
               "raw": "{{base_url}}/clients",
-              "host": ["{{base_url}}"],
-              "path": ["clients"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clients"
+              ]
             },
             "description": "Create a new client record"
           },
@@ -1008,8 +1159,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/clients/1",
-              "host": ["{{base_url}}"],
-              "path": ["clients", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clients",
+                "1"
+              ]
             },
             "description": "Get specific client details"
           },
@@ -1047,8 +1203,13 @@
             },
             "url": {
               "raw": "{{base_url}}/clients/1",
-              "host": ["{{base_url}}"],
-              "path": ["clients", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clients",
+                "1"
+              ]
             },
             "description": "Update client information"
           },
@@ -1072,8 +1233,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/clients/1",
-              "host": ["{{base_url}}"],
-              "path": ["clients", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clients",
+                "1"
+              ]
             },
             "description": "Delete a client record"
           },
@@ -1111,8 +1277,14 @@
             },
             "url": {
               "raw": "{{base_url}}/clients/1/emails",
-              "host": ["{{base_url}}"],
-              "path": ["clients", "1", "emails"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "clients",
+                "1",
+                "emails"
+              ]
             },
             "description": "Add additional email address for a client"
           },
@@ -1136,8 +1308,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/client-emails/1",
-              "host": ["{{base_url}}"],
-              "path": ["client-emails", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "client-emails",
+                "1"
+              ]
             },
             "description": "Delete a client email record"
           },
@@ -1167,8 +1344,12 @@
             ],
             "url": {
               "raw": "{{base_url}}/offers",
-              "host": ["{{base_url}}"],
-              "path": ["offers"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers"
+              ]
             },
             "description": "Get list of all offer letters with related user, employee, and client data"
           },
@@ -1197,7 +1378,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"content\": \"<html><body><h1>Job Offer Letter</h1><p>Dear Candidate,</p><p>We are pleased to offer you the position of Software Developer at our company.</p><p><strong>Terms:</strong></p><ul><li>Position: Software Developer</li><li>Start Date: January 15, 2025</li><li>Salary: $75,000 per year</li><li>Benefits: Health insurance, 401k matching</li></ul><p>Please confirm your acceptance within 7 days.</p><p>Sincerely,<br>HR Department</p></body></html>\",\n    \"user_id\": 1,\n    \"employee_id\": 1,\n    \"client_id\": 1\n}",
+              "raw": "{\n    \"content\": \"<html><body><h1>Job Offer Letter</h1><p>Dear Candidate,</p><p>We are pleased to offer you the position of Software Developer at our company.</p><p><strong>Terms:</strong></p><ul><li>Position: Software Developer</li><li>Start Date: January 15, 2025</li><li>Salary: $75,000 per year</li><li>Benefits: Health insurance, 401k matching</li></ul><p>Please confirm your acceptance within 7 days.</p><p>Sincerely,<br>HR Department</p></body></html>\",\n   \"emails\": [\n        \"contact@acmecorp.com\",\n        \"support@acmecorp.com\",\n        \"sales@acmecorp.com\"\n    ],\n   \"user_id\": 1,\n    \"employee_id\": 1,\n    \"client_id\": 1\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1206,8 +1387,12 @@
             },
             "url": {
               "raw": "{{base_url}}/offers",
-              "host": ["{{base_url}}"],
-              "path": ["offers"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers"
+              ]
             },
             "description": "Create a new offer letter with HTML content"
           },
@@ -1231,8 +1416,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/offers/1",
-              "host": ["{{base_url}}"],
-              "path": ["offers", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers",
+                "1"
+              ]
             },
             "description": "Get specific offer letter with related user, employee, and client data"
           },
@@ -1270,8 +1460,13 @@
             },
             "url": {
               "raw": "{{base_url}}/offers/1",
-              "host": ["{{base_url}}"],
-              "path": ["offers", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers",
+                "1"
+              ]
             },
             "description": "Update offer letter content and relationships"
           },
@@ -1295,8 +1490,13 @@
             ],
             "url": {
               "raw": "{{base_url}}/offers/1",
-              "host": ["{{base_url}}"],
-              "path": ["offers", "1"]
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "offers",
+                "1"
+              ]
             },
             "description": "Delete an offer letter record"
           },

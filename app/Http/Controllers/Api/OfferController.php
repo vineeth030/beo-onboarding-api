@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
+use App\Models\Employee;
 use App\Models\Offer;
 
 class OfferController extends Controller
@@ -23,6 +24,17 @@ class OfferController extends Controller
     public function store(StoreOfferRequest $request)
     {
         $offer = Offer::create($request->validated());
+
+        Employee::where('id', $request->get('employee_id'))?->update(['offer_letter_status' => 1]);
+
+        if ($request->has('emails')) {
+            $emails = collect($request->input('emails'))->map(function ($email) {
+                return ['email' => $email];
+            });
+
+            // Send offer letter to these email ids $emails.
+        }
+
         return response()->json($offer, 201);
     }
 

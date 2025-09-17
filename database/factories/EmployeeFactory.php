@@ -31,7 +31,7 @@ class EmployeeFactory extends Factory
             'photo_path' => null,
             'blood_group' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             'status' => $this->faker->randomElement([0, 1, 2, 3, 4]),
-            'offer_letter_status' => $this->faker->randomElement([0, 1, 2]),
+            'offer_letter_status' => 0, //$this->faker->randomElement([0, 1, 2]),
         ];
     }
 }
