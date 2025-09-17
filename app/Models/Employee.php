@@ -17,9 +17,10 @@ class Employee extends Model
     const STATUS_SUCCESS = 3;
     const STATUS_REJECTED = 4;
 
-    const OFFER_STATUS_PENDING = 0;
-    const OFFER_STATUS_ACCEPTED = 1;
-    const OFFER_STATUS_REJECTED = 2;
+    const OFFER_STATUS_NOT_STARTED = 0;
+    const OFFER_STATUS_PENDING = 1;
+    const OFFER_STATUS_ACCEPTED = 2;
+    const OFFER_STATUS_REJECTED = 3;
 
     const DIVISION_BEO_INDIA = 0;
     const DIVISION_INDIA_4IT = 1;
@@ -73,6 +74,7 @@ class Employee extends Model
     public function getOfferLetterStatusLabelAttribute()
     {
         return match ($this->offer_letter_status) {
+            self::OFFER_STATUS_NOT_STARTED => 'not started',
             self::OFFER_STATUS_PENDING => 'pending',
             self::OFFER_STATUS_ACCEPTED => 'accepted',
             self::OFFER_STATUS_REJECTED => 'rejected',
@@ -122,6 +124,11 @@ class Employee extends Model
     public function employments(): HasMany
     {
         return $this->hasMany(Employment::class);
+    }
+
+    public function offers(): HasMany
+    {
+        return $this->hasMany(Offer::class);
     }
 
     public function user()

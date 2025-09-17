@@ -5,8 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
+use App\Mail\OfferLetterSend;
 use App\Models\Employee;
 use App\Models\Offer;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Spatie\Browsershot\Browsershot;
+use Illuminate\Support\Str;
 
 class OfferController extends Controller
 {
@@ -25,14 +31,41 @@ class OfferController extends Controller
     {
         $offer = Offer::create($request->validated());
 
-        Employee::where('id', $request->get('employee_id'))?->update(['offer_letter_status' => 1]);
+        $employee = Employee::where('id', $request->get('employee_id'))?->first();
+
+        $employee->update(['offer_letter_status' => 1]);
 
         if ($request->has('emails')) {
             $emails = collect($request->input('emails'))->map(function ($email) {
                 return ['email' => $email];
             });
 
+            $rawContent = $offer->content;
+
+            if (is_string($rawContent) && str_starts_with($rawContent, '"')) {
+                $rawContent = json_decode($rawContent, true);
+            }
+
+            if (is_string($rawContent)) {
+                $htmlContent = stripslashes($rawContent);
+            } else {
+                $htmlContent = '';
+            }
+
+            $offerLetterFileName = $employee->id . '-' . Str::random(8) . '.pdf';
+            $offerLetterFilePath = 'offer-letters/' . $employee->id . '/' . $offerLetterFileName;
+
+            Storage::disk('public')->makeDirectory('offer-letters/' . $employee->id);
+
+            Log::info('The HTML Content: ' . $htmlContent);
+
+            Browsershot::html($htmlContent)
+                ->setNodeBinary(env('NODE_BINARY_PATH'))
+                ->setNpmBinary(env('NPM_BINARY_PATH'))
+                ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
+
             // Send offer letter to these email ids $emails.
+            Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath)));
         }
 
         return response()->json($offer, 201);
@@ -43,7 +76,13 @@ class OfferController extends Controller
      */
     public function show(Offer $offer)
     {
-        return $offer->load(['user', 'employee', 'client']);
+        $offer->load(['user', 'employee', 'client']);
+
+        Log::info('Content: ', [stripslashes($offer->content)]);
+
+        $offer->content = stripslashes($offer->content);
+
+        return response()->json($offer);
     }
 
     /**
