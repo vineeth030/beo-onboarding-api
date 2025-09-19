@@ -23,7 +23,7 @@ class StoreEmployeeRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'middle_name' => ['sometimes', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'client_id' => ['required'],
             'dob' => ['sometimes', 'date'],

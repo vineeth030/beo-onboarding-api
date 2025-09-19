@@ -50,6 +50,18 @@ class ClientController extends Controller
     public function update(UpdateClientRequest $request, Client $client)
     {
         $client->update($request->validated());
+
+        if ($request->has('emails')) {
+
+            $client->emails()->delete();
+            
+            $emails = collect($request->input('emails'))->map(function ($email) {
+                return ['email' => $email];
+            });
+
+            $client->emails()->createMany($emails);
+        }
+
         return response()->json($client);
     }
 

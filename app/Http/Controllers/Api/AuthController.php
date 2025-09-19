@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\AuthenticateWithBEOSystem;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Log;
+
+use function PHPUnit\Framework\isNull;
 
 class AuthController extends Controller
 {
@@ -33,26 +37,94 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'email' => 'required|email',
+            'email' => 'required',
             'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $emailDomain = substr(strrchr($request->email, "@"), 1);
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
+        if ($emailDomain == 'beo.in' || empty($emailDomain)) {
+
+            $authResponse = $this->adminAuth($request->input('email'), $request->input('password'));
+        }else{
+
+            $authResponse = $this->employeeAuth($request->input('email'), $request->input('password'));
+        }
+
+        return response()->json($authResponse);
+    }
+
+    private function employeeAuth($email, $password): array{
+        
+        $user = User::where('email', $email)->first();
+
+        if (!$user || !Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are not correct.'],
+                'login' => ['The provided credentials are not correct.' . $user->password],
             ]);
         }
 
-        $token = $user->createToken($request->email)->plainTextToken;
+        $token = $user->createToken($email)->plainTextToken;
 
-        return response()->json([
+        return [
             'message' => 'Login successful',
             'token' => $token,
             'role' => $user->role,
             'user_id' => $user->id
-        ]);
+        ];
+    }
+
+    private function adminAuth($userName, $password): array
+    {
+        try {
+            [$sessionToken, $userIdCode, $message] = new BEOSystemContoller()->login($userName, $password);
+        } catch (\Throwable $th) {
+            return [
+                'message' => $th->getMessage(),
+                'sessionToken' => null
+            ];
+        }
+
+        if ($sessionToken == null) {
+            return [
+                'message' => $message,
+                'sessionToken' => null
+            ];
+        }
+
+        try {
+            $adminDetails = new BEOSystemContoller()->retrive($sessionToken, $userIdCode);
+        } catch (\Throwable $th) {
+            return [
+                'message' => $th->getMessage(),
+                'sessionToken' => null
+            ];
+        }
+
+        Log::info('Designation: ', [$adminDetails['designation']]);
+
+        if ($adminDetails['group'] != 'Human Resources') {
+            return [
+                'message' => 'Unauthorised access.',
+                'sessionToken' => null
+            ];
+        }
+
+        //Update users table with this api response.
+        $user = User::firstOrCreate(
+            ['email' => $adminDetails['email']], // search condition
+            ['name' => $adminDetails['name'], 'password' => Hash::make($password), 'role' => 'admin'] // values if not found
+        );
+
+        $token = $user->createToken($adminDetails['email'])->plainTextToken;
+
+        return [
+            'message' => $adminDetails['message'],
+            'sessionToken' => $sessionToken,
+            'token' => $token,
+            'role' => 'admin',
+            'user_id' => $user->id
+        ];
     }
 
     public function logout(Request $request)

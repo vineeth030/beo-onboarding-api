@@ -59,13 +59,19 @@ class OfferController extends Controller
 
             Log::info('The HTML Content: ' . $htmlContent);
 
-            Browsershot::html($htmlContent)
+            //$htmlContent = "<html><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><script src=\"https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4\"></script></head><body><div class=\"p-10\">" . $htmlContent . "</div></body></html>";
+
+            $html = view('pdf.offer-letter-template', [
+                'htmlContent' => $htmlContent
+            ])->render();
+
+            Browsershot::html($html)
                 ->setNodeBinary(env('NODE_BINARY_PATH'))
                 ->setNpmBinary(env('NPM_BINARY_PATH'))
                 ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
 
             // Send offer letter to these email ids $emails.
-            Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath)));
+            //Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath)));
         }
 
         return response()->json($offer, 201);
