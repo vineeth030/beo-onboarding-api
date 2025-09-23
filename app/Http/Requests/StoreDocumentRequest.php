@@ -25,7 +25,7 @@ class StoreDocumentRequest extends FormRequest
             'type' => ['required', 'string', 'in:pan,aadhar,passport,driving_license,voter_id'],
             'number' => ['required', 'string', 'max:255'],
             'name_on_doc' => ['required', 'string', 'max:255'],
-            'file_path' => ['required', 'string', 'max:255'],
+            'file' => ['required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
         ];
     }
 }

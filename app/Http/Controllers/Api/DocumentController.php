@@ -17,7 +17,10 @@ class DocumentController extends Controller
 
     public function store(StoreDocumentRequest $request, Employee $employee)
     {
-        $document = $employee->documents()->create($request->validated());
+        $path = $request->file('file')->store("documents/{$employee->id}", 'public');
+
+        $document = $employee->documents()->create($request->validated() + ['file_path' => '/storage/' . $path]);
+
         return response()->json($document, 201);
     }
 
