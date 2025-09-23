@@ -14,6 +14,7 @@ class Education extends Model
 
     protected $fillable = [
         'employee_id',
+        'title',
         'board',
         'school',
         'specialization',

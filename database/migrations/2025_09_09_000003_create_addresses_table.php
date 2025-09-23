@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('state');
             $table->string('pin');
             $table->string('duration_of_stay');
+            $table->boolean('is_permanent')->default(true);
             $table->timestamps();
         });
     }

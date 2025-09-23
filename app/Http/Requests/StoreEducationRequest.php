@@ -22,6 +22,7 @@ class StoreEducationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => ['required', 'string', 'max:255'],
             'board' => ['required', 'string', 'max:255'],
             'school' => ['required', 'string', 'max:255'],
             'specialization' => ['required', 'string', 'max:255'],
@@ -31,6 +32,7 @@ class StoreEducationRequest extends FormRequest
             'mode_of_education' => ['required', 'string', 'max:255'],
             'certificate_path' => ['required', 'string', 'max:255'],
             'is_highest' => ['boolean'],
+            'file' => ['required', 'file', 'mimes:pdf,jpg,png', 'max:2048']
         ];
     }
 }

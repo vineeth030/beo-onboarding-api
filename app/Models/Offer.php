@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+use function PHPSTORM_META\map;
+
 class Offer extends Model
 {
     /** @use HasFactory<\Database\Factories\OfferFactory> */
@@ -16,6 +18,11 @@ class Offer extends Model
         'user_id',
         'employee_id',
         'client_id',
+        'name',
+        'comment',
+        'is_accepted',
+        'is_declined',
+        'decline_reason'
     ];
 
     public function user(): BelongsTo

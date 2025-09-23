@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Education>
@@ -18,6 +19,7 @@ class EducationFactory extends Factory
     {
         return [
             'board' => $this->faker->word,
+            'title' => Arr::random(['10th', 'PG', 'UG']),
             'school' => $this->faker->company . ' School',
             'specialization' => $this->faker->jobTitle,
             'percentage' => $this->faker->randomFloat(2, 50, 100) . '%',

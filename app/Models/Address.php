@@ -20,6 +20,7 @@ class Address extends Model
         'state',
         'pin',
         'duration_of_stay',
+        'is_permanent'
     ];
 
     public function employee(): BelongsTo

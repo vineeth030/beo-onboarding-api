@@ -29,9 +29,12 @@ class DocumentController extends Controller
         return $document;
     }
 
-    public function update(UpdateDocumentRequest $request, Employee $employee, Document $document)
+    public function update(UpdateDocumentRequest $request, Document $document)
     {
-        $document->update($request->validated());
+        $path = $request->file('file')->store("documents/{$document->employee_id}", 'public');
+
+        $document->update($request->validated() + ['file_path' => '/storage/' . $path]);
+        
         return response()->json($document);
     }
 

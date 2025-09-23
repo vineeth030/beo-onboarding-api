@@ -21,10 +21,10 @@ return new class extends Migration
             $table->string('mode_of_employment');
             $table->date('start_date');
             $table->date('last_working_date')->nullable();
-            $table->string('salary_file')->nullable();
-            $table->string('salary_preview_url')->nullable();
-            $table->string('relieving_file')->nullable();
-            $table->string('relieving_preview_url')->nullable();
+            $table->string('resignation_acceptance_letter_file')->nullable();
+            $table->string('resignation_acceptance_letter_preview_url')->nullable();
+            $table->string('experience_letter_file')->nullable();
+            $table->string('experience_letter_preview_url')->nullable();
             $table->boolean('is_current_org')->default(false);
             $table->timestamps();
         });

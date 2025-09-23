@@ -17,6 +17,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('employee_id')->constrained()->onDelete('cascade');
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->string('name')->nullable();
+            $table->string('comment')->nullable();
+            $table->boolean('is_accepted')->default(0);
+            $table->boolean('is_declined')->default(0);
+            $table->string('decline_reason')->nullable();
             $table->timestamps();
         });
     }

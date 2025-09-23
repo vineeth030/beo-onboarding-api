@@ -22,6 +22,7 @@ class UpdateEducationRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'title' => ['sometimes', 'required', 'string', 'max:255'],
             'board' => ['sometimes', 'required', 'string', 'max:255'],
             'school' => ['sometimes', 'required', 'string', 'max:255'],
             'specialization' => ['sometimes', 'required', 'string', 'max:255'],
@@ -31,6 +32,7 @@ class UpdateEducationRequest extends FormRequest
             'mode_of_education' => ['sometimes', 'required', 'string', 'max:255'],
             'certificate_path' => ['sometimes', 'required', 'string', 'max:255'],
             'is_highest' => ['sometimes', 'boolean'],
+            'file' => ['nullable', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048']
         ];
     }
 }

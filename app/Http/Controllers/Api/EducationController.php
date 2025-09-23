@@ -17,7 +17,10 @@ class EducationController extends Controller
 
     public function store(StoreEducationRequest $request, Employee $employee)
     {
-        $education = $employee->educations()->create($request->validated());
+        $path = $request->file('file')->store("documents/{$employee->id}", 'public');
+
+        $education = $employee->educations()->create($request->validated() + ['certificate_path' + $path]);
+
         return response()->json($education, 201);
     }
 
@@ -28,7 +31,10 @@ class EducationController extends Controller
 
     public function update(UpdateEducationRequest $request, Employee $employee, Education $education)
     {
-        $education->update($request->validated());
+        $path = $request->file('file')->store("documents/{$employee->id}", 'public');
+
+        $education->update($request->validated() + ['certificate_path' + $path]);
+
         return response()->json($education);
     }
 

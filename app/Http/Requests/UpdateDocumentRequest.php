@@ -22,10 +22,10 @@ class UpdateDocumentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type' => ['sometimes', 'required', 'string', 'in:pan,aadhar,passport,driving_license,voter_id'],
-            'number' => ['sometimes', 'required', 'string', 'max:255'],
-            'name_on_doc' => ['sometimes', 'required', 'string', 'max:255'],
-            'file_path' => ['sometimes', 'required', 'string', 'max:255'],
+            'type' => ['nullable', 'required', 'string', 'in:pan,aadhar,passport,driving_license,voter_id'],
+            'number' => ['nullable', 'required', 'string', 'max:255'],
+            'name_on_doc' => ['nullable', 'required', 'string', 'max:255'],
+            'file' => ['nullable', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
         ];
     }
 }
