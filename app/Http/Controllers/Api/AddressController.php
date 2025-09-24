@@ -17,8 +17,14 @@ class AddressController extends Controller
 
     public function store(StoreAddressRequest $request, Employee $employee)
     {
-        $address = $employee->addresses()->create($request->validated());
-        return response()->json($address, 201);
+        $addresses = [];
+
+        foreach ($request->validated()['addresses'] as $addressData) {
+            $address = $employee->addresses()->create($addressData);
+            $addresses[] = $address;
+        }
+
+        return response()->json($addresses, 201);
     }
 
     public function show(Employee $employee, Address $address)

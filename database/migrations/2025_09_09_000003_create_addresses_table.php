@@ -18,11 +18,12 @@ return new class extends Migration
             $table->string('line2')->nullable();
             $table->string('line3')->nullable();
             $table->string('landmark')->nullable();
-            $table->string('country');
-            $table->string('state');
-            $table->string('pin');
-            $table->string('duration_of_stay');
-            $table->boolean('is_permanent')->default(true);
+            $table->string('country')->nullable();
+            $table->string('state')->nullable();
+            $table->string('city')->nullable();
+            $table->string('pin')->nullable();
+            $table->string('duration_of_stay')->nullable();
+            $table->enum('type', ['current', 'permanent']);
             $table->timestamps();
         });
     }

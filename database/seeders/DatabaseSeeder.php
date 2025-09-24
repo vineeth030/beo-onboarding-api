@@ -28,7 +28,8 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create(['role' => 'candidate'])->each(function ($user) {
             Employee::factory()
-                ->has(Address::factory()->count(2))
+                ->has(Address::factory()->state(['type' => 'current']))
+                ->has(Address::factory()->state(['type' => 'permanent']))
                 ->has(Document::factory()->count(3))
                 ->has(Education::factory()->count(2), 'educations')
                 ->has(Employment::factory()->count(2))

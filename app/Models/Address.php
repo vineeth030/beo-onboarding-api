@@ -18,9 +18,10 @@ class Address extends Model
         'landmark',
         'country',
         'state',
+        'city',
         'pin',
         'duration_of_stay',
-        'is_permanent'
+        'type'
     ];
 
     public function employee(): BelongsTo

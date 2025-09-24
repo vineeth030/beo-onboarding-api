@@ -17,11 +17,22 @@ class EducationController extends Controller
 
     public function store(StoreEducationRequest $request, Employee $employee)
     {
-        $path = $request->file('file')->store("documents/{$employee->id}", 'public');
+        $educations = [];
 
-        $education = $employee->educations()->create($request->validated() + ['certificate_path' + $path]);
+        foreach ($request->validated()['educations'] as $educationData) {
+            $file = $educationData['file'];
+            unset($educationData['file']);
 
-        return response()->json($education, 201);
+            $path = $file->store("documents/{$employee->id}", 'public');
+
+            $education = $employee->educations()->create(
+                $educationData + ['certificate_path' => $path]
+            );
+
+            $educations[] = $education;
+        }
+
+        return response()->json($educations, 201);
     }
 
     public function show(Employee $employee, Education $education)

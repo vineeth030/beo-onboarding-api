@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('title');
             $table->string('board');
             $table->string('school');
-            $table->string('specialization');
+            $table->string('specialization')->nullable();
             $table->string('percentage');
             $table->date('from_date');
             $table->date('to_date');
-            $table->string('mode_of_education');
+            $table->string('mode_of_education')->nullable();
             $table->string('certificate_path');
             $table->string('certificate_preview_url')->nullable();
             $table->boolean('is_highest')->default(false);

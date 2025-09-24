@@ -22,6 +22,7 @@ class AddressFactory extends Factory
             'landmark' => $this->faker->optional()->word,
             'country' => 'India',
             'state' => $this->faker->state,
+            'city' => $this->faker->city,
             'pin' => $this->faker->postcode,
             'duration_of_stay' => $this->faker->randomDigit . ' years',
         ];
