@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('school');
             $table->string('specialization')->nullable();
             $table->string('percentage');
-            $table->date('from_date');
-            $table->date('to_date');
+            $table->date('from_date')->nullable();
+            $table->date('to_date')->nullable();
             $table->string('mode_of_education')->nullable();
             $table->string('certificate_path');
             $table->string('certificate_preview_url')->nullable();

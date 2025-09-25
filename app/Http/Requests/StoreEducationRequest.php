@@ -28,8 +28,8 @@ class StoreEducationRequest extends FormRequest
             'educations.*.school' => ['required', 'string', 'max:255'],
             'educations.*.specialization' => ['nullable', 'string', 'max:255'],
             'educations.*.percentage' => ['required', 'string', 'max:255'],
-            'educations.*.from_date' => ['required', 'date'],
-            'educations.*.to_date' => ['required', 'date'],
+            'educations.*.from_date' => ['sometimes','date'],
+            'educations.*.to_date' => ['sometimes', 'date'],
             'educations.*.mode_of_education' => ['nullable', 'string', 'max:255'],
             'educations.*.is_highest' => ['boolean'],
             'educations.*.file' => ['required', 'file', 'mimes:pdf,jpg,png', 'max:2048']

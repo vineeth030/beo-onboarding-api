@@ -7,6 +7,8 @@ use App\Http\Requests\StoreEducationRequest;
 use App\Http\Requests\UpdateEducationRequest;
 use App\Models\Education;
 use App\Models\Employee;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Log;
 
 class EducationController extends Controller
 {
@@ -40,13 +42,35 @@ class EducationController extends Controller
         return $education;
     }
 
-    public function update(UpdateEducationRequest $request, Employee $employee, Education $education)
+    public function update(UpdateEducationRequest $request, $employee_id)
     {
-        $path = $request->file('file')->store("documents/{$employee->id}", 'public');
+        $employee = Employee::where('id', $employee_id)->first();
 
-        $education->update($request->validated() + ['certificate_path' + $path]);
+        $employee->educations()->delete();
 
-        return response()->json($education);
+        $educations = [];
+
+        foreach ($request->validated()['educations'] as $educationData) {
+            $file = $educationData['file'] ?? null;
+            unset($educationData['file']);
+
+            $certificatePath = null;
+
+            if ($file instanceof UploadedFile) {
+                $path = $file->store("documents/{$employee->id}", 'public');
+                $certificatePath = '/storage/' . $path;
+            }elseif (is_string($file) && str_starts_with($file, '/storage/')) {
+                $certificatePath = $file;
+            }
+
+            $education = $employee->educations()->create(
+                $educationData + ['employee_id' => $employee->id] + ($certificatePath ? ['certificate_path' => $certificatePath] : [])
+            );
+
+            $educations[] = $education;
+        }
+
+        return response()->json($educations);
     }
 
     public function destroy(Employee $employee, Education $education)

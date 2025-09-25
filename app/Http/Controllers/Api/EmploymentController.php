@@ -20,33 +20,39 @@ class EmploymentController extends Controller
     public function store(StoreEmploymentRequest $request, Employee $employee)
     {
         $validatedData = $request->validated();
-        $salarySlipFiles = $validatedData['salary_slips'] ?? [];
-        unset($validatedData['salary_slips']);
+        $employments = [];
 
-        if ($request->hasFile('resignation_acceptance_letter_file')) {
-            $validatedData['resignation_acceptance_letter_file'] = $request->file('resignation_acceptance_letter_file')
-                ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file('resignation_acceptance_letter_file')->getClientOriginalExtension(), 'public');
-            $validatedData['resignation_acceptance_letter_preview_url'] = Storage::url($validatedData['resignation_acceptance_letter_file']);
+        foreach ($validatedData['employments'] as $index => $employmentData) {
+            $salarySlipFiles = $employmentData['salary_slips'] ?? [];
+            unset($employmentData['salary_slips']);
+
+            if ($request->hasFile("employments.{$index}.resignation_acceptance_letter_file")) {
+                $employmentData['resignation_acceptance_letter_file'] = $request->file("employments.{$index}.resignation_acceptance_letter_file")
+                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.resignation_acceptance_letter_file")->getClientOriginalExtension(), 'public');
+                $employmentData['resignation_acceptance_letter_preview_url'] = Storage::url($employmentData['resignation_acceptance_letter_file']);
+            }
+
+            if ($request->hasFile("employments.{$index}.experience_letter_file")) {
+                $employmentData['experience_letter_file'] = $request->file("employments.{$index}.experience_letter_file")
+                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.experience_letter_file")->getClientOriginalExtension(), 'public');
+                $employmentData['experience_letter_preview_url'] = Storage::url($employmentData['experience_letter_file']);
+            }
+
+            $employment = $employee->employments()->create($employmentData);
+
+            foreach ($salarySlipFiles as $salarySlipFile) {
+                $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips",uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(),'public');
+
+                $employment->salarySlips()->create([
+                    'file_path' => $filePath,
+                    'preview_url' => Storage::url($filePath),
+                ]);
+            }
+
+            $employments[] = $employment->load('salarySlips');
         }
 
-        if ($request->hasFile('experience_letter_file')) {
-            $validatedData['experience_letter_file'] = $request->file('experience_letter_file')
-                ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file('experience_letter_file')->getClientOriginalExtension(), 'public');
-            $validatedData['experience_letter_preview_url'] = Storage::url($validatedData['experience_letter_file']);
-        }
-
-        $employment = $employee->employments()->create($validatedData);
-
-        foreach ($salarySlipFiles as $salarySlipFile) {
-            $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips",uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(),'public');
-
-            $employment->salarySlips()->create([
-                'file_path' => $filePath,
-                'preview_url' => Storage::url($filePath),
-            ]);
-        }
-
-        return response()->json($employment->load('salarySlips'), 201);
+        return response()->json($employments, 201);
     }
 
     public function show(Employee $employee, Employment $employment)
@@ -54,46 +60,60 @@ class EmploymentController extends Controller
         return $employment->load('salarySlips');
     }
 
-    public function update(UpdateEmploymentRequest $request, Employee $employee, Employment $employment)
+    public function update(UpdateEmploymentRequest $request, $employee_id)
     {
-        $validatedData = $request->validated();
-        $salarySlipFiles = $validatedData['salary_slips'] ?? [];
-        unset($validatedData['salary_slips']);
+        $employee = Employee::where('id', $employee_id)->first();
 
-        if ($request->hasFile('resignation_acceptance_letter_file')) {
-
+        $employee->employments()->each(function ($employment) {
             if ($employment->resignation_acceptance_letter_file) {
                 Storage::disk('public')->delete($employment->resignation_acceptance_letter_file);
             }
-
-            $validatedData['resignation_acceptance_letter_file'] = $request->file('resignation_acceptance_letter_file')
-                ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file('resignation_acceptance_letter_file')->getClientOriginalExtension(), 'public');
-            $validatedData['resignation_acceptance_letter_preview_url'] = Storage::url($validatedData['resignation_acceptance_letter_file']);
-        }
-
-        if ($request->hasFile('experience_letter_file')) {
-
             if ($employment->experience_letter_file) {
                 Storage::disk('public')->delete($employment->experience_letter_file);
             }
-            
-            $validatedData['experience_letter_file'] = $request->file('experience_letter_file')
-                ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file('experience_letter_file')->getClientOriginalExtension(), 'public');
-            $validatedData['experience_letter_preview_url'] = Storage::url($validatedData['experience_letter_file']);
+        });
+
+        $employee->employments()->delete();
+
+        $employments = [];
+
+        foreach ($request->validated()['employments'] as $index => $employmentData) {
+            $salarySlipFiles = $employmentData['salary_slips'] ?? [];
+            unset($employmentData['salary_slips']);
+
+            if ($request->hasFile("employments.{$index}.resignation_acceptance_letter_file")) {
+                $employmentData['resignation_acceptance_letter_file'] = $request->file("employments.{$index}.resignation_acceptance_letter_file")
+                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.resignation_acceptance_letter_file")->getClientOriginalExtension(), 'public');
+                $employmentData['resignation_acceptance_letter_preview_url'] = Storage::url($employmentData['resignation_acceptance_letter_file']);
+            } elseif (isset($employmentData['resignation_acceptance_letter_file']) && is_string($employmentData['resignation_acceptance_letter_file']) && str_starts_with($employmentData['resignation_acceptance_letter_file'], '/storage/')) {
+                $employmentData['resignation_acceptance_letter_preview_url'] = $employmentData['resignation_acceptance_letter_file'];
+                $employmentData['resignation_acceptance_letter_file'] = str_replace('/storage/', '', $employmentData['resignation_acceptance_letter_file']);
+            }
+
+            if ($request->hasFile("employments.{$index}.experience_letter_file")) {
+                $employmentData['experience_letter_file'] = $request->file("employments.{$index}.experience_letter_file")
+                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.experience_letter_file")->getClientOriginalExtension(), 'public');
+                $employmentData['experience_letter_preview_url'] = Storage::url($employmentData['experience_letter_file']);
+            } elseif (isset($employmentData['experience_letter_file']) && is_string($employmentData['experience_letter_file']) && str_starts_with($employmentData['experience_letter_file'], '/storage/')) {
+                $employmentData['experience_letter_preview_url'] = $employmentData['experience_letter_file'];
+                $employmentData['experience_letter_file'] = str_replace('/storage/', '', $employmentData['experience_letter_file']);
+            }
+
+            $employment = $employee->employments()->create($employmentData + ['employee_id' => $employee->id]);
+
+            foreach ($salarySlipFiles as $salarySlipFile) {
+                $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips", uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(), 'public');
+
+                $employment->salarySlips()->create([
+                    'file_path' => $filePath,
+                    'preview_url' => Storage::url($filePath),
+                ]);
+            }
+
+            $employments[] = $employment->load('salarySlips');
         }
 
-        $employment->update($validatedData);
-        
-        foreach ($salarySlipFiles as $salarySlipFile) {
-            $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips",uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(),'public');
-
-            $employment->salarySlips()->create([
-                'file_path' => $filePath,
-                'preview_url' => Storage::url($filePath),
-            ]);
-        }
-
-        return response()->json($employment->load('salarySlips'));
+        return response()->json($employments);
     }
 
     public function destroy(Employee $employee, Employment $employment)

@@ -32,10 +32,18 @@ class AddressController extends Controller
         return $address;
     }
 
-    public function update(UpdateAddressRequest $request, Employee $employee, Address $address)
+    public function update(UpdateAddressRequest $request, Employee $employee, ?Address $address = null)
     {
-        $address->update($request->validated());
-        return response()->json($address);
+        $employee->addresses()->delete();
+
+        $addresses = [];
+
+        foreach ($request->validated()['addresses'] as $addressData) {
+            $address = $employee->addresses()->create($addressData);
+            $addresses[] = $address;
+        }
+
+        return response()->json($addresses);
     }
 
     public function destroy(Employee $employee, Address $address)

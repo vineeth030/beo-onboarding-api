@@ -22,11 +22,17 @@ class UpdateAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'line1' => ['sometimes', 'required', 'string', 'max:255'],
-            'country' => ['sometimes', 'required', 'string', 'max:255'],
-            'state' => ['sometimes', 'required', 'string', 'max:255'],
-            'pin' => ['sometimes', 'required', 'string', 'max:255'],
-            'duration_of_stay' => ['sometimes', 'required', 'string', 'max:255'],
+            'addresses' => ['required', 'array', 'size:2'],
+            'addresses.*.line1' => ['required', 'string', 'max:255'],
+            'addresses.*.line2' => ['nullable', 'string', 'max:255'],
+            'addresses.*.line3' => ['nullable', 'string', 'max:255'],
+            'addresses.*.landmark' => ['nullable', 'string', 'max:255'],
+            'addresses.*.country' => ['required', 'string', 'max:255'],
+            'addresses.*.state' => ['required', 'string', 'max:255'],
+            'addresses.*.city' => ['nullable', 'string', 'max:255'],
+            'addresses.*.pin' => ['required', 'string', 'max:255'],
+            'addresses.*.duration_of_stay' => ['required', 'string', 'max:255'],
+            'addresses.*.type' => ['required', 'in:current,permanent'],
         ];
     }
 }

@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('pin')->nullable();
             $table->string('duration_of_stay')->nullable();
             $table->enum('type', ['current', 'permanent']);
+            $table->boolean('is_present_address_same_as_current')->default(false);
             $table->timestamps();
         });
     }

@@ -25,7 +25,7 @@ class UpdateDocumentRequest extends FormRequest
             'type' => ['nullable', 'required', 'string', 'in:pan,aadhar,passport,driving_license,voter_id'],
             'number' => ['nullable', 'required', 'string', 'max:255'],
             'name_on_doc' => ['nullable', 'required', 'string', 'max:255'],
-            'file' => ['nullable', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
+            'file' => ['sometimes', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
         ];
     }
 }

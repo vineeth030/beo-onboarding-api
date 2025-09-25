@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class UpdateEducationRequest extends FormRequest
 {
@@ -22,17 +23,37 @@ class UpdateEducationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['sometimes', 'required', 'string', 'max:255'],
-            'board' => ['sometimes', 'required', 'string', 'max:255'],
-            'school' => ['sometimes', 'required', 'string', 'max:255'],
-            'specialization' => ['sometimes', 'required', 'string', 'max:255'],
-            'percentage' => ['sometimes', 'required', 'string', 'max:255'],
-            'from_date' => ['sometimes', 'required', 'date'],
-            'to_date' => ['sometimes', 'required', 'date'],
-            'mode_of_education' => ['sometimes', 'required', 'string', 'max:255'],
-            'certificate_path' => ['sometimes', 'required', 'string', 'max:255'],
-            'is_highest' => ['sometimes', 'boolean'],
-            'file' => ['nullable', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048']
+            'educations' => ['required', 'array', 'min:1', 'max:25'],
+            'educations.*.title' => ['required', 'string', 'max:255'],
+            'educations.*.board' => ['required', 'string', 'max:255'],
+            'educations.*.school' => ['required', 'string', 'max:255'],
+            'educations.*.specialization' => ['nullable', 'string', 'max:255'],
+            'educations.*.percentage' => ['required', 'string', 'max:255'],
+            'educations.*.from_date' => ['sometimes', 'date'],
+            'educations.*.to_date' => ['sometimes','date'],
+            'educations.*.mode_of_education' => ['nullable', 'string', 'max:255'],
+            'educations.*.is_highest' => ['boolean'],
+            'educations.*.file' => [
+                'nullable', 
+                function ($attribute, $value, $fail) {
+                    // Case 1: Uploaded file
+                    if ($value instanceof \Illuminate\Http\UploadedFile) {
+                        $validator = Validator::make(
+                            [$attribute => $value],
+                            [$attribute => 'file|mimes:pdf,jpg,png|max:2048']
+                        );
+                        if ($validator->fails()) {
+                            $fail($validator->errors()->first($attribute));
+                        }
+                    }
+                    // Case 2: Existing string (URL or path)
+                    elseif (is_string($value)) {
+                        if (!str_starts_with($value, '/storage/')) {
+                            $fail('The '.$attribute.' must be a valid file URL.');
+                        }
+                    }
+                },
+            ]
         ];
     }
 }

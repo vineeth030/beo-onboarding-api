@@ -21,7 +21,8 @@ class Address extends Model
         'city',
         'pin',
         'duration_of_stay',
-        'type'
+        'type',
+        'is_present_address_same_as_current'
     ];
 
     public function employee(): BelongsTo

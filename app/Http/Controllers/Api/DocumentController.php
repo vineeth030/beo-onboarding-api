@@ -31,9 +31,13 @@ class DocumentController extends Controller
 
     public function update(UpdateDocumentRequest $request, Document $document)
     {
-        $path = $request->file('file')->store("documents/{$document->employee_id}", 'public');
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store("documents/{$document->employee_id}", 'public');
+            $document->update($request->validated() + ['file_path' => '/storage/' . $path]);
+        }else{
+            $document->update($request->validated());
+        }
 
-        $document->update($request->validated() + ['file_path' => '/storage/' . $path]);
         
         return response()->json($document);
     }

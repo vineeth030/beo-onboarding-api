@@ -17,6 +17,9 @@ class BEOSystemContoller extends Controller
     private const BEO_SYSTEM_LOGIN_API_URL = '/beosystem/api/Login/UserLoginForMobApp?deviceId=9e528a0c-2302-4474-b5be-8bf829b30e5a';
     private const BEO_SYSTEM_USER_DETAILS_API_URL = '/beosystem/api/Login/UserInfoForMobApp';
     private const BEO_SYSTEM_CREATE_USER_API_URL = '/beosystem/api/Users/SaveUserDetailsForMobApp';
+    private const BEO_SYSTEM_COUNTRIES_API_URL = '/beosystem/api/Users/GetCountryListForMobApp';
+    private const BEO_SYSTEM_STATES_API_URL = '/beosystem/api/Users/GetStateListForMobApp';
+    private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/beosystem/api/Users/NeccessaryUsersDetailsInfoForMobApp';
 
     public function __construct()
     {
@@ -45,6 +48,43 @@ class BEOSystemContoller extends Controller
         }
 
         return [ $data['sessionToken'], $data['userIdCode'], 'Login success.' ];
+    }
+
+    public function countries() : array {
+
+        $response = Http::get(config('beosystem.base_url') . self::BEO_SYSTEM_COUNTRIES_API_URL)->throw();
+
+        if ($response->failed()) {
+            return [null, 'BEO system unavailable. Please try again later.'];
+        }
+
+        return $response->json('con_list');
+    }
+
+    public function states() : array {
+
+        $response = Http::get(config('beosystem.base_url') . self::BEO_SYSTEM_STATES_API_URL)->throw();
+
+        if ($response->failed()) {
+            return [null, 'BEO system unavailable. Please try again later.'];
+        }
+
+        return $response->json('sta_list');
+    }
+
+    public function designations(string $sessionToken, int $userIdCode) : array {
+
+        $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
+                        ->post(
+                            config('beosystem.base_url') . self::BEO_SYSTEM_DESIGNATIONS_API_URL,
+                            ['userIdCode' => $userIdCode]
+                        )->throw();
+
+        if ($response->failed()) {
+            return [null, 'BEO system unavailable. Please try again later.'];
+        }
+
+        return $response->json('AUserNeccesaryDesigList_lists');
     }
 
     /**
@@ -118,7 +158,57 @@ class BEOSystemContoller extends Controller
     private function prepareStoreUserPayload(){
 
         return [
-            //
+            "userIdCode"=> 198,
+            "editUid" => 0, // Set to zero when creating an employee.
+            "userID"=> "asdasdasd.a",
+            "firstName"=> "abcd",
+            "lastName"=> "a",
+            "fatherName"=> "a",
+            "nationality"=> 100, // BEO Country API
+            "communAddressLine1"=> "communAddressLine1",
+            "communAddressLine2"=> "communAddressLine2",
+            "communAddDistrict"=> "communAddDistrict",
+            "communAddPinCode"=> "communAddPinCode",
+            "communAddstate"=> "communAddstate", // BEO State API
+            "communAddcountry"=> 101, // BEO Country API
+            "mobile"=> "987654321",
+            "landLine"=> "123456",
+            "permntAddSameAsCommun"=> 0,
+            "permntAddressLine1"=> "permntAddressLine1",
+            "permntAddressLine2"=> "permntAddressLine2",
+            "permntAddDistrict"=> "permntAddDistrict",
+            "permntAddpinCode"=> "permntAddpinCode",
+            "permntAddstate"=> "Kerala",
+            "permntAddcountry"=> 102, 
+            "emailId"=> "d.ara@asdasd.mmm",
+            "BEOChat"=> "d.ara@fff.mmm", // Can be empty.
+            "fax"=> "12345678", // Can be empty
+            "password"=> "a",
+            "retypePassword"=> "a",
+            "prfLang"=> "en-GB",
+            "empId"=> 732, // To be entered manually.
+            "dob"=> "",
+            "gender"=> "F",
+            "designation"=> 0, // BEO API
+            "group"=> 3, // BEO API
+            "grade"=> 0,
+            "doj"=> "",
+            "noticePeriodStart"=> "",
+            "noticePeriodEnd"=> "",
+            "relievingDate"=> "",
+            "floorId"=> 0,
+            "chkHalfDay"=> false,
+            "chkHour"=> false,
+            "timeType"=> 0,
+            "bloodGroupId"=> 6,
+            "bloodGroup"=> "O-",
+            "tshirtSize"=> "S",
+            "weeklyWorkingHour"=> "",
+            "assessmentType"=> 0,
+            "month"=> 0,
+            "specialTypeUser"=> 0,
+            "sType"=> "Edit",
+            "permntWfh"=> 0
         ];
     } 
 }

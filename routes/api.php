@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BEOSystemContoller;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EducationController;
 use App\Http\Controllers\Api\EmployeeController;
@@ -43,4 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Offers routes
     Route::apiResource('offers', OfferController::class);
+
+    Route::get('/countries', [BEOSystemContoller::class, 'countries']);
+    Route::get('/states', [BEOSystemContoller::class, 'states']);
 });

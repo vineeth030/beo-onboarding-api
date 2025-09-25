@@ -70,7 +70,8 @@ class AuthController extends Controller
             'message' => 'Login successful',
             'token' => $token,
             'role' => $user->role,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'employee_id' => $user->employee?->id
         ];
     }
 
@@ -123,7 +124,8 @@ class AuthController extends Controller
             'sessionToken' => $sessionToken,
             'token' => $token,
             'role' => 'admin',
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'employee_id' => 0
         ];
     }
 

@@ -22,18 +22,19 @@ class StoreEmploymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'company_name' => ['required', 'string', 'max:255'],
-            'employee_id_at_company' => ['nullable', 'string', 'max:255'],
-            'designation' => ['required', 'string', 'max:255'],
-            'location' => ['required', 'string', 'max:255'],
-            'mode_of_employment' => ['required', 'string', 'max:255'],
-            'start_date' => ['required', 'date'],
-            'last_working_date' => ['nullable', 'date', 'after:start_date'],
-            'resignation_acceptance_letter_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
-            'experience_letter_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
-            'is_current_org' => ['boolean'],
-            'salary_slips' => ['nullable', 'array'],
-            'salary_slips.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
+            'employments' => ['required', 'array', 'min:1'],
+            'employments.*.company_name' => ['required', 'string', 'max:255'],
+            'employments.*.employee_id_at_company' => ['nullable', 'string', 'max:255'],
+            'employments.*.designation' => ['required', 'string', 'max:255'],
+            'employments.*.location' => ['required', 'string', 'max:255'],
+            'employments.*.mode_of_employment' => ['required', 'string', 'max:255'],
+            'employments.*.start_date' => ['required', 'date'],
+            'employments.*.last_working_date' => ['nullable', 'date', 'after:employments.*.start_date'],
+            'employments.*.resignation_acceptance_letter_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
+            'employments.*.experience_letter_file' => ['nullable', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
+            'employments.*.is_current_org' => ['boolean'],
+            'employments.*.salary_slips' => ['nullable', 'array'],
+            'employments.*.salary_slips.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
         ];
     }
 }
