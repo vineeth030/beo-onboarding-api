@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('name_on_doc');
             $table->string('file_path');
             $table->string('preview_url')->nullable();
+            $table->boolean('is_open')->default(0);
+            $table->boolean('is_verified')->default(0);
             $table->timestamps();
         });
     }

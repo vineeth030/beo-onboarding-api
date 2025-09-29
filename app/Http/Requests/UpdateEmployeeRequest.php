@@ -27,6 +27,7 @@ class UpdateEmployeeRequest extends FormRequest
             'first_name' => ['sometimes', 'required', 'string', 'max:255'],
             'middle_name' => ['sometimes', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required', 'string', 'max:255'],
+            'fathers_name' => ['sometimes', 'required', 'string', 'max:255'],
             'file' => ['sometimes', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
             'client_id' => ['sometimes', 'required'],
             'dob' => ['sometimes', 'required', 'date'],

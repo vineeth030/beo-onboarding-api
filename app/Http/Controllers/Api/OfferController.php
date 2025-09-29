@@ -59,8 +59,6 @@ class OfferController extends Controller
 
             Log::info('The HTML Content: ' . $htmlContent);
 
-            //$htmlContent = "<html><head><meta charset=\"UTF-8\" /><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" /><script src=\"https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4\"></script></head><body><div class=\"p-10\">" . $htmlContent . "</div></body></html>";
-
             $html = view('pdf.offer-letter-template', [
                 'htmlContent' => $htmlContent
             ])->render();
@@ -96,7 +94,21 @@ class OfferController extends Controller
      */
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        $offer->update($request->validated());
+        $offerData = $request->validated();
+
+        if ($request->hasFile('sign_file_path')) {
+            $path = $request->file('sign_file_path')->store("documents/{$offer->employee->employee_id}", 'public');
+            $offerData['sign_file_path'] = $path;   
+        }
+
+        if ($request->boolean('is_accepted')) {
+            $offer->employee()->update(['offer_letter_status' => 2]);
+        } elseif ($request->boolean('is_declined')) {
+            $offer->employee()->update(['offer_letter_status' => 3]);
+        }
+
+        $offer->update($offerData);
+
         return response()->json($offer);
     }
 

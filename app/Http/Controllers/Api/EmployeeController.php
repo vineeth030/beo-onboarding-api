@@ -57,9 +57,12 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        $path = $request->file('file')->store("documents/{$employee->id}", 'public');
-
-        $employee->update($request->validated() + ['photo_path' => '/storage/' . $path]);
+        if ($request->hasFile('file')) {
+            $path = $request->file('file')->store("documents/{$employee->id}", 'public');
+            $employee->update($request->validated() + ['photo_path' => '/storage/' . $path]);
+        }else{
+            $employee->update($request->validated());
+        }
 
         return response()->json($employee);
     }

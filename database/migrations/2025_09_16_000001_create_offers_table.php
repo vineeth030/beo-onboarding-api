@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
             $table->string('name')->nullable();
             $table->string('comment')->nullable();
+            $table->string('sign_file_path')->nullable();
             $table->boolean('is_accepted')->default(0);
             $table->boolean('is_declined')->default(0);
             $table->string('decline_reason')->nullable();

@@ -20,6 +20,7 @@ class Offer extends Model
         'client_id',
         'name',
         'comment',
+        'sign_file_path',
         'is_accepted',
         'is_declined',
         'decline_reason'

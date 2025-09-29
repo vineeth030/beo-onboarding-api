@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Validator;
 
 class UpdateEmploymentRequest extends FormRequest
 {
@@ -34,7 +35,27 @@ class UpdateEmploymentRequest extends FormRequest
             'employments.*.experience_letter_file' => ['nullable'],
             'employments.*.is_current_org' => ['boolean'],
             'employments.*.salary_slips' => ['nullable', 'array'],
-            'employments.*.salary_slips.*' => ['file', 'mimes:pdf,jpg,jpeg,png', 'max:2048'],
+            'employments.*.salary_slips.*' => [
+                'nullable', 
+                function ($attribute, $value, $fail) {
+                    // Case 1: Uploaded file
+                    if ($value instanceof \Illuminate\Http\UploadedFile) {
+                        $validator = Validator::make(
+                            [$attribute => $value],
+                            [$attribute => 'file|mimes:pdf,jpg,png|max:2048']
+                        );
+                        if ($validator->fails()) {
+                            $fail($validator->errors()->first($attribute));
+                        }
+                    }
+                    // Case 2: Existing string (URL or path)
+                    elseif (is_string($value)) {
+                        if (!str_starts_with($value, '/storage/')) {
+                            $fail('The '.$attribute.' must be a valid file URL.');
+                        }
+                    }
+                },
+            ],
         ];
     }
 }

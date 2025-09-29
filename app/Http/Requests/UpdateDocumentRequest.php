@@ -26,6 +26,8 @@ class UpdateDocumentRequest extends FormRequest
             'number' => ['nullable', 'required', 'string', 'max:255'],
             'name_on_doc' => ['nullable', 'required', 'string', 'max:255'],
             'file' => ['sometimes', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
+            'is_open' => ['sometimes', 'boolean'],
+            'is_verified' => ['sometimes', 'boolean']
         ];
     }
 }

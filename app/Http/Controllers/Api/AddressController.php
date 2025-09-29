@@ -32,8 +32,10 @@ class AddressController extends Controller
         return $address;
     }
 
-    public function update(UpdateAddressRequest $request, Employee $employee, ?Address $address = null)
+    public function update(UpdateAddressRequest $request, $employee_id)
     {
+        $employee = Employee::where('id', $employee_id)->first();
+        
         $employee->addresses()->delete();
 
         $addresses = [];
