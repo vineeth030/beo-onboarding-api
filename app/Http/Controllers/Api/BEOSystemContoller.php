@@ -21,6 +21,7 @@ class BEOSystemContoller extends Controller
     private const BEO_SYSTEM_COUNTRIES_API_URL = '/beosystem/api/Users/GetCountryListForMobApp';
     private const BEO_SYSTEM_STATES_API_URL = '/beosystem/api/Users/GetStateListForMobApp';
     private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/beosystem/api/Users/NeccessaryUsersDetailsInfoForMobApp';
+    private const BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL = '/beosystem/api/Users/GetGroupListWithEmployessInfoForMobApp';
 
     public function __construct()
     {
@@ -155,10 +156,35 @@ class BEOSystemContoller extends Controller
         ];
     }
 
-    public function storeEmployees() : array {
+    /**
+     * Store BEO employees data to onboarding app database.
+     */
+    public function storeEmployees(Request $request) : array {
         $employees = [];
+
+        $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken'), 'userIdCode' => $request->get('userIdCode')]])
+                        ->post( config('beosystem.base_url') . self::BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL )->throw();
+
+        if ($response->failed()) {
+            return [null, 'BEO system unavailable. Please try again later.'];
+        }
+
+        //status=120, session expired
+
+        $data = $response->json();
+
+        // Seed beo_employees table with this data evey time admin hit refresh data.
+
+        // When BEO System API session is expired, make the onboarding app logout.
         
-        return $employees;
+        return ['message' => 'success', 'code' => 200];
+    }
+
+    public function getBEOEmployees() : array {
+
+        // Get seeder employees from beo_employees table.
+
+        return [];
     }
 
     private function prepareLoginPayload($userName, $password){
