@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: beo-onboarding-api
+    restart: unless-stopped
+    working_dir: /var/www/onboardingapi
+    volumes:
+      - ./:/var/www/onboardingapi
+    environment:
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=onboardingdb
+      - DB_USERNAME=onboardinguser
+      - DB_PASSWORD=onboardingpassword
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: laravel-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/var/www/html
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: laravel-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laraveluser
+      MYSQL_PASSWORD: secret
+    ports:
+      - "3306:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:

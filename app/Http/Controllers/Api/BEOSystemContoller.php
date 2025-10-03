@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Cache;
 
 class BEOSystemContoller extends Controller
 {
@@ -52,39 +53,50 @@ class BEOSystemContoller extends Controller
 
     public function countries() : array {
 
-        $response = Http::get(config('beosystem.base_url') . self::BEO_SYSTEM_COUNTRIES_API_URL)->throw();
+        return Cache::remember('beo_countries', now()->addMonths(3), function () {
 
-        if ($response->failed()) {
-            return [null, 'BEO system unavailable. Please try again later.'];
-        }
+            $response = Http::get(
+                config('beosystem.base_url') . self::BEO_SYSTEM_COUNTRIES_API_URL
+            );
 
-        return $response->json('con_list');
+            if ($response->failed()) {
+                return [null, 'BEO system unavailable. Please try again later.'];
+            }
+
+            return $response->json('con_list') ?? [];
+        });
     }
 
     public function states() : array {
 
-        $response = Http::get(config('beosystem.base_url') . self::BEO_SYSTEM_STATES_API_URL)->throw();
+        return Cache::remember('beo_states', now()->addMonths(3), function () {
 
-        if ($response->failed()) {
-            return [null, 'BEO system unavailable. Please try again later.'];
-        }
+            $response = Http::get(config('beosystem.base_url') . self::BEO_SYSTEM_STATES_API_URL)->throw();
 
-        return $response->json('sta_list');
+            if ($response->failed()) {
+                return [null, 'BEO system unavailable. Please try again later.'];
+            }
+
+            return $response->json('sta_list');
+        });
     }
 
     public function designations(string $sessionToken, int $userIdCode) : array {
 
-        $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                        ->post(
-                            config('beosystem.base_url') . self::BEO_SYSTEM_DESIGNATIONS_API_URL,
-                            ['userIdCode' => $userIdCode]
-                        )->throw();
+        return Cache::remember('beo_designations', now()->addMonths(1), function ($sessionToken, $userIdCode) {
 
-        if ($response->failed()) {
-            return [null, 'BEO system unavailable. Please try again later.'];
-        }
+            $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
+                            ->post(
+                                config('beosystem.base_url') . self::BEO_SYSTEM_DESIGNATIONS_API_URL,
+                                ['userIdCode' => $userIdCode]
+                            )->throw();
 
-        return $response->json('AUserNeccesaryDesigList_lists');
+            if ($response->failed()) {
+                return [null, 'BEO system unavailable. Please try again later.'];
+            }
+
+            return $response->json('AUserNeccesaryDesigList_lists');
+        });
     }
 
     /**
@@ -121,7 +133,7 @@ class BEOSystemContoller extends Controller
     /**
      * Store a newly created employee in storage.
      */
-    public function store($sessionToken)
+    public function store($sessionToken): array
     {
         $requestBody = $this->prepareStoreUserPayload();
 
@@ -141,6 +153,12 @@ class BEOSystemContoller extends Controller
         return [
             'message' => 'New employee created successfully.' 
         ];
+    }
+
+    public function storeEmployees() : array {
+        $employees = [];
+        
+        return $employees;
     }
 
     private function prepareLoginPayload($userName, $password){

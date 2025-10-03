@@ -29,7 +29,7 @@ class StoreEmployeeRequest extends FormRequest
             'dob' => ['sometimes', 'date'],
             'gender' => ['sometimes', 'string'],
             'marital_status' => ['sometimes', 'string'],
-            'nationality' => ['sometimes', 'string'],
+            'nationality' => ['sometimes', 'integer'],
             'place_of_birth' => ['sometimes', 'string'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:employees'],
             'mobile' => ['required', 'string', 'max:255', 'unique:employees'],

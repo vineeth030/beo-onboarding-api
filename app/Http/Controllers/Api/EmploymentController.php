@@ -64,14 +64,14 @@ class EmploymentController extends Controller
     {
         $employee = Employee::where('id', $employee_id)->first();
 
-        $employee->employments()->each(function ($employment) {
-            if ($employment->resignation_acceptance_letter_file) {
-                Storage::disk('public')->delete($employment->resignation_acceptance_letter_file);
-            }
-            if ($employment->experience_letter_file) {
-                Storage::disk('public')->delete($employment->experience_letter_file);
-            }
-        });
+        // $employee->employments()->each(function ($employment) {
+        //     if ($employment->resignation_acceptance_letter_file) {
+        //         Storage::disk('public')->delete($employment->resignation_acceptance_letter_file);
+        //     }
+        //     if ($employment->experience_letter_file) {
+        //         Storage::disk('public')->delete($employment->experience_letter_file);
+        //     }
+        // });
 
         $employee->employments()->delete();
 
@@ -102,7 +102,12 @@ class EmploymentController extends Controller
             $employment = $employee->employments()->create($employmentData + ['employee_id' => $employee->id]);
 
             foreach ($salarySlipFiles as $salarySlipFile) {
-                $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips", uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(), 'public');
+                
+                if (is_file($salarySlipFile)) {
+                    $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips", uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(), 'public');
+                }elseif(isset($salarySlipFile) && is_string($salarySlipFile) && str_starts_with($salarySlipFile, '/storage/')){
+                    $filePath = str_replace('/storage/', '', $salarySlipFile);
+                }
 
                 $employment->salarySlips()->create([
                     'file_path' => $filePath,

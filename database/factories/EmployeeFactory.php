@@ -24,7 +24,7 @@ class EmployeeFactory extends Factory
             'dob' => $this->faker->date(),
             'gender' => $this->faker->randomElement(['male', 'female', 'other']),
             'marital_status' => $this->faker->randomElement(['single', 'married', 'divorced', 'widowed']),
-            'nationality' => 'Indian',
+            'nationality' => 99,
             'place_of_birth' => $this->faker->city,
             'email' => $this->faker->unique()->safeEmail,
             'mobile' => $this->faker->unique()->phoneNumber,

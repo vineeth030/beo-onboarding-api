@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('experience_letter_file')->nullable();
             $table->string('experience_letter_preview_url')->nullable();
             $table->boolean('is_current_org')->default(false);
+            $table->boolean('is_serving_notice_period')->default(false);
             $table->timestamps();
         });
     }

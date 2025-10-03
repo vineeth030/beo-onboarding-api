@@ -33,7 +33,7 @@ class UpdateEmployeeRequest extends FormRequest
             'dob' => ['sometimes', 'required', 'date'],
             'gender' => ['sometimes', 'required', 'string'],
             'marital_status' => ['sometimes', 'required', 'string'],
-            'nationality' => ['sometimes', 'required', 'string'],
+            'nationality' => ['sometimes', 'required', 'integer'],
             'place_of_birth' => ['sometimes', 'required', 'string'],
             'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:employees,email,' . $employeeId],
             'mobile' => ['sometimes', 'required', 'string', 'max:255', 'unique:employees,mobile,' . $employeeId],

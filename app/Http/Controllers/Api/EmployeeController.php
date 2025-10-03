@@ -49,7 +49,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        return $employee->load(['addresses', 'documents', 'educations', 'employments', 'offers']);
+        return $employee->load(['addresses', 'documents', 'educations', 'employments.salarySlips', 'offers']);
     }
 
     /**
