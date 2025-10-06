@@ -25,6 +25,8 @@ class Education extends Model
         'certificate_path',
         'certificate_preview_url',
         'is_highest',
+        'is_verified',
+        'is_open'
     ];
 
     public function employee(): BelongsTo

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('employee_id');
             $table->string('photo_path');
             $table->string('designation');
-            $table->integer('phone');
+            $table->string('phone', 20);
             $table->string('email');
             $table->timestamps();
         });

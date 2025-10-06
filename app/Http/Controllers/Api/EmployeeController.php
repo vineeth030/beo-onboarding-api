@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Employee;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -74,5 +75,30 @@ class EmployeeController extends Controller
     {
         $employee->delete();
         return response()->json(null, 204);
+    }
+
+    /**
+     * buddy_is is the employee_id in beo_employees table.
+     */
+    public function assignBuddy(Employee $employee, Request $request) : JsonResponse {
+
+        $employee->update([
+            'buddy_id' => $request->get('beo_employee_id')
+        ]);
+
+        return response()->json(null, 200);
+    }
+
+    /**
+     * buddy_is is the employee_id in beo_employees table.
+     */
+    public function assignPocs(Employee $employee, Request $request) : JsonResponse {
+
+        $employee->update([
+            'poc_1_id' => $request->get('beo_employee_1_id'),
+            'poc_2_id' => $request->get('beo_employee_2_id')
+        ]);
+
+        return response()->json(null, 200);
     }
 }

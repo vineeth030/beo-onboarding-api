@@ -40,6 +40,12 @@ class UpdateEmployeeRequest extends FormRequest
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
             'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
             'division' => ['sometimes', 'integer', 'in:0,1'],
+            'category' => ['sometimes', 'integer', 'in:0,1'],
+            'is_verified' => ['sometimes','boolean'],
+            'is_open' => ['sometimes','boolean'],
+            'buddy_id' => ['sometimes', 'integer'],
+            'poc_1_id' => ['sometimes', 'integer'],
+            'poc_2_id' => ['sometimes', 'integer'],
         ];
     }
 }

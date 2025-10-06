@@ -35,6 +35,8 @@ class UpdateEmploymentRequest extends FormRequest
             'employments.*.experience_letter_file' => ['nullable'],
             'employments.*.is_current_org' => ['boolean'],
             'employments.*.is_serving_notice_period' => ['boolean'],
+            'employments.*.is_verified' => ['boolean'],
+            'employments.*.is_open' => ['boolean'],
             'employments.*.salary_slips' => ['nullable', 'array'],
             'employments.*.salary_slips.*' => [
                 'nullable', 

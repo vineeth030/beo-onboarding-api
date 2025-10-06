@@ -37,6 +37,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('employees.educations', EducationController::class)->shallow();
     Route::apiResource('employees.employments', EmploymentController::class)->shallow();
 
+    Route::post('employees/{employee}', [EmployeeController::class, 'verify']);
+    Route::post('employments/{employment}/verify', [EmploymentController::class, 'verify']);
+
     // Client routes
     Route::apiResource('clients', ClientController::class);
     Route::post('/clients/{id}/emails', [ClientEmailController::class, 'store']);
@@ -47,4 +50,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/countries', [BEOSystemContoller::class, 'countries']);
     Route::get('/states', [BEOSystemContoller::class, 'states']);
+
+    Route::post('/store-beo-employees-to-onboarding', [BEOSystemContoller::class, 'storeBEOEmployeesToOnboarding']);
+    Route::get('/get-all-beo-employees', [BEOSystemContoller::class, 'getBEOEmployees']);
+    Route::get('/get-single-beo-employee/{employee_id}', [BEOSystemContoller::class, 'getSingleBEOEmployee']);
+    Route::post('/employees/{employee}/assign-buddy-to-employee', [EmployeeController::class, 'assignBuddy']);
+    Route::post('/employees/{employee}/assign-pocs-to-employee', [EmployeeController::class, 'assignPocs']);
 });

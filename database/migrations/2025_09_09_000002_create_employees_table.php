@@ -33,6 +33,11 @@ return new class extends Migration
             $table->integer('offer_letter_status')->default(0);
             $table->integer('division')->default(0);
             $table->integer('category')->default(0);
+            $table->boolean('is_verified')->default(0);
+            $table->boolean('is_open')->default(0);
+            $table->integer('buddy_id')->nullable();
+            $table->integer('poc_1_id')->nullable();
+            $table->integer('poc_2_id')->nullable();
             $table->timestamps();
         });
     }

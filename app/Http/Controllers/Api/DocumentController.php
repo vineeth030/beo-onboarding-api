@@ -7,6 +7,7 @@ use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Employee;
 use App\Models\Document;
+use Illuminate\Support\Arr;
 
 class DocumentController extends Controller
 {
@@ -19,7 +20,7 @@ class DocumentController extends Controller
     {
         $path = $request->file('file')->store("documents/{$employee->id}", 'public');
 
-        $document = $employee->documents()->create($request->validated() + ['file_path' => '/storage/' . $path]);
+        $document = $employee->documents()->create(Arr::except($request->validated(), ['file']) + ['file_path' => '/storage/' . $path]);
 
         return response()->json($document, 201);
     }
@@ -33,9 +34,9 @@ class DocumentController extends Controller
     {
         if ($request->hasFile('file')) {
             $path = $request->file('file')->store("documents/{$document->employee_id}", 'public');
-            $document->update($request->validated() + ['file_path' => '/storage/' . $path]);
+            $document->update(Arr::except($request->validated(), ['file']) + ['file_path' => '/storage/' . $path]);
         }else{
-            $document->update($request->validated());
+            $document->update(Arr::except($request->validated(), ['file']));
         }
 
         

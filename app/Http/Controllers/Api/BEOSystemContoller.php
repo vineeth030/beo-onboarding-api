@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
+use App\Models\BeoEmployee;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class BEOSystemContoller extends Controller
 {
@@ -158,9 +161,10 @@ class BEOSystemContoller extends Controller
 
     /**
      * Store BEO employees data to onboarding app database.
+     * 
+     * Seed beo_employees table with this data evey time admin hit refresh data.
      */
-    public function storeEmployees(Request $request) : array {
-        $employees = [];
+    public function storeBEOEmployeesToOnboarding(Request $request) : array {
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken'), 'userIdCode' => $request->get('userIdCode')]])
                         ->post( config('beosystem.base_url') . self::BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL )->throw();
@@ -169,22 +173,41 @@ class BEOSystemContoller extends Controller
             return [null, 'BEO system unavailable. Please try again later.'];
         }
 
-        //status=120, session expired
+        $data = json_decode($response, true);
 
-        $data = $response->json();
+        if ($data['status'] == 120) {
+            return ['message' => 'BEO System session expired', 'code' => 120];
+        }
 
-        // Seed beo_employees table with this data evey time admin hit refresh data.
+        DB::table('beo_employees')->truncate();
+
+        // Loop through groups and employees
+        foreach ($data['groupList'] as $group) {
+            foreach ($group['employeeLists'] as $employee) {
+                 BeoEmployee::create([
+                    'name' => $employee['employeeName'],
+                    'employee_id' => $employee['employeeId'],
+                    'photo_path' => $employee['imageUrl'],
+                    'designation' => $employee['designation'],
+                    'phone' => $employee['mobileNumber'],
+                    'email' => $employee['email']
+                ]);
+            }
+        }
 
         // When BEO System API session is expired, make the onboarding app logout.
         
         return ['message' => 'success', 'code' => 200];
     }
 
-    public function getBEOEmployees() : array {
+    public function getBEOEmployees() : Collection {
 
-        // Get seeder employees from beo_employees table.
+        return BeoEmployee::all();
+    }
 
-        return [];
+    public function getSingleBEOEmployee($employee_id) : BeoEmployee {
+        
+        return BeoEmployee::where('employee_id', $employee_id)->first();
     }
 
     private function prepareLoginPayload($userName, $password){

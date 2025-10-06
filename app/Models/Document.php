@@ -16,7 +16,10 @@ class Document extends Model
         'number',
         'name_on_doc',
         'file_path',
+        'file',
         'preview_url',
+        'is_open',
+        'is_verified'
     ];
 
     public function employee(): BelongsTo

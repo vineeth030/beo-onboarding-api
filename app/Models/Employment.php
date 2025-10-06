@@ -25,7 +25,9 @@ class Employment extends Model
         'experience_letter_file',
         'experience_letter_preview_url',
         'is_current_org',
-        'is_serving_notice_period'
+        'is_serving_notice_period',
+        'is_verified',
+        'is_open'
     ];
 
     public function employee(): BelongsTo

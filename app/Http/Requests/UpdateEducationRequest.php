@@ -33,6 +33,8 @@ class UpdateEducationRequest extends FormRequest
             'educations.*.to_date' => ['sometimes','date'],
             'educations.*.mode_of_education' => ['nullable', 'string', 'max:255'],
             'educations.*.is_highest' => ['boolean'],
+            'educations.*.is_verified' => ['boolean'],
+            'educations.*.is_open' => ['boolean'],
             'educations.*.file' => [
                 'nullable', 
                 function ($attribute, $value, $fail) {

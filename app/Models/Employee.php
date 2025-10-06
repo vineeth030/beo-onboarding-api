@@ -49,7 +49,12 @@ class Employee extends Model
         'status',
         'offer_letter_status',
         'division',
-        'category'
+        'category',
+        'is_verified',
+        'is_open',
+        'buddy_id',
+        'poc_1_id',
+        'poc_2_id'
     ];
 
     protected $casts = [

@@ -25,6 +25,8 @@ return new class extends Migration
             $table->string('certificate_path');
             $table->string('certificate_preview_url')->nullable();
             $table->boolean('is_highest')->default(false);
+            $table->boolean('is_verified')->default(0);
+            $table->boolean('is_open')->default(0);
             $table->timestamps();
         });
     }

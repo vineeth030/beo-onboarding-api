@@ -7,8 +7,11 @@ use App\Http\Requests\StoreEducationRequest;
 use App\Http\Requests\UpdateEducationRequest;
 use App\Models\Education;
 use App\Models\Employee;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
+use Illuminate\Support\Facades\Request;
 
 class EducationController extends Controller
 {
@@ -71,6 +74,17 @@ class EducationController extends Controller
         }
 
         return response()->json($educations);
+    }
+
+    public function verify(Education $education, Request $request) : JsonResponse {
+
+        $validated = $request->validate([
+            'is_verified' => ['required', 'boolean']
+        ]);
+
+        $education->update(['is_verified' => $validated['is_verified']]);
+
+        return response()->json(null, 200);
     }
 
     public function destroy(Employee $employee, Education $education)
