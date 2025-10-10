@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -32,6 +33,7 @@ class Employee extends Model
     protected $fillable = [
         'user_id',
         'client_id',
+        'office_id',
         'first_name',
         'middle_name',
         'last_name',
@@ -46,6 +48,7 @@ class Employee extends Model
         'mobile',
         'photo_path',
         'blood_group',
+        'joining_date',
         'status',
         'offer_letter_status',
         'division',
@@ -109,6 +112,11 @@ class Employee extends Model
     public function client(): HasOne
     {
         return $this->hasOne(Client::class);
+    }
+
+    public function office(): BelongsTo
+    {
+        return $this->belongsTo(Office::class);
     }
 
     public function addresses(): HasMany

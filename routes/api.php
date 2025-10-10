@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\EmploymentController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ClientEmailController;
 use App\Http\Controllers\Api\OfferController;
+use App\Http\Controllers\OfficeController;
+use App\Models\Office;
 
 /*
 |--------------------------------------------------------------------------
@@ -39,11 +41,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('employees/{employee}', [EmployeeController::class, 'verify']);
     Route::post('employments/{employment}/verify', [EmploymentController::class, 'verify']);
+    Route::post('educations/{education}/verify', [EducationController::class, 'verify']);
+    Route::post('employments/{employment}/open', [EmploymentController::class, 'open']);
+    Route::post('educations/{education}/open', [EducationController::class, 'open']);
 
     // Client routes
     Route::apiResource('clients', ClientController::class);
     Route::post('/clients/{id}/emails', [ClientEmailController::class, 'store']);
     Route::delete('/client-emails/{id}', [ClientEmailController::class, 'destroy']);
+
+    Route::get('offices', [OfficeController::class, 'index']);
+    Route::get('offices/{office}', [OfficeController::class, 'show']);
 
     // Offers routes
     Route::apiResource('offers', OfferController::class);

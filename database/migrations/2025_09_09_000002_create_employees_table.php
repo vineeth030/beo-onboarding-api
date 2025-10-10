@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->integer('office_id')->nullable();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('last_name');
@@ -29,6 +30,7 @@ return new class extends Migration
             $table->string('mobile')->unique();
             $table->string('photo_path')->nullable();
             $table->string('blood_group')->nullable();
+            $table->string('joining_date')->nullable(); //Kept as string after insistance from the HR team.
             $table->integer('status')->default(0);
             $table->integer('offer_letter_status')->default(0);
             $table->integer('division')->default(0);

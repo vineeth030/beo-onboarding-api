@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(OfficeSeeder::class);
+
         User::factory()->create([
             'name' => 'Super Admin',
             'email' => 'superadmin@ob.com',
@@ -33,7 +35,7 @@ class DatabaseSeeder extends Seeder
                 ->has(Document::factory()->count(3))
                 ->has(Education::factory()->count(2), 'educations')
                 ->has(Employment::factory()->count(2))
-                ->create(['user_id' => $user->id, 'client_id' => rand(1, 9), 'email' => $user->email, 'password' => 'password']);
+                ->create(['user_id' => $user->id, 'client_id' => rand(1, 9), 'office_id' => rand(1,2), 'email' => $user->email, 'password' => 'password']);
         });
 
         $this->call(OfferSeeder::class);

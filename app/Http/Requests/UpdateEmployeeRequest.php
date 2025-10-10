@@ -25,11 +25,12 @@ class UpdateEmployeeRequest extends FormRequest
 
         return [
             'first_name' => ['sometimes', 'required', 'string', 'max:255'],
-            'middle_name' => ['sometimes', 'string', 'max:255'],
+            'middle_name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'last_name' => ['sometimes', 'required', 'string', 'max:255'],
             'fathers_name' => ['sometimes', 'required', 'string', 'max:255'],
             'file' => ['sometimes', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
             'client_id' => ['sometimes', 'required'],
+            'office_id' => ['sometimes', 'nullable', 'integer'],
             'dob' => ['sometimes', 'required', 'date'],
             'gender' => ['sometimes', 'required', 'string'],
             'marital_status' => ['sometimes', 'required', 'string'],
@@ -40,7 +41,8 @@ class UpdateEmployeeRequest extends FormRequest
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
             'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
             'division' => ['sometimes', 'integer', 'in:0,1'],
-            'category' => ['sometimes', 'integer', 'in:0,1'],
+            'category' => ['sometimes', 'integer'],
+            'joining_date' => ['sometimes', 'nullable', 'string'],
             'is_verified' => ['sometimes','boolean'],
             'is_open' => ['sometimes','boolean'],
             'buddy_id' => ['sometimes', 'integer'],

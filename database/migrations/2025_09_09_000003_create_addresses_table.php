@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('line2')->nullable();
             $table->string('line3')->nullable();
             $table->string('landmark')->nullable();
-            $table->string('country')->nullable();
+            $table->integer('country')->nullable();
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->string('pin')->nullable();

@@ -27,7 +27,7 @@ class UpdateAddressRequest extends FormRequest
             'addresses.*.line2' => ['nullable', 'string', 'max:255'],
             'addresses.*.line3' => ['nullable', 'string', 'max:255'],
             'addresses.*.landmark' => ['nullable', 'string', 'max:255'],
-            'addresses.*.country' => ['required', 'string', 'max:255'],
+            'addresses.*.country' => ['required', 'integer', 'max:255'],
             'addresses.*.state' => ['required', 'string', 'max:255'],
             'addresses.*.city' => ['nullable', 'string', 'max:255'],
             'addresses.*.pin' => ['required', 'string', 'max:255'],

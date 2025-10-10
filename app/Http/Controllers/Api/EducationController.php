@@ -11,7 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class EducationController extends Controller
 {
@@ -83,6 +83,17 @@ class EducationController extends Controller
         ]);
 
         $education->update(['is_verified' => $validated['is_verified']]);
+
+        return response()->json(null, 200);
+    }
+
+    public function open(Education $education, Request $request) : JsonResponse {
+
+        $validated = $request->validate([
+            'is_open' => ['required', 'boolean']
+        ]);
+
+        $education->update(['is_open' => $validated['is_open']]);
 
         return response()->json(null, 200);
     }

@@ -9,7 +9,7 @@ use App\Models\Employee;
 use App\Models\Employment;
 use App\Models\SalarySlip;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class EmploymentController extends Controller
@@ -130,6 +130,17 @@ class EmploymentController extends Controller
         ]);
 
         $employment->update(['is_verified' => $validated['is_verified']]);
+
+        return response()->json(null, 200);
+    }
+
+    public function open(Employment $employment, Request $request) : JsonResponse {
+
+        $validated = $request->validate([
+            'is_open' => ['required', 'boolean']
+        ]);
+
+        $employment->update(['is_open' => $validated['is_open']]);
 
         return response()->json(null, 200);
     }

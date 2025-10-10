@@ -23,9 +23,10 @@ class StoreEmployeeRequest extends FormRequest
     {
         return [
             'first_name' => ['required', 'string', 'max:255'],
-            'middle_name' => ['sometimes', 'string', 'max:255'],
+            'middle_name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'client_id' => ['required'],
+            'office_id' => ['sometimes', 'nullable', 'integer'],
             'dob' => ['sometimes', 'date'],
             'gender' => ['sometimes', 'string'],
             'marital_status' => ['sometimes', 'string'],
@@ -36,6 +37,8 @@ class StoreEmployeeRequest extends FormRequest
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
             'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
             'division' => ['sometimes', 'integer', 'in:0,1'],
+            'category' => ['sometimes', 'integer'],
+            'joining_date' => ['sometimes', 'string']
         ];
     }
 }

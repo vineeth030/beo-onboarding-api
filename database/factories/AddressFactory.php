@@ -20,7 +20,7 @@ class AddressFactory extends Factory
             'line1' => $this->faker->streetAddress,
             'line2' => $this->faker->optional()->secondaryAddress,
             'landmark' => $this->faker->optional()->word,
-            'country' => 'India',
+            'country' => 100,
             'state' => $this->faker->state,
             'city' => $this->faker->city,
             'pin' => $this->faker->postcode,
