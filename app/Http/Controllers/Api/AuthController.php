@@ -94,7 +94,7 @@ class AuthController extends Controller
         }
 
         try {
-            $adminDetails = new BEOSystemController()->retrive($sessionToken, $userIdCode);
+            $adminDetails = (new BEOSystemController())->retrive($sessionToken, $userIdCode);
         } catch (\Throwable $th) {
             return [
                 'message' => $th->getMessage(),
