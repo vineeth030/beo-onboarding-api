@@ -6,8 +6,6 @@ services:
     container_name: beo-onboarding-api
     restart: unless-stopped
     working_dir: /var/www/onboardingapi
-    volumes:
-      - ./:/var/www/onboardingapi
     environment:
       - DB_HOST=db
       - DB_PORT=3306
