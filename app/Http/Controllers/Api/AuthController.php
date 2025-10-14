@@ -78,7 +78,7 @@ class AuthController extends Controller
     private function adminAuth($userName, $password): array
     {
         try {
-            [$sessionToken, $userIdCode, $message] = new BEOSystemContoller()->login($userName, $password);
+            [$sessionToken, $userIdCode, $message] = (new BEOSystemController())->login($userName, $password);
         } catch (\Throwable $th) {
             return [
                 'message' => $th->getMessage(),
@@ -94,7 +94,7 @@ class AuthController extends Controller
         }
 
         try {
-            $adminDetails = new BEOSystemContoller()->retrive($sessionToken, $userIdCode);
+            $adminDetails = new BEOSystemController()->retrive($sessionToken, $userIdCode);
         } catch (\Throwable $th) {
             return [
                 'message' => $th->getMessage(),

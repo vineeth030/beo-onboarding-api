@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BEOSystemContoller;
+use App\Http\Controllers\Api\BEOSystemController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EducationController;
 use App\Http\Controllers\Api\EmployeeController;
@@ -59,12 +59,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Offers routes
     Route::apiResource('offers', OfferController::class);
 
-    Route::get('/countries', [BEOSystemContoller::class, 'countries']);
-    Route::get('/states', [BEOSystemContoller::class, 'states']);
+    Route::get('/countries', [BEOSystemController::class, 'countries']);
+    Route::get('/states', [BEOSystemController::class, 'states']);
 
-    Route::post('/store-beo-employees-to-onboarding', [BEOSystemContoller::class, 'storeBEOEmployeesToOnboarding']);
-    Route::get('/get-all-beo-employees', [BEOSystemContoller::class, 'getBEOEmployees']);
-    Route::get('/get-single-beo-employee/{employee_id}', [BEOSystemContoller::class, 'getSingleBEOEmployee']);
+    Route::post('/store-beo-employees-to-onboarding', [BEOSystemController::class, 'storeBEOEmployeesToOnboarding']);
+    Route::get('/get-all-beo-employees', [BEOSystemController::class, 'getBEOEmployees']);
+    Route::get('/get-single-beo-employee/{employee_id}', [BEOSystemController::class, 'getSingleBEOEmployee']);
     Route::post('/employees/{employee}/assign-buddy-to-employee', [EmployeeController::class, 'assignBuddy']);
     Route::post('/employees/{employee}/assign-pocs-to-employee', [EmployeeController::class, 'assignPocs']);
 });
