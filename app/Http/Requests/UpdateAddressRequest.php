@@ -33,6 +33,7 @@ class UpdateAddressRequest extends FormRequest
             'addresses.*.pin' => ['required', 'string', 'max:255'],
             'addresses.*.duration_of_stay' => ['required', 'string', 'max:255'],
             'addresses.*.type' => ['required', 'in:current,permanent'],
+            'addresses.*.is_present_address_same_as_current' => ['boolean']
         ];
     }
 }
