@@ -18,13 +18,13 @@ class BEOSystemController extends Controller
     private string $firebaseId;
     private const BEO_SYSTEM_LOGIN_SUCCESS_CODE = 104;
     private const BEO_SYSTEM_INVALID_CREDENTIALS_CODE = 102;
-    private const BEO_SYSTEM_LOGIN_API_URL = '/beosystem/api/Login/UserLoginForMobApp?deviceId=9e528a0c-2302-4474-b5be-8bf829b30e5a';
-    private const BEO_SYSTEM_USER_DETAILS_API_URL = '/beosystem/api/Login/UserInfoForMobApp';
-    private const BEO_SYSTEM_CREATE_USER_API_URL = '/beosystem/api/Users/SaveUserDetailsForMobApp';
-    private const BEO_SYSTEM_COUNTRIES_API_URL = '/beosystem/api/Users/GetCountryListForMobApp';
-    private const BEO_SYSTEM_STATES_API_URL = '/beosystem/api/Users/GetStateListForMobApp';
-    private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/beosystem/api/Users/NeccessaryUsersDetailsInfoForMobApp';
-    private const BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL = '/beosystem/api/Users/GetGroupListWithEmployessInfoForMobApp';
+    private const BEO_SYSTEM_LOGIN_API_URL = '/api/Login/UserLoginForMobApp?deviceId=9e528a0c-2302-4474-b5be-8bf829b30e5a';
+    private const BEO_SYSTEM_USER_DETAILS_API_URL = '/api/Login/UserInfoForMobApp';
+    private const BEO_SYSTEM_CREATE_USER_API_URL = '/api/Users/SaveUserDetailsForMobApp';
+    private const BEO_SYSTEM_COUNTRIES_API_URL = '/api/Users/GetCountryListForMobApp';
+    private const BEO_SYSTEM_STATES_API_URL = '/api/Users/GetStateListForMobApp';
+    private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/api/Users/NeccessaryUsersDetailsInfoForMobApp';
+    private const BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL = '/api/Users/GetGroupListWithEmployessInfoForMobApp';
 
     public function __construct()
     {
