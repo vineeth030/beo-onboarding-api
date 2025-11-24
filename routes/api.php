@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\EmploymentController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ClientEmailController;
 use App\Http\Controllers\Api\OfferController;
+use App\Http\Controllers\Api\SalaryComponentController;
 use App\Http\Controllers\OfficeController;
 use App\Models\Office;
 
@@ -67,4 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/get-single-beo-employee/{employee_id}', [BEOSystemController::class, 'getSingleBEOEmployee']);
     Route::post('/employees/{employee}/assign-buddy-to-employee', [EmployeeController::class, 'assignBuddy']);
     Route::post('/employees/{employee}/assign-pocs-to-employee', [EmployeeController::class, 'assignPocs']);
+
+    Route::get('/salary-components', [SalaryComponentController::class, 'index']);
+    Route::post('/salary-components', [SalaryComponentController::class, 'store']);
 });
