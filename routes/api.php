@@ -69,6 +69,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/employees/{employee}/assign-buddy-to-employee', [EmployeeController::class, 'assignBuddy']);
     Route::post('/employees/{employee}/assign-pocs-to-employee', [EmployeeController::class, 'assignPocs']);
 
-    Route::get('/salary-components', [SalaryComponentController::class, 'index']);
+    Route::get('/salary-components', [SalaryComponentController::class, 'show']);
     Route::post('/salary-components', [SalaryComponentController::class, 'store']);
+    Route::put('/salary-components', [SalaryComponentController::class, 'update']);
 });

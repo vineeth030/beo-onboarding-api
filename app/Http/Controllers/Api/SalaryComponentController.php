@@ -14,6 +14,42 @@ class SalaryComponentController extends Controller
         return DB::table('salary_components')->first();
     }
 
+    // $id is set to one since there is only one record.
+    public function show($id = 1)
+    {
+        return DB::table('salary_components')->where('id', $id)->first();
+    }
+
+    public function update(Request $request, $id = 1)
+    {
+        $validator = Validator::make($request->all(), [
+            'basic_percentage' => 'sometimes|numeric',
+            'da_percentage' => 'sometimes|numeric',
+            'hra_percentage' => 'sometimes|numeric',
+            'travel_allowance_percentage' => 'sometimes|numeric',
+            'communication_allowance_threshold' => 'sometimes|numeric',
+            'communication_allowance_amount' => 'sometimes|numeric',
+            'research_allowance_threshold' => 'sometimes|numeric',
+            'research_allowance_amount' => 'sometimes|numeric',
+            'insurance_internal' => 'sometimes|numeric',
+            'insurance_external' => 'sometimes|numeric',
+            'employer_pf_annual' => 'sometimes|numeric'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => 'error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        DB::table('salary_components')->where('id', $id)
+            ->update($validator->validated());
+
+        return DB::table('salary_components')->where('id', $id)->first();
+    }
+
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
