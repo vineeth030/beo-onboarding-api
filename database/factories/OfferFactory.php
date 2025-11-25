@@ -22,7 +22,10 @@ class OfferFactory extends Factory
         $htmlContent = $this->generateOfferLetterHtml();
 
         return [
-            'content' => $htmlContent,
+            'email_attachment_content_for_client' => $htmlContent,
+            'email_content_for_employee' => $htmlContent,
+            'client_emails' => ['c1@cc.com', 'c2@cc.com', 'c3@cc.com'],
+            'beo_emails' => ['b1@cc.com', 'b2@cc.com', 'b3@cc.com'],
             'user_id' => User::factory(),
             'employee_id' => Employee::factory(),
             'client_id' => Client::factory(),

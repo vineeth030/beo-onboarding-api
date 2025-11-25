@@ -13,7 +13,10 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
-            $table->longText('content');
+            $table->longText('email_attachment_content_for_client');
+            $table->longText('email_content_for_employee');
+            $table->json('client_emails')->nullable();
+            $table->json('beo_emails')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('employee_id')->constrained()->onDelete('cascade');
             $table->foreignId('client_id')->constrained()->onDelete('cascade');

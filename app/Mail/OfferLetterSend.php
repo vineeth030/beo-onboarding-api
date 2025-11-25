@@ -18,7 +18,9 @@ class OfferLetterSend extends Mailable
      * Create a new message instance.
      */
     public function __construct(
-        private string $offerLetterFilePath
+        private string $offerLetterFilePath = "",
+        private bool $isClient = false,
+        private string $content = ""
     ){}
 
     /**
@@ -38,19 +40,38 @@ class OfferLetterSend extends Mailable
     {
         return new Content(
             view: 'emails.offers.send',
+            with: [
+                'isClient' => $this->isClient,
+                'content' => $this->content   
+            ],
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment> | null
      */
-    public function attachments(): array
+    public function attachments(): ?array
     {
-        return [
-            Attachment::fromPath($this->offerLetterFilePath)
-                ->withMime('application/pdf')
-        ];
+        if ($this->hasAttachments()) {
+            return [
+                Attachment::fromPath($this->offerLetterFilePath)
+                    ->withMime('application/pdf')
+            ];
+        }
+
+        return null;
+    }
+
+    /**
+     * Check if there are any attachments.
+     *
+     * @return bool
+     */
+    private function hasAttachments(): bool
+    {
+        // Check if the offer letter file path is set
+        return !empty($this->offerLetterFilePath);
     }
 }

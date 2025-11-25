@@ -14,7 +14,10 @@ class Offer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'content',
+        'email_attachment_content_for_client',
+        'email_content_for_employee',
+        'client_emails',
+        'beo_emails',
         'user_id',
         'employee_id',
         'client_id',
@@ -24,6 +27,11 @@ class Offer extends Model
         'is_accepted',
         'is_declined',
         'decline_reason'
+    ];
+
+    protected $casts = [
+        'client_emails' => 'array',
+        'beo_emails' => 'array',
     ];
 
     public function user(): BelongsTo

@@ -22,10 +22,13 @@ class StoreOfferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['required', 'string'],
+            'email_attachment_content_for_client' => ['required', 'string'],
+            'email_content_for_employee' => ['required', 'string'],
             'user_id' => ['required', 'exists:users,id'],
             'employee_id' => ['required', 'exists:employees,id'],
             'client_id' => ['required', 'exists:clients,id'],
+            'client_emails' => ['required', 'array'],
+            'beo_emails' => ['required', 'array']
         ];
     }
 }
