@@ -129,16 +129,16 @@ class OfferController extends Controller
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
-        $offerLetterFileName = $employee_id . '-' . Str::random(8) . '.pdf';
-        $offerLetterFilePath = 'offer-letters/' . $employee_id . '/' . $offerLetterFileName;
+        // $offerLetterFileName = $employee_id . '-' . Str::random(8) . '.pdf';
+        // $offerLetterFilePath = 'offer-letters/' . $employee_id . '/' . $offerLetterFileName;
 
-        Storage::disk('public')->makeDirectory('offer-letters/' . $employee_id);
+        // Storage::disk('public')->makeDirectory('offer-letters/' . $employee_id);
 
-        Browsershot::html($html)
-            ->setNodeBinary(env('NODE_BINARY_PATH'))
-            ->setNpmBinary(env('NPM_BINARY_PATH'))
-            ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
+        // Browsershot::html($html)
+        //     ->setNodeBinary(env('NODE_BINARY_PATH'))
+        //     ->setNpmBinary(env('NPM_BINARY_PATH'))
+        //     ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
 
-        //Mail::to($email)->send(new OfferLetterSend());
+        Mail::to($email)->send(new OfferLetterSend(content: $html));
     }
 }

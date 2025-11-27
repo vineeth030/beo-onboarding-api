@@ -17,8 +17,6 @@
             If you need any clarification or further changes, please feel free to reach out.
         </p>
     @else
-        <p>Hi,</p>
-
         {!! $content !!}
     @endif
 </div>
