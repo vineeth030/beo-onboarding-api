@@ -34,6 +34,8 @@ class Employee extends Model
         'user_id',
         'client_id',
         'office_id',
+        'department_id',
+        'designation_id',
         'first_name',
         'middle_name',
         'last_name',
@@ -147,5 +149,15 @@ class Employee extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function department(): BelongsTo
+    {
+        return $this->belongsTo(Department::class);
+    }
+
+    public function designation(): BelongsTo
+    {
+        return $this->belongsTo(Designation::class);
     }
 }

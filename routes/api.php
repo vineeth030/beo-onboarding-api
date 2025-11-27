@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BEOSystemController;
+use App\Http\Controllers\Api\DepartmentController;
+use App\Http\Controllers\Api\DesignationController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EducationController;
 use App\Http\Controllers\Api\EmployeeController;
@@ -53,6 +55,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::post('/clients/{id}/emails', [ClientEmailController::class, 'store']);
     Route::delete('/client-emails/{id}', [ClientEmailController::class, 'destroy']);
+
+    // Department and Designation routes
+    Route::apiResource('departments', DepartmentController::class);
+    Route::apiResource('designations', DesignationController::class);
 
     Route::get('offices', [OfficeController::class, 'index']);
     Route::get('offices/{office}', [OfficeController::class, 'show']);
