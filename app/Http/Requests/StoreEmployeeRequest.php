@@ -38,7 +38,9 @@ class StoreEmployeeRequest extends FormRequest
             'offer_letter_status' => ['sometimes', 'integer', 'in:0,1,2'],
             'division' => ['sometimes', 'integer', 'in:0,1'],
             'category' => ['sometimes', 'integer'],
-            'joining_date' => ['sometimes', 'string']
+            'joining_date' => ['sometimes', 'string'],
+            'department_id' => ['sometimes', 'integer'],
+            'designation_id' => ['sometimes', 'integer'],
         ];
     }
 }

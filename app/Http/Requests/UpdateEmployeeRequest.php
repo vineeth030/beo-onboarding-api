@@ -48,6 +48,8 @@ class UpdateEmployeeRequest extends FormRequest
             'buddy_id' => ['sometimes', 'integer'],
             'poc_1_id' => ['sometimes', 'integer'],
             'poc_2_id' => ['sometimes', 'integer'],
+            'department_id' => ['sometimes', 'integer'],
+            'designation_id' => ['sometimes', 'integer'],
         ];
     }
 }
