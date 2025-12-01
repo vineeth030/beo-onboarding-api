@@ -39,7 +39,7 @@ class StoreEmployeeRequest extends FormRequest
             'division' => ['sometimes', 'integer', 'in:0,1'],
             'category' => ['sometimes', 'integer'],
             'joining_date' => ['sometimes', 'string'],
-            'department_id' => ['sometimes', 'integer'],
+            'department_id' => ['sometimes', 'nullable', 'integer'],
             'designation_id' => ['sometimes', 'integer'],
         ];
     }

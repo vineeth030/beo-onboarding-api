@@ -125,7 +125,8 @@ class AuthController extends Controller
             'token' => $token,
             'role' => 'admin',
             'user_id' => $user->id,
-            'employee_id' => 0
+            'employee_id' => 0,
+            'userIdCode' => $userIdCode
         ];
     }
 
