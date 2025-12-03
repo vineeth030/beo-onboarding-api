@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Address;
 use App\Models\Document;
 use App\Models\Education;
@@ -39,5 +40,19 @@ class DatabaseSeeder extends Seeder
         });
 
         $this->call(OfferSeeder::class);
+
+        DB::table('salary_components')->insert([
+            'basic_percentage' => 0.45,
+            'da_percentage' => 0.15,
+            'hra_percentage' => 0.1375,    
+            'travel_allowance_percentage' => 0.03,
+            'communication_allowance_threshold' => 40000,
+            'communication_allowance_amount' => 2000,
+            'research_allowance_threshold' => 50000,
+            'research_allowance_amount' => 1000,
+            'insurance_internal' => 5985,    
+            'insurance_external' => 14400,
+            'employer_pf_annual' => 21600
+        ]);
     }
 }

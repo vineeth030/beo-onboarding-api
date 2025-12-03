@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BEOSystemController;
@@ -65,6 +66,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Offers routes
     Route::apiResource('offers', OfferController::class);
+
+    // Activity routes
+    Route::apiResource('activities', ActivityController::class);
 
     Route::get('/countries', [BEOSystemController::class, 'countries']);
     Route::get('/states', [BEOSystemController::class, 'states']);

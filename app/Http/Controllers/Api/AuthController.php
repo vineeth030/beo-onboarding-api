@@ -102,8 +102,6 @@ class AuthController extends Controller
             ];
         }
 
-        Log::info('Designation: ', [$adminDetails['designation']]);
-
         if ($adminDetails['group'] != 'Human Resources') {
             return [
                 'message' => 'Unauthorised access.',
