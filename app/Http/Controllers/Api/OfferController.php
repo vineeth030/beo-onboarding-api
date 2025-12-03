@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
 use App\Mail\OfferLetterSend;
+use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\Offer;
 use Illuminate\Support\Facades\Log;
@@ -39,6 +40,14 @@ class OfferController extends Controller
         $this->sendOfferLetterEmailsToClientAndBeo($emails, $offer->email_attachment_content_for_client, $employee->id);
         $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee, $employee->id);
 
+        Activity::create([
+            'employee_id' => $employee->id,
+            'performed_by_user_id' => auth()->user()->id,
+            'user_type' => 'hr',
+            'type' => 'add.candidate',
+            'title' => 'Offer created for ' . $employee->name . ' by ' . auth()->user()->name,
+        ]);
+
         return response()->json($offer, 201);
     }
 
@@ -70,8 +79,25 @@ class OfferController extends Controller
 
         if ($request->boolean('is_accepted')) {
             $offer->employee()->update(['offer_letter_status' => 2]);
+
+            Activity::create([
+                'employee_id' => $offer->employee->id,
+                'performed_by_user_id' => auth()->user()->id,
+                'user_type' => 'candidate',
+                'type' => 'accept.offer.candidate',
+                'title' => 'Offer accepted by ' . $offer->employee->name,
+            ]);
+
         } elseif ($request->boolean('is_declined')) {
             $offer->employee()->update(['offer_letter_status' => 3]);
+
+            Activity::create([
+                'employee_id' => $offer->employee->id,
+                'performed_by_user_id' => auth()->user()->id,
+                'user_type' => 'candidate',
+                'type' => 'decline.offer.candidate',
+                'title' => 'Offer declined by ' . $offer->employee->name,
+            ]);
         }
 
         $offer->update($offerData);

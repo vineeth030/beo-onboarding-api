@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\AuthenticateWithBEOSystem;
 use App\Http\Controllers\Controller;
+use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -65,6 +66,14 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken($email)->plainTextToken;
+
+        Activity::create([
+            'employee_id' => $user->employee?->id,
+            'performed_by_user_id' => $user->id,
+            'user_type' => 'candidate',
+            'type' => 'candidate.login',
+            'title' => $user->employee?->first_name . ' ' . $user->employee?->last_name . ' logged in successfully.',
+        ]);
 
         return [
             'message' => 'Login successful',

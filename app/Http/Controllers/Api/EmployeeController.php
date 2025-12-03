@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -41,6 +42,14 @@ class EmployeeController extends Controller
             'password' => $randomPassword,
             'client_id' => $request->get('client_id')
         ]);
+
+        Activity::create([
+            'employee_id' => $employeeUser->id,
+            'performed_by_user_id' => auth()->user()->id,
+            'user_type' => 'hr',
+            'type' => 'add.candidate',
+            'title' => 'New candidate ' . $employeeUser->name . ' added by ' . auth()->user()->name,
+        ]);
         
         return response()->json($employee, 201);
     }
@@ -65,6 +74,27 @@ class EmployeeController extends Controller
             $employee->update($request->validated());
         }
 
+        if ($request->has('status') && $request->get('status') == 4) {
+            
+            Activity::create([
+                'employee_id' => $employee->id,
+                'performed_by_user_id' => auth()->user()->id,
+                'user_type' => 'hr',
+                'type' => 'verify.details.candidate',
+                'title' => 'Details of candidate ' . $employee->name . ' verified by ' . auth()->user()->name,
+            ]);
+
+        }else{
+
+            Activity::create([
+                'employee_id' => $employee->id,
+                'performed_by_user_id' => auth()->user()->id,
+                'user_type' => 'hr',
+                'type' => 'update.details.candidate',
+                'title' => 'Details of candidate ' . $employee->name . ' updated by ' . auth()->user()->name,
+            ]);
+        }
+
         return response()->json($employee);
     }
 
@@ -86,6 +116,14 @@ class EmployeeController extends Controller
             'buddy_id' => $request->get('beo_employee_id')
         ]);
 
+        Activity::create([
+            'employee_id' => $employee->id,
+            'performed_by_user_id' => auth()->user()->id,
+            'user_type' => 'hr',
+            'type' => 'assign.buddy.candidate',
+            'title' => 'Assigned buddy to candidate ' . $employee->name . ' by ' . auth()->user()->name,
+        ]);
+
         return response()->json(null, 200);
     }
 
@@ -97,6 +135,14 @@ class EmployeeController extends Controller
         $employee->update([
             'poc_1_id' => $request->get('beo_employee_1_id'),
             'poc_2_id' => $request->get('beo_employee_2_id')
+        ]);
+
+        Activity::create([
+            'employee_id' => $employee->id,
+            'performed_by_user_id' => auth()->user()->id,
+            'user_type' => 'hr',
+            'type' => 'assign.pocs.candidate',
+            'title' => 'Assigned POCs to candidate ' . $employee->name . ' by ' . auth()->user()->name,
         ]);
 
         return response()->json(null, 200);
