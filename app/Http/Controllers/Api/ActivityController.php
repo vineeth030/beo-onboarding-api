@@ -37,7 +37,7 @@ class ActivityController extends Controller
         }
 
         // Order by most recent first
-        $query->orderBy('created_at', 'desc');
+        $query->orderBy('id', 'desc');
 
         $activities = $query->paginate($request->get('per_page', 15));
 
