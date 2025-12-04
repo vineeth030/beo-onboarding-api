@@ -16,35 +16,38 @@ class ReportController extends Controller
             'to_date' => 'sometimes|date'    
         ]);
 
-        $from_date = $request->input('from_date');
-        $to_date = $request->input('to_date');
+        $fromDate = $request->input('from_date');
+        $toDate = $request->input('to_date');
 
         $offerQuery = Offer::query();
         $employeeQuery = Employee::query();
 
-        if ($from_date && $to_date) {
-            $offerQuery->whereBetween('created_at', [$from_date, $to_date]);
-            $employeeQuery->whereBetween('created_at', [$from_date, $to_date]);
+        if ($fromDate && $toDate) {
+            $offerQuery->whereBetween('created_at', [$fromDate, $toDate]);
+            $employeeQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }
 
-        $total_offers = $offerQuery->count();
-        $accepted_offers = (clone $offerQuery)->where('is_accepted', 1)->count();
-        $pending_offers = (clone $offerQuery)->where('is_accepted', 0)->where('is_declined', 0)->count();
-        $declined_offers = (clone $offerQuery)->where('is_declined', 1)->count();
+        $totalOffers = $offerQuery->count();
+        $acceptedOffers = (clone $offerQuery)->where('is_accepted', 1)->count();
+        $pendingOffers = (clone $offerQuery)->where('is_accepted', 0)->where('is_declined', 0)->count();
+        $declinedOffers = (clone $offerQuery)->where('is_declined', 1)->count();
 
-        $background_verification_pending = (clone $employeeQuery)->where('status', 2)->count();
-        $background_verified = (clone $employeeQuery)->where('status', 4)->count();
+        $backgroundVerificationPending = (clone $employeeQuery)->where('status', 2)->count();
+        $backgroundVerified = (clone $employeeQuery)->where('status', 4)->count();
+
+        $candidatesWithPendingFormCompletion = (clone $employeeQuery)->select('id', 'first_name', 'last_name', 'email', 'mobile')->where('status', 2)->get();
 
         return response()->json([
             'message' => 'Success',
             'data' => [
-                'total_offers' => $total_offers,
-                'accepted_offers' => $accepted_offers,
-                'pending_offers' => $pending_offers,
-                'declined_offers' => $declined_offers,
-                'background_verification_pending' => $background_verification_pending,
-                'background_verified' => $background_verified
-            ]
+                'total_offers' => $totalOffers,
+                'accepted_offers' => $acceptedOffers,
+                'pending_offers' => $pendingOffers,
+                'declined_offers' => $declinedOffers,
+                'background_verification_pending' => $backgroundVerificationPending,
+                'background_verified' => $backgroundVerified
+            ],
+            'candidates_with_pending_form_completion' => $candidatesWithPendingFormCompletion
         ], 200);
     }
 }
