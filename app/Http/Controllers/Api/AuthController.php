@@ -67,13 +67,15 @@ class AuthController extends Controller
 
         $token = $user->createToken($email)->plainTextToken;
 
-        Activity::create([
-            'employee_id' => $user->employee?->id,
-            'performed_by_user_id' => $user->id,
-            'user_type' => 'candidate',
-            'type' => 'candidate.login',
-            'title' => $user->employee?->first_name . ' ' . $user->employee?->last_name . ' logged in successfully.',
-        ]);
+        if ($user->role != "superadmin") {
+            Activity::create([
+                'employee_id' => $user->employee?->id,
+                'performed_by_user_id' => $user->id,
+                'user_type' => 'candidate',
+                'type' => 'candidate.login',
+                'title' => $user->employee?->first_name . ' ' . $user->employee?->last_name . ' logged in successfully.',
+            ]);
+        }
 
         return [
             'message' => 'Login successful',

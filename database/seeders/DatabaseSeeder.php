@@ -54,5 +54,7 @@ class DatabaseSeeder extends Seeder
             'insurance_external' => 14400,
             'employer_pf_annual' => 21600
         ]);
+
+        $this->call(ActivitySeeder::class);
     }
 }
