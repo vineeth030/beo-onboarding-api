@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AddressController;
@@ -15,9 +14,9 @@ use App\Http\Controllers\Api\EmploymentController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ClientEmailController;
 use App\Http\Controllers\Api\OfferController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SalaryComponentController;
-use App\Http\Controllers\OfficeController;
-use App\Models\Office;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -61,14 +60,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('departments', DepartmentController::class);
     Route::apiResource('designations', DesignationController::class);
 
-    Route::get('offices', [OfficeController::class, 'index']);
-    Route::get('offices/{office}', [OfficeController::class, 'show']);
+    Route::get('offices', [OfferController::class, 'index']);
+    Route::get('offices/{office}', [OfferController::class, 'show']);
 
     // Offers routes
     Route::apiResource('offers', OfferController::class);
 
     // Activity routes
     Route::apiResource('activities', ActivityController::class);
+
+    Route::get('/reports', [ReportController::class, 'index']);
 
     Route::get('/countries', [BEOSystemController::class, 'countries']);
     Route::get('/states', [BEOSystemController::class, 'states']);
