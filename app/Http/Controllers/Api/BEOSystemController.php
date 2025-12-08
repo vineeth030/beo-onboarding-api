@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreBEOEmployeeRequest;
 use App\Models\BeoEmployee;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -24,6 +25,7 @@ class BEOSystemController extends Controller
     private const BEO_SYSTEM_COUNTRIES_API_URL = '/api/Users/GetCountryListForMobApp';
     private const BEO_SYSTEM_STATES_API_URL = '/api/Users/GetStateListForMobApp';
     private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/api/Users/NeccessaryUsersDetailsInfoForMobApp';
+    private const BEO_SYSTEM_GROUPS_API_URL = '/api/Users/GetGroupListForMobApp';
     private const BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL = '/api/Users/GetGroupListWithEmployessInfoForMobApp';
 
     public function __construct()
@@ -85,9 +87,27 @@ class BEOSystemController extends Controller
         });
     }
 
+    public function groups(string $sessionToken, int $userIdCode) : array {
+
+        return Cache::remember('beo_groups', now()->addMonths(1), function () use ($sessionToken, $userIdCode) {
+
+            $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
+                            ->post(
+                                config('beosystem.base_url') . self::BEO_SYSTEM_GROUPS_API_URL,
+                                ['userIdCode' => $userIdCode]
+                            )->throw();
+
+            if ($response->failed()) {
+                return [null, 'BEO system unavailable. Please try again later.'];
+            }
+
+            return $response->json('group_list');
+        });
+    }
+
     public function designations(string $sessionToken, int $userIdCode) : array {
 
-        return Cache::remember('beo_designations', now()->addMonths(1), function ($sessionToken, $userIdCode) {
+        return Cache::remember('beo_designations', now()->addMonths(1), function () use ($sessionToken, $userIdCode) {
 
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
                             ->post(
@@ -137,11 +157,11 @@ class BEOSystemController extends Controller
     /**
      * Store a newly created employee in storage.
      */
-    public function store($sessionToken): array
+    public function store(StoreBEOEmployeeRequest $request): array
     {
-        $requestBody = $this->prepareStoreUserPayload();
+        $requestBody = $this->prepareStoreUserPayload($request->validated());
 
-        $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
+        $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
                         ->post(config('beosystem.base_url') . self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
 
         if ($response->failed()) {
@@ -222,54 +242,54 @@ class BEOSystemController extends Controller
         ];
     }
     
-    private function prepareStoreUserPayload(){
+    private function prepareStoreUserPayload(StoreBEOEmployeeRequest $request){
 
         return [
-            "userIdCode"=> 198,
-            "editUid" => 0, // Set to zero when creating an employee.
-            "userID"=> "asdasdasd.a",
-            "firstName"=> "abcd",
-            "lastName"=> "a",
-            "fatherName"=> "a",
-            "nationality"=> 100, // BEO Country API
-            "communAddressLine1"=> "communAddressLine1",
-            "communAddressLine2"=> "communAddressLine2",
-            "communAddDistrict"=> "communAddDistrict",
-            "communAddPinCode"=> "communAddPinCode",
-            "communAddstate"=> "communAddstate", // BEO State API
-            "communAddcountry"=> 101, // BEO Country API
-            "mobile"=> "987654321",
-            "landLine"=> "123456",
-            "permntAddSameAsCommun"=> 0,
-            "permntAddressLine1"=> "permntAddressLine1",
-            "permntAddressLine2"=> "permntAddressLine2",
-            "permntAddDistrict"=> "permntAddDistrict",
-            "permntAddpinCode"=> "permntAddpinCode",
-            "permntAddstate"=> "Kerala",
-            "permntAddcountry"=> 102, 
-            "emailId"=> "d.ara@asdasd.mmm",
-            "BEOChat"=> "d.ara@fff.mmm", // Can be empty.
-            "fax"=> "12345678", // Can be empty
-            "password"=> "a",
-            "retypePassword"=> "a",
-            "prfLang"=> "en-GB",
-            "empId"=> 732, // To be entered manually.
-            "dob"=> "",
-            "gender"=> "F",
-            "designation"=> 0, // BEO API
-            "group"=> 3, // BEO API
+            "userIdCode"=> $request->get('user_id_code'),
+            "editUid" => 0,
+            "userID" => $request->get('user_id'),
+            "firstName" => $request->get('first_name'),
+            "lastName" => $request->get('last_name'),
+            "fatherName" => $request->get('father_name'),
+            "country_id" => $request->get('country_id'),
+            "communAddressLine1" => $request->get('communication_address_line_1'),
+            "communAddressLine2"=> $request->get('communication_address_line_2'),
+            "communAddDistrict"=> $request->get('communication_address_district'),
+            "communAddPinCode"=> $request->get('communication_address_pin_code'),
+            "communAddstate"=> $request->get('communication_address_state'),
+            "communAddcountry"=> $request->get('communication_address_country_id'),
+            "mobile"=> $request->get('mobile'),
+            "landLine"=> "",
+            "permntAddSameAsCommun"=> $request->get('permanent_address_same_as_communication'),
+            "permntAddressLine1"=> $request->get('permanent_address_line_1'),
+            "permntAddressLine2"=> $request->get('permanent_address_line_2'),
+            "permntAddDistrict"=> $request->get('permanent_address_district'),
+            "permntAddpinCode"=> $request->get('permanent_address_pin_code'),
+            "permntAddstate"=> $request->get('permanent_address_state'),
+            "permntAddcountry"=> $request->get('permanent_address_country_id'), 
+            "emailId"=> $request->get('email_id'),
+            "BEOChat"=> "",
+            "fax"=> "",
+            "password"=> $request->get('password'),
+            "retypePassword"=> $request->get('confirm_password'),
+            "prfLang"=> $request->get('preferred_language'),
+            "empId"=> $request->get('employee_id'),
+            "dob"=> $request->get('date_of_birth'),
+            "gender"=> $request->get('gender'),
+            "designation"=> $request->get('designation'),
+            "group"=> $request->get('group'),
             "grade"=> 0,
-            "doj"=> "",
+            "doj"=> $request->get('date_of_joining'),
             "noticePeriodStart"=> "",
             "noticePeriodEnd"=> "",
             "relievingDate"=> "",
-            "floorId"=> 0,
+            "floorId"=> $request->get('floor_id'),
             "chkHalfDay"=> false,
             "chkHour"=> false,
             "timeType"=> 0,
-            "bloodGroupId"=> 6,
-            "bloodGroup"=> "O-",
-            "tshirtSize"=> "S",
+            "bloodGroupId"=> $request->get('blood_group_id'),
+            "bloodGroup"=> $request->get('blood_group'),
+            "tshirtSize"=> $request->get('tshirt_size'),
             "weeklyWorkingHour"=> "",
             "assessmentType"=> 0,
             "month"=> 0,
@@ -277,5 +297,61 @@ class BEOSystemController extends Controller
             "sType"=> "Edit",
             "permntWfh"=> 0
         ];
-    } 
+    }
+    
+    /*
+
+    "userIdCode"=> 198,
+    "editUid" => 0, // Set to zero when creating an employee.
+    "userID"=> "asdasdasd.a",
+    "firstName"=> "abcd",
+    "lastName"=> "a",
+    "fatherName"=> "a",
+    "nationality"=> 100, // BEO Country API
+    "communAddressLine1"=> "communAddressLine1",
+    "communAddressLine2"=> "communAddressLine2",
+    "communAddDistrict"=> "communAddDistrict",
+    "communAddPinCode"=> "communAddPinCode",
+    "communAddstate"=> "communAddstate", // BEO State API
+    "communAddcountry"=> 101, // BEO Country API
+    "mobile"=> "987654321",
+    "landLine"=> "123456",
+    "permntAddSameAsCommun"=> 0,
+    "permntAddressLine1"=> "permntAddressLine1",
+    "permntAddressLine2"=> "permntAddressLine2",
+    "permntAddDistrict"=> "permntAddDistrict",
+    "permntAddpinCode"=> "permntAddpinCode",
+    "permntAddstate"=> "Kerala",
+    "permntAddcountry"=> 102, 
+    "emailId"=> "d.ara@asdasd.mmm",
+    "BEOChat"=> "d.ara@fff.mmm", // Can be empty.
+    "fax"=> "12345678", // Can be empty
+    "password"=> "a",
+    "retypePassword"=> "a",
+    "prfLang"=> "en-GB",
+    "empId"=> 732, // To be entered manually.
+    "dob"=> "",
+    "gender"=> "F",
+    "designation"=> 0, // BEO API
+    "group"=> 3, // BEO API
+    "grade"=> 0,
+    "doj"=> "",
+    "noticePeriodStart"=> "",
+    "noticePeriodEnd"=> "",
+    "relievingDate"=> "",
+    "floorId"=> 0,
+    "chkHalfDay"=> false,
+    "chkHour"=> false,
+    "timeType"=> 0,
+    "bloodGroupId"=> 6,
+    "bloodGroup"=> "O-",
+    "tshirtSize"=> "S",
+    "weeklyWorkingHour"=> "",
+    "assessmentType"=> 0,
+    "month"=> 0,
+    "specialTypeUser"=> 0,
+    "sType"=> "Edit",
+    "permntWfh"=> 0
+    */
+    
 }

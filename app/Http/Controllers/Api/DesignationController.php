@@ -6,15 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDesignationRequest;
 use App\Http\Requests\UpdateDesignationRequest;
 use App\Models\Designation;
+use Illuminate\Http\Request;
 
 class DesignationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Designation::orderBy('id', 'desc')->get();
+        $validated = $request->validate([
+            'sessionToken' => 'required|string',
+            'userIdCode'   => 'required|numeric',
+        ]);
+
+        return (new BEOSystemController)->designations($validated['sessionToken'], $validated['userIdCode']);
     }
 
     /**

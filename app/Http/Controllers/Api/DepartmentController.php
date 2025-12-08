@@ -6,15 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Models\Department;
+use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Department::orderBy('id', 'desc')->get();
+        $validated = $request->validate([
+            'sessionToken' => 'required|string',
+            'userIdCode'   => 'required|numeric',
+        ]);
+
+        return (new BEOSystemController)->groups($validated['sessionToken'], $validated['userIdCode']);
     }
 
     /**
