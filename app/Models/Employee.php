@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Notifications\Notifiable;
 
 class Employee extends Model
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
     const STATUS_YET_TO_START = 0;
     const STATUS_STARTED = 1;

@@ -9,8 +9,11 @@ use App\Mail\OfferLetterSend;
 use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\Offer;
+use App\Notifications\OfferCreated;
+use App\Notifications\OfferSendNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Str;
@@ -35,10 +38,12 @@ class OfferController extends Controller
         $employee = Employee::where('id', $request->get('employee_id'))?->first();
         $employee->update(['offer_letter_status' => 1]);
 
-        $emails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
+        $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
-        $this->sendOfferLetterEmailsToClientAndBeo($emails, $offer->email_attachment_content_for_client, $employee->id);
-        $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee, $employee->id);
+        $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee->id);
+        $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
+
+        $employee->notify(new OfferSendNotification());
 
         Activity::create([
             'employee_id' => $employee->id,
@@ -141,7 +146,7 @@ class OfferController extends Controller
         //Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath), true, ""));
     }
 
-    private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent, int $employee_id) {
+    private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent) {
 
         if (is_string($offerLetterEmailContent) && str_starts_with($offerLetterEmailContent, '"')) {
             $offerLetterEmailContent = json_decode($offerLetterEmailContent, true);
@@ -154,16 +159,6 @@ class OfferController extends Controller
         }
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
-
-        // $offerLetterFileName = $employee_id . '-' . Str::random(8) . '.pdf';
-        // $offerLetterFilePath = 'offer-letters/' . $employee_id . '/' . $offerLetterFileName;
-
-        // Storage::disk('public')->makeDirectory('offer-letters/' . $employee_id);
-
-        // Browsershot::html($html)
-        //     ->setNodeBinary(env('NODE_BINARY_PATH'))
-        //     ->setNpmBinary(env('NPM_BINARY_PATH'))
-        //     ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
 
         Mail::to($email)->send(new OfferLetterSend(content: $html));
     }

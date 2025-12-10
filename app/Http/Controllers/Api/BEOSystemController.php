@@ -12,6 +12,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
+use function Illuminate\Log\log;
+
 class BEOSystemController extends Controller
 {
     private string $aesKey;
@@ -159,7 +161,11 @@ class BEOSystemController extends Controller
      */
     public function store(StoreBEOEmployeeRequest $request): array
     {
+        //Log::info('Request: ', [$request->validated()]);
+
         $requestBody = $this->prepareStoreUserPayload($request->validated());
+
+        Log::info('Request body: ', [$requestBody]);
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
                         ->post(config('beosystem.base_url') . self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
@@ -242,54 +248,56 @@ class BEOSystemController extends Controller
         ];
     }
     
-    private function prepareStoreUserPayload(StoreBEOEmployeeRequest $request){
+    private function prepareStoreUserPayload(array $validatedEmployeeDetails){
+
+        Log::info('Request: ', [$validatedEmployeeDetails]);
 
         return [
-            "userIdCode"=> $request->get('user_id_code'),
+            "userIdCode"=> $validatedEmployeeDetails['user_id_code'],
             "editUid" => 0,
-            "userID" => $request->get('user_id'),
-            "firstName" => $request->get('first_name'),
-            "lastName" => $request->get('last_name'),
-            "fatherName" => $request->get('father_name'),
-            "country_id" => $request->get('country_id'),
-            "communAddressLine1" => $request->get('communication_address_line_1'),
-            "communAddressLine2"=> $request->get('communication_address_line_2'),
-            "communAddDistrict"=> $request->get('communication_address_district'),
-            "communAddPinCode"=> $request->get('communication_address_pin_code'),
-            "communAddstate"=> $request->get('communication_address_state'),
-            "communAddcountry"=> $request->get('communication_address_country_id'),
-            "mobile"=> $request->get('mobile'),
+            "userID" => $validatedEmployeeDetails['user_id'],
+            "firstName" => $validatedEmployeeDetails['first_name'],
+            "lastName" => $validatedEmployeeDetails['last_name'],
+            "fatherName" => $validatedEmployeeDetails['father_name'],
+            "country_id" => $validatedEmployeeDetails['country_id'],
+            "communAddressLine1" => $validatedEmployeeDetails['communication_address_line_1'],
+            "communAddressLine2"=> $validatedEmployeeDetails['communication_address_line_2'],
+            "communAddDistrict"=> $validatedEmployeeDetails['communication_address_district'],
+            "communAddPinCode"=> $validatedEmployeeDetails['communication_address_pin_code'],
+            "communAddstate"=> $validatedEmployeeDetails['communication_address_state'],
+            "communAddcountry"=> $validatedEmployeeDetails['communication_address_country_id'],
+            "mobile"=> $validatedEmployeeDetails['mobile'],
             "landLine"=> "",
-            "permntAddSameAsCommun"=> $request->get('permanent_address_same_as_communication'),
-            "permntAddressLine1"=> $request->get('permanent_address_line_1'),
-            "permntAddressLine2"=> $request->get('permanent_address_line_2'),
-            "permntAddDistrict"=> $request->get('permanent_address_district'),
-            "permntAddpinCode"=> $request->get('permanent_address_pin_code'),
-            "permntAddstate"=> $request->get('permanent_address_state'),
-            "permntAddcountry"=> $request->get('permanent_address_country_id'), 
-            "emailId"=> $request->get('email_id'),
+            "permntAddSameAsCommun"=> $validatedEmployeeDetails['permanent_address_same_as_communication'],
+            "permntAddressLine1"=> $validatedEmployeeDetails['permanent_address_line_1'],
+            "permntAddressLine2"=> $validatedEmployeeDetails['permanent_address_line_2'],
+            "permntAddDistrict"=> $validatedEmployeeDetails['permanent_address_district'],
+            "permntAddpinCode"=> $validatedEmployeeDetails['permanent_address_pin_code'],
+            "permntAddstate"=> $validatedEmployeeDetails['permanent_address_state'],
+            "permntAddcountry"=> $validatedEmployeeDetails['permanent_address_country_id'], 
+            "emailId"=> $validatedEmployeeDetails['email_id'],
             "BEOChat"=> "",
             "fax"=> "",
-            "password"=> $request->get('password'),
-            "retypePassword"=> $request->get('confirm_password'),
-            "prfLang"=> $request->get('preferred_language'),
-            "empId"=> $request->get('employee_id'),
-            "dob"=> $request->get('date_of_birth'),
-            "gender"=> $request->get('gender'),
-            "designation"=> $request->get('designation'),
-            "group"=> $request->get('group'),
+            "password"=> $validatedEmployeeDetails['password'],
+            "retypePassword"=> $validatedEmployeeDetails['confirm_password'],
+            "prfLang"=> $validatedEmployeeDetails['preferred_language'],
+            "empId"=> $validatedEmployeeDetails['employee_id'],
+            "dob"=> $validatedEmployeeDetails['date_of_birth'],
+            "gender"=> $validatedEmployeeDetails['gender'],
+            "designation"=> $validatedEmployeeDetails['designation_id'],
+            "group"=> $validatedEmployeeDetails['group_id'],
             "grade"=> 0,
-            "doj"=> $request->get('date_of_joining'),
+            "doj"=> $validatedEmployeeDetails['date_of_joining'],
             "noticePeriodStart"=> "",
             "noticePeriodEnd"=> "",
             "relievingDate"=> "",
-            "floorId"=> $request->get('floor_id'),
+            "floorId"=> $validatedEmployeeDetails['floor_id'],
             "chkHalfDay"=> false,
             "chkHour"=> false,
             "timeType"=> 0,
-            "bloodGroupId"=> $request->get('blood_group_id'),
-            "bloodGroup"=> $request->get('blood_group'),
-            "tshirtSize"=> $request->get('tshirt_size'),
+            "bloodGroupId"=> $validatedEmployeeDetails['blood_group_id'],
+            "bloodGroup"=> $validatedEmployeeDetails['blood_group'],
+            "tshirtSize"=> $validatedEmployeeDetails['t_shirt_size'],
             "weeklyWorkingHour"=> "",
             "assessmentType"=> 0,
             "month"=> 0,
@@ -301,57 +309,57 @@ class BEOSystemController extends Controller
     
     /*
 
-    "userIdCode"=> 198,
-    "editUid" => 0, // Set to zero when creating an employee.
-    "userID"=> "asdasdasd.a",
-    "firstName"=> "abcd",
-    "lastName"=> "a",
-    "fatherName"=> "a",
-    "nationality"=> 100, // BEO Country API
-    "communAddressLine1"=> "communAddressLine1",
-    "communAddressLine2"=> "communAddressLine2",
-    "communAddDistrict"=> "communAddDistrict",
-    "communAddPinCode"=> "communAddPinCode",
-    "communAddstate"=> "communAddstate", // BEO State API
-    "communAddcountry"=> 101, // BEO Country API
-    "mobile"=> "987654321",
-    "landLine"=> "123456",
-    "permntAddSameAsCommun"=> 0,
-    "permntAddressLine1"=> "permntAddressLine1",
-    "permntAddressLine2"=> "permntAddressLine2",
-    "permntAddDistrict"=> "permntAddDistrict",
-    "permntAddpinCode"=> "permntAddpinCode",
-    "permntAddstate"=> "Kerala",
-    "permntAddcountry"=> 102, 
-    "emailId"=> "d.ara@asdasd.mmm",
-    "BEOChat"=> "d.ara@fff.mmm", // Can be empty.
-    "fax"=> "12345678", // Can be empty
-    "password"=> "a",
-    "retypePassword"=> "a",
-    "prfLang"=> "en-GB",
-    "empId"=> 732, // To be entered manually.
-    "dob"=> "",
-    "gender"=> "F",
-    "designation"=> 0, // BEO API
-    "group"=> 3, // BEO API
-    "grade"=> 0,
-    "doj"=> "",
-    "noticePeriodStart"=> "",
-    "noticePeriodEnd"=> "",
-    "relievingDate"=> "",
-    "floorId"=> 0,
-    "chkHalfDay"=> false,
-    "chkHour"=> false,
-    "timeType"=> 0,
-    "bloodGroupId"=> 6,
-    "bloodGroup"=> "O-",
-    "tshirtSize"=> "S",
-    "weeklyWorkingHour"=> "",
-    "assessmentType"=> 0,
-    "month"=> 0,
-    "specialTypeUser"=> 0,
-    "sType"=> "Edit",
-    "permntWfh"=> 0
+    "userIdCode": 198,
+    "editUid": 0, // Set to zero when creating an employee.
+    "userID": "asdasdasd.a",
+    "firstName": "abcd",
+    "lastName": "a",
+    "fatherName": "a",
+    "nationality": 100, // BEO Country API
+    "communAddressLine1": "communAddressLine1",
+    "communAddressLine2": "communAddressLine2",
+    "communAddDistrict": "communAddDistrict",
+    "communAddPinCode": "communAddPinCode",
+    "communAddstate": "communAddstate", // BEO State API
+    "communAddcountry": 101, // BEO Country API
+    "mobile": "987654321",
+    "landLine": "123456",
+    "permntAddSameAsCommun": 0,
+    "permntAddressLine1": "permntAddressLine1",
+    "permntAddressLine2": "permntAddressLine2",
+    "permntAddDistrict": "permntAddDistrict",
+    "permntAddpinCode": "permntAddpinCode",
+    "permntAddstate": "Kerala",
+    "permntAddcountry": 102, 
+    "emailId": "d.ara@asdasd.mmm",
+    "BEOChat": "d.ara@fff.mmm", // Can be empty.
+    "fax": "12345678", // Can be empty
+    "password": "a",
+    "retypePassword": "a",
+    "prfLang": "en-GB",
+    "empId": 732, // To be entered manually.
+    "dob": "",
+    "gender": "F",
+    "designation": 0, // BEO API
+    "group": 3, // BEO API
+    "grade": 0,
+    "doj": "",
+    "noticePeriodStart": "",
+    "noticePeriodEnd": "",
+    "relievingDate": "",
+    "floorId": 0,
+    "chkHalfDay": false,
+    "chkHour": false,
+    "timeType": 0,
+    "bloodGroupId": 6,
+    "bloodGroup": "O-",
+    "tshirtSize": "S",
+    "weeklyWorkingHour": "",
+    "assessmentType": 0,
+    "month": 0,
+    "specialTypeUser": 0,
+    "sType": "Edit",
+    "permntWfh": 0
     */
     
 }
