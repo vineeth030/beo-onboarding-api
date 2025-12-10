@@ -71,6 +71,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/reports', [ReportController::class, 'index']);
 
+    Route::get('/notifications', function(){
+        return auth()->user()->unreadNotifications;
+    });
+
     Route::get('/countries', [BEOSystemController::class, 'countries']);
     Route::get('/states', [BEOSystemController::class, 'states']);
 
