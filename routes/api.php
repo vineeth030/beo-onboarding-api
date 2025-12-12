@@ -13,10 +13,11 @@ use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmploymentController;
 use App\Http\Controllers\Api\ClientController;
 use App\Http\Controllers\Api\ClientEmailController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SalaryComponentController;
-
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,9 +72,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/reports', [ReportController::class, 'index']);
 
-    Route::get('/notifications', function(){
-        return auth()->user()->unreadNotifications;
-    });
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/read-notifications', [NotificationController::class, 'readAll']);
 
     Route::get('/countries', [BEOSystemController::class, 'countries']);
     Route::get('/states', [BEOSystemController::class, 'states']);

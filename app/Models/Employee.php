@@ -11,7 +11,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Employee extends Model
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
     const STATUS_YET_TO_START = 0;
     const STATUS_STARTED = 1;

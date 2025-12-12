@@ -43,7 +43,9 @@ class OfferController extends Controller
         $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee->id);
         $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
 
-        $employee->notify(new OfferSendNotification());
+        //$employee->notify(new OfferSendNotification());
+
+        auth()->user()->notify(new OfferSendNotification());
 
         Activity::create([
             'employee_id' => $employee->id,
@@ -160,6 +162,6 @@ class OfferController extends Controller
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
-        Mail::to($email)->send(new OfferLetterSend(content: $html));
+        //Mail::to($email)->send(new OfferLetterSend(content: $html));
     }
 }

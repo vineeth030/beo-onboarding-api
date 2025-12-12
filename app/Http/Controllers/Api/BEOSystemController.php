@@ -166,9 +166,12 @@ class BEOSystemController extends Controller
         $requestBody = $this->prepareStoreUserPayload($request->validated());
 
         Log::info('Request body: ', [$requestBody]);
+        Log::info('Request flag one session token.' , [$request->get('sessionToken')]);
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
                         ->post(config('beosystem.base_url') . self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
+        
+        Log::info('Request flag two');
 
         if ($response->failed()) {
             return [null, 'BEO system unavailable. Please try again later.'];
@@ -259,7 +262,6 @@ class BEOSystemController extends Controller
             "firstName" => $validatedEmployeeDetails['first_name'],
             "lastName" => $validatedEmployeeDetails['last_name'],
             "fatherName" => $validatedEmployeeDetails['father_name'],
-            "country_id" => $validatedEmployeeDetails['country_id'],
             "communAddressLine1" => $validatedEmployeeDetails['communication_address_line_1'],
             "communAddressLine2"=> $validatedEmployeeDetails['communication_address_line_2'],
             "communAddDistrict"=> $validatedEmployeeDetails['communication_address_district'],
@@ -267,7 +269,7 @@ class BEOSystemController extends Controller
             "communAddstate"=> $validatedEmployeeDetails['communication_address_state'],
             "communAddcountry"=> $validatedEmployeeDetails['communication_address_country_id'],
             "mobile"=> $validatedEmployeeDetails['mobile'],
-            "landLine"=> "",
+            "landLine"=> "123456",
             "permntAddSameAsCommun"=> $validatedEmployeeDetails['permanent_address_same_as_communication'],
             "permntAddressLine1"=> $validatedEmployeeDetails['permanent_address_line_1'],
             "permntAddressLine2"=> $validatedEmployeeDetails['permanent_address_line_2'],
@@ -275,9 +277,10 @@ class BEOSystemController extends Controller
             "permntAddpinCode"=> $validatedEmployeeDetails['permanent_address_pin_code'],
             "permntAddstate"=> $validatedEmployeeDetails['permanent_address_state'],
             "permntAddcountry"=> $validatedEmployeeDetails['permanent_address_country_id'], 
+            "nationality" => $validatedEmployeeDetails['country_id'],
             "emailId"=> $validatedEmployeeDetails['email_id'],
-            "BEOChat"=> "",
-            "fax"=> "",
+            "BEOChat"=> "d.ara@fff.mmm",
+            "fax"=> "12345678",
             "password"=> $validatedEmployeeDetails['password'],
             "retypePassword"=> $validatedEmployeeDetails['confirm_password'],
             "prfLang"=> $validatedEmployeeDetails['preferred_language'],
@@ -302,7 +305,7 @@ class BEOSystemController extends Controller
             "assessmentType"=> 0,
             "month"=> 0,
             "specialTypeUser"=> 0,
-            "sType"=> "Edit",
+            "sType"=> "New",
             "permntWfh"=> 0
         ];
     }
