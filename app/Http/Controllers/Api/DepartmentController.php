@@ -44,6 +44,9 @@ class DepartmentController extends Controller
         $department->update($request->validated());
 
         if ($request->has('emails')) {
+
+            $department->emails()->delete();
+
             $emails = collect($request->input('emails'))->map(function ($email) {
                 return ['email' => $email];
             });
@@ -51,7 +54,7 @@ class DepartmentController extends Controller
             $department->emails()->createMany($emails);
         }
 
-        return response()->json($department);
+        return response()->json($department->with('emails')->first());
     }
 
     /**
