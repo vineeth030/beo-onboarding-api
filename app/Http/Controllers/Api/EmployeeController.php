@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\User;
+use App\Notifications\AssignBuddyNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -116,6 +117,8 @@ class EmployeeController extends Controller
             'buddy_id' => $request->get('beo_employee_id')
         ]);
 
+        $employee->user->notify(new AssignBuddyNotification());
+
         Activity::create([
             'employee_id' => $employee->id,
             'performed_by_user_id' => auth()->user()->id,
@@ -136,6 +139,8 @@ class EmployeeController extends Controller
             'poc_1_id' => $request->get('beo_employee_1_id'),
             'poc_2_id' => $request->get('beo_employee_2_id')
         ]);
+
+        $employee->user->notify(new AssignBuddyNotification());
 
         Activity::create([
             'employee_id' => $employee->id,

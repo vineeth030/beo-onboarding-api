@@ -43,8 +43,6 @@ class OfferController extends Controller
         $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee->id);
         $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
 
-        //$employee->notify(new OfferSendNotification());
-
         $employee->user->notify(new OfferSendNotification());
 
         Activity::create([
