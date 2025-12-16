@@ -23,6 +23,8 @@ class UpdateDepartmentRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'notice_period' => ['sometimes', 'integer', 'min:0'],
+            'emails.*' => ['sometimes','email','max:255'],
         ];
     }
 }

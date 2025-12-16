@@ -24,6 +24,7 @@ class StoreDepartmentRequest extends FormRequest
         return [
             'id' => ['required', 'integer', 'unique:departments'],
             'name' => ['required', 'string', 'max:255'],
+            'notice_period' => ['sometimes', 'integer', 'min:0'],
         ];
     }
 }

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('departments', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->integer('notice_period')->default(3);
             $table->timestamps();
         });
     }
