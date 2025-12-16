@@ -15,7 +15,7 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        return Department::select('id', 'name')->with('emails')->get();
+        return Department::select('id', 'name', 'notice_period')->with('emails')->get();
     }
 
     /**
