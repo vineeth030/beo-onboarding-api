@@ -22,6 +22,7 @@ class StoreDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'id' => ['required', 'integer', 'unique:departments'],
             'name' => ['required', 'string', 'max:255'],
         ];
     }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->json('beo_emails')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('employee_id')->constrained()->onDelete('cascade');
-            $table->foreignId('client_id')->constrained()->onDelete('cascade');
+            $table->foreignId('department_id');
             $table->string('name')->nullable();
             $table->string('comment')->nullable();
             $table->string('sign_file_path')->nullable();

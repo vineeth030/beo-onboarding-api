@@ -27,8 +27,6 @@ class DatabaseSeeder extends Seeder
             'role' => 'superadmin'
         ]);
 
-        $this->call(ClientSeeder::class);
-
         User::factory(10)->create(['role' => 'candidate'])->each(function ($user) {
             Employee::factory()
                 ->has(Address::factory()->state(['type' => 'current']))
@@ -36,7 +34,7 @@ class DatabaseSeeder extends Seeder
                 ->has(Document::factory()->count(3))
                 ->has(Education::factory()->count(2), 'educations')
                 ->has(Employment::factory()->count(2))
-                ->create(['user_id' => $user->id, 'client_id' => rand(1, 9), 'office_id' => rand(1,2), 'email' => $user->email, 'password' => 'password']);
+                ->create(['user_id' => $user->id, 'department_id' => rand(1, 9), 'designation_id' => rand(1, 9), 'office_id' => rand(1,2), 'email' => $user->email, 'password' => 'password']);
         });
 
         $this->call(OfferSeeder::class);

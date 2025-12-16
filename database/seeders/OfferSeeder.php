@@ -28,7 +28,7 @@ class OfferSeeder extends Seeder
                 Offer::factory()->create([
                     'user_id' => $users->random()->id,
                     'employee_id' => $employees->random()->id,
-                    'client_id' => $clients->random()->id,
+                    'department_id' => $clients->random()->id,
                 ]);
             }
         }

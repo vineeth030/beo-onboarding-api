@@ -28,7 +28,7 @@ class OfferFactory extends Factory
             'beo_emails' => ['b1@cc.com', 'b2@cc.com', 'b3@cc.com'],
             'user_id' => User::factory(),
             'employee_id' => Employee::factory(),
-            'client_id' => Client::factory(),
+            'department_id' => rand(1, 9),
         ];
     }
 

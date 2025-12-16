@@ -15,12 +15,7 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        $validated = $request->validate([
-            'sessionToken' => 'required|string',
-            'userIdCode'   => 'required|numeric',
-        ]);
-
-        return (new BEOSystemController)->groups($validated['sessionToken'], $validated['userIdCode']);
+        return Department::select('id', 'name')->with('emails')->get();
     }
 
     /**
@@ -47,6 +42,14 @@ class DepartmentController extends Controller
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
         $department->update($request->validated());
+
+        if ($request->has('emails')) {
+            $emails = collect($request->input('emails'))->map(function ($email) {
+                return ['email' => $email];
+            });
+
+            $department->emails()->createMany($emails);
+        }
 
         return response()->json($department);
     }

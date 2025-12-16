@@ -25,7 +25,7 @@ class UpdateOfferRequest extends FormRequest
             'content' => ['sometimes', 'string'],
             'user_id' => ['sometimes', 'exists:users,id'],
             'employee_id' => ['sometimes', 'exists:employees,id'],
-            'client_id' => ['sometimes', 'exists:clients,id'],
+            'department_id' => ['sometimes', 'exists:clients,id'],
             'name' => ['sometimes'],
             'comment' => ['sometimes'],
             'sign_file_path' => ['sometimes'],

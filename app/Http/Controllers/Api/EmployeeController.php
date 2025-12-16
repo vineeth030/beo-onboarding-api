@@ -40,7 +40,7 @@ class EmployeeController extends Controller
         $employee = Employee::create($request->validated() + [
             'user_id' => $employeeUser->id, 
             'password' => $randomPassword,
-            'client_id' => $request->get('client_id')
+            'department_id' => $request->get('department_id')
         ]);
 
         Activity::create([

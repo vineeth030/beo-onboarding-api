@@ -29,7 +29,7 @@ class UpdateEmployeeRequest extends FormRequest
             'last_name' => ['sometimes', 'required', 'string', 'max:255'],
             'fathers_name' => ['sometimes', 'required', 'string', 'max:255'],
             'file' => ['sometimes', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
-            'client_id' => ['sometimes', 'required'],
+            'department_id' => ['sometimes', 'required'],
             'office_id' => ['sometimes', 'nullable', 'integer'],
             'dob' => ['sometimes', 'required', 'date'],
             'gender' => ['sometimes', 'required', 'string'],

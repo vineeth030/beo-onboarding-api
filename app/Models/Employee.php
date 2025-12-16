@@ -33,7 +33,7 @@ class Employee extends Model
 
     protected $fillable = [
         'user_id',
-        'client_id',
+        'department_id',
         'office_id',
         'department_id',
         'designation_id',

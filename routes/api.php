@@ -81,6 +81,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/register-employees-to-beo-system', [BEOSystemController::class, 'store']);
 
     Route::post('/store-beo-employees-to-onboarding', [BEOSystemController::class, 'storeBEOEmployeesToOnboarding']);
+    Route::post('/store-departments-to-onboarding', [BEOSystemController::class, 'storeDepartmentsToOnboarding']);
+    Route::post('/store-designations-to-onboarding', [BEOSystemController::class, 'storeDesignationsToOnboarding']);
+
     Route::get('/get-all-beo-employees', [BEOSystemController::class, 'getBEOEmployees']);
     Route::get('/get-single-beo-employee/{employee_id}', [BEOSystemController::class, 'getSingleBEOEmployee']);
     Route::post('/employees/{employee}/assign-buddy-to-employee', [EmployeeController::class, 'assignBuddy']);

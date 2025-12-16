@@ -26,7 +26,7 @@ class StoreOfferRequest extends FormRequest
             'email_content_for_employee' => ['required', 'string'],
             'user_id' => ['required', 'exists:users,id'],
             'employee_id' => ['required', 'exists:employees,id'],
-            'client_id' => ['required', 'exists:clients,id'],
+            'department_id' => ['required', 'exists:departments,id'],
             'client_emails' => ['required', 'array'],
             'beo_emails' => ['required', 'array']
         ];

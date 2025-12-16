@@ -25,7 +25,7 @@ class StoreEmployeeRequest extends FormRequest
             'first_name' => ['required', 'string', 'max:255'],
             'middle_name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
-            'client_id' => ['required'],
+            'department_id' => ['required'],
             'office_id' => ['sometimes', 'nullable', 'integer'],
             'dob' => ['sometimes', 'date'],
             'gender' => ['sometimes', 'string'],

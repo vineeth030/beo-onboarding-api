@@ -11,7 +11,7 @@ class Designation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
+        'id', 'name',
     ];
 
     public function employees(): HasMany

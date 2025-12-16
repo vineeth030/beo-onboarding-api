@@ -45,7 +45,7 @@ class OfferController extends Controller
 
         //$employee->notify(new OfferSendNotification());
 
-        auth()->user()->notify(new OfferSendNotification());
+        $employee->user->notify(new OfferSendNotification());
 
         Activity::create([
             'employee_id' => $employee->id,

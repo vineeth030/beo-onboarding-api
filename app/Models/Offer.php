@@ -20,7 +20,7 @@ class Offer extends Model
         'beo_emails',
         'user_id',
         'employee_id',
-        'client_id',
+        'department_id',
         'name',
         'comment',
         'sign_file_path',

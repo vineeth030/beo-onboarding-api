@@ -15,12 +15,7 @@ class DesignationController extends Controller
      */
     public function index(Request $request)
     {
-        $validated = $request->validate([
-            'sessionToken' => 'required|string',
-            'userIdCode'   => 'required|numeric',
-        ]);
-
-        return (new BEOSystemController)->designations($validated['sessionToken'], $validated['userIdCode']);
+        return response()->json(Designation::select('id', 'name')->get());
     }
 
     /**
@@ -38,7 +33,7 @@ class DesignationController extends Controller
      */
     public function show(Designation $designation)
     {
-        return $designation;
+        return $designation->load('emails');
     }
 
     /**
@@ -56,6 +51,7 @@ class DesignationController extends Controller
      */
     public function destroy(Designation $designation)
     {
+        $designation->emails()->delete();
         $designation->delete();
 
         return response()->json(null, 204);

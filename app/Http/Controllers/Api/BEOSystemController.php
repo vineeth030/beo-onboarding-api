@@ -7,10 +7,15 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBEOEmployeeRequest;
+use App\Http\Requests\StoreDepartmentRequest;
 use App\Models\BeoEmployee;
+use App\Models\Department;
+use App\Models\Designation;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 use function Illuminate\Log\log;
 
@@ -89,6 +94,9 @@ class BEOSystemController extends Controller
         });
     }
 
+    /**
+     * This method is not used at the moment.
+     */
     public function groups(string $sessionToken, int $userIdCode) : array {
 
         return Cache::remember('beo_groups', now()->addMonths(1), function () use ($sessionToken, $userIdCode) {
@@ -107,6 +115,9 @@ class BEOSystemController extends Controller
         });
     }
 
+    /**
+     * This method is not used at the moment.
+     */
     public function designations(string $sessionToken, int $userIdCode) : array {
 
         return Cache::remember('beo_designations', now()->addMonths(1), function () use ($sessionToken, $userIdCode) {
@@ -227,6 +238,71 @@ class BEOSystemController extends Controller
         // When BEO System API session is expired, make the onboarding app logout.
         
         return ['message' => 'success', 'code' => 200];
+    }
+
+    public function storeDesignationsToOnboarding(Request $request) : JsonResponse {
+
+        $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
+                            ->post(
+                                config('beosystem.base_url') . self::BEO_SYSTEM_DESIGNATIONS_API_URL,
+                                ['userIdCode' => $request->get('userIdCode')]
+                            )->throw();
+
+        if ($response->failed()) {
+            return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 500]);
+        }
+
+        if ($response->json()['status'] == 120) {
+            return response()->json(['message' => 'BEO System session token expired.', 'code' => 500]);
+        }
+
+        if ($response->json()['status'] == 119) {
+            return response()->json(['message' => 'BEO System invalid session token.', 'code' => 500]);
+        }
+
+        $designationsFromBEOSystem = $response->json('AUserNeccesaryDesigList_lists');
+
+        Schema::disableForeignKeyConstraints();
+        DB::table('designations')->truncate();
+        Schema::enableForeignKeyConstraints();
+
+        foreach ($designationsFromBEOSystem as $designation) {
+            Designation::create([
+                'id' => $designation['dId'],
+                'name' => $designation['designation']
+            ]);
+        }
+
+        return response()->json(['message' => 'success', 'code' => 200]);
+    }
+
+
+    public function storeDepartmentsToOnboarding(Request $request) : JsonResponse {
+
+        $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
+                            ->post(
+                                config('beosystem.base_url') . self::BEO_SYSTEM_GROUPS_API_URL,
+                                ['userIdCode' => $request->get('userIdCode')]
+                            )->throw();
+
+        if ($response->failed()) {
+            return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 500]);
+        }
+
+        $departmentsFromBEOSystem = $response->json('group_list');
+
+        Schema::disableForeignKeyConstraints();
+        DB::table('departments')->truncate();
+        Schema::enableForeignKeyConstraints();
+
+        foreach ($departmentsFromBEOSystem as $department) {
+            Department::create([
+                'id' => $department['group_id'],
+                'name' => $department['group_name']
+            ]);
+        }
+
+        return response()->json(['message' => 'success', 'code' => 200]);
     }
 
     public function getBEOEmployees() : Collection {
