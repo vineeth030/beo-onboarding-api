@@ -143,7 +143,7 @@ class OfferController extends Controller
             ->setNpmBinary(env('NPM_BINARY_PATH'))
             ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
 
-        //Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath), true, ""));
+        Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath), true, ""));
     }
 
     private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent) {
@@ -160,6 +160,6 @@ class OfferController extends Controller
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
-        //Mail::to($email)->send(new OfferLetterSend(content: $html));
+        Mail::to($email)->send(new OfferLetterSend(content: $html));
     }
 }

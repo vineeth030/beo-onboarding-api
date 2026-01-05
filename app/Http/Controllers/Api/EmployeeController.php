@@ -9,6 +9,10 @@ use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\User;
 use App\Notifications\AssignBuddyNotification;
+use App\Notifications\AssignPocNotification;
+use App\Notifications\DateOfJoiningChangeApprovedNotification;
+use App\Notifications\DateOfJoiningChangeRejectedNotification;
+use App\Notifications\DateOfJoiningChangeRequestedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -75,7 +79,36 @@ class EmployeeController extends Controller
             $employee->update($request->validated());
         }
 
-        if ($request->has('status') && $request->get('status') == 4) {
+        if($request->has('is_joining_date_update_approved')){
+            
+            if ($request->has('is_joining_date_update_approved') && auth()->user()->role != 'candidate') {
+                
+                $request->get('is_joining_date_update_approved') == 1  ? 
+                $employee->user->notify(new DateOfJoiningChangeApprovedNotification($updatedDateOfJoining = $request->get('updated_joining_date')))  : 
+                    $employee->user->notify(new DateOfJoiningChangeRejectedNotification($updatedDateOfJoining = $request->get('updated_joining_date')));
+            }
+
+            if ($request->has('requested_joining_date') && 
+                     is_null($request->get('is_joining_date_update_approved')) && 
+                            auth()->user()->role == 'candidate') {
+
+                $admins = User::where('role', 'admin')->get();
+
+                foreach ($admins as $key => $admin) {
+
+                    $admin->notify(new DateOfJoiningChangeRequestedNotification(
+                        $requestedDateOfJoining = $request->get('requested_joining_date'),
+                        $requestedEmployeeName = auth()->user()->name
+                    ));
+
+                    
+                }
+            }
+            
+        }
+    
+
+        if ($request->has('status') && $request->get('status') == 4 && auth()->user()->role != 'candidate') {
             
             Activity::create([
                 'employee_id' => $employee->id,
@@ -85,8 +118,10 @@ class EmployeeController extends Controller
                 'title' => 'Details of candidate ' . $employee->name . ' verified by ' . auth()->user()->name,
             ]);
 
-        }else{
+        }
 
+        if ($request->has('status') && $request->get('status') != 4) {
+            
             Activity::create([
                 'employee_id' => $employee->id,
                 'performed_by_user_id' => auth()->user()->id,
@@ -140,7 +175,7 @@ class EmployeeController extends Controller
             'poc_2_id' => $request->get('beo_employee_2_id')
         ]);
 
-        $employee->user->notify(new AssignBuddyNotification());
+        $employee->user->notify(new AssignPocNotification());
 
         Activity::create([
             'employee_id' => $employee->id,

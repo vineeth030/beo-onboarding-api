@@ -40,6 +40,7 @@ return new class extends Migration
             $table->boolean('is_pre_joining_completed')->default(0);
             $table->boolean('is_joining_date_update_approved')->nullable()->default(null);
             $table->date('updated_joining_date')->nullable();
+            $table->date('requested_joining_date')->nullable();
             $table->boolean('is_open')->default(0);
             $table->integer('buddy_id')->nullable();
             $table->integer('poc_1_id')->nullable();

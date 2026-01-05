@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DateOfJoiningChangeApprovedNotification extends Notification
+class DateOfJoiningChangeRejectedNotification extends Notification
 {
     use Queueable;
 
@@ -26,14 +26,14 @@ class DateOfJoiningChangeApprovedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['mail', 'database'];
     }
-
+    
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Date of joining changed approved.',
-            'message' => 'Date of joining changed approved!',
+            'title' => 'Date of joining changed rejected.',
+            'message' => 'Date of joining changed rejected!',
             'employee_id' => $notifiable->id
         ];
     }
@@ -44,9 +44,9 @@ class DateOfJoiningChangeApprovedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Date of Joining Change Request - Approved')
+            ->subject('Date of Joining Change Request - Rejected')
             ->greeting('Hi,')
-            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
+            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been rejected by the HR team.")
             ->line('Please contact the HR team for more information.')
             ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
     }

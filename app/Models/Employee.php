@@ -60,6 +60,7 @@ class Employee extends Model
         'is_pre_joining_completed',
         'is_joining_date_update_approved',
         'updated_joining_date',
+        'requested_joining_date',
         'is_open',
         'buddy_id',
         'poc_1_id',
