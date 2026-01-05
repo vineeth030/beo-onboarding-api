@@ -39,10 +39,10 @@ class DateOfJoiningChangeRequestedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Request to change Date of Joining from candidate')
-            ->greeting('Hi,')
+            ->greeting("Date of Joining change request")
             ->line("There has been a request from candidate named $this->requestedEmployeeName to change the Date of Joining to $this->requestedDateOfJoining.")
             ->line('Please contact the candidate for more information.')
-            ->salutation('Thanks,' . PHP_EOL . 'BEO Software');
+            ->salutation('Thanks');
     }
 
     public function toDatabase($notifiable)
