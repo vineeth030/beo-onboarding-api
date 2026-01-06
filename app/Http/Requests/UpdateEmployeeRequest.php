@@ -46,7 +46,7 @@ class UpdateEmployeeRequest extends FormRequest
             'is_verified' => ['sometimes','boolean'],
             'is_open' => ['sometimes','boolean'],
             'is_pre_joining_completed' => ['sometimes','boolean'],
-            'is_joining_date_update_approved' => ['sometimes', 'integer'],
+            'is_joining_date_update_approved' => ['sometimes', 'nullable', 'integer'],
             'updated_joining_date' => ['sometimes', 'date'],
             'requested_joining_date' => ['sometimes', 'nullable', 'date'],
             'buddy_id' => ['sometimes', 'integer'],
