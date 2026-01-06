@@ -14,7 +14,7 @@ class DateOfJoiningChangeRejectedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $updatedDateOfJoining)
+    public function __construct()
     {
         //
     }
@@ -46,7 +46,7 @@ class DateOfJoiningChangeRejectedNotification extends Notification
         return (new MailMessage)
             ->subject('Date of Joining Change Request - Rejected')
             ->greeting('Hi,')
-            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been rejected by the HR team.")
+            ->line("Your request to change the Date of Joining has been rejected by the HR team.")
             ->line('Please contact the HR team for more information.')
             ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
     }

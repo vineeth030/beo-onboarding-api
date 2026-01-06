@@ -85,7 +85,7 @@ class EmployeeController extends Controller
                 
                 $request->get('is_joining_date_update_approved') == 1  ? 
                 $employee->user->notify(new DateOfJoiningChangeApprovedNotification($updatedDateOfJoining = $request->get('updated_joining_date')))  : 
-                    $employee->user->notify(new DateOfJoiningChangeRejectedNotification($updatedDateOfJoining = $request->get('updated_joining_date')));
+                    $employee->user->notify(new DateOfJoiningChangeRejectedNotification());
             }
 
             if ($request->has('requested_joining_date') && 
@@ -100,8 +100,6 @@ class EmployeeController extends Controller
                         $requestedDateOfJoining = $request->get('requested_joining_date'),
                         $requestedEmployeeName = auth()->user()->name
                     ));
-
-                    
                 }
             }
             
