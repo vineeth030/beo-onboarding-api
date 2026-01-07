@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Employee\ApproveJoiningDateChangeAction;
+use App\Actions\Employee\RequestJoiningDateChangeAction;
+use App\Actions\Employee\UpdateEmployeeAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
@@ -15,6 +18,7 @@ use App\Notifications\DateOfJoiningChangeRejectedNotification;
 use App\Notifications\DateOfJoiningChangeRequestedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
@@ -70,66 +74,44 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateEmployeeRequest $request, Employee $employee)
+    public function update(UpdateEmployeeRequest $request, Employee $employee, UpdateEmployeeAction $updateEmployeeAction)
     {
-        if ($request->hasFile('file')) {
-            $path = $request->file('file')->store("documents/{$employee->id}", 'public');
-            $employee->update($request->validated() + ['photo_path' => '/storage/' . $path]);
-        }else{
-            $employee->update($request->validated());
+        $dataForEmployeeUpdate = Arr::except(
+            $request->validated(),
+            [
+                'is_joining_date_update_approved',
+                'updated_joining_date',
+                'requested_joining_date'
+            ]
+        );
+
+        $updatedEmployee = $updateEmployeeAction->execute(
+            employee: $employee,
+            data: $dataForEmployeeUpdate,
+            file: $request->file('file')
+        );
+
+        if (
+            $request->has('is_joining_date_update_approved') &&
+            auth()->user()->role !== 'candidate'
+        ) {
+            app(ApproveJoiningDateChangeAction::class)->execute(
+                employee: $employee,
+                isJoiningDateUpdateApproved: $request->is_joining_date_update_approved,
+                updatedJoiningDate: $request->updated_joining_date
+            );
         }
 
-        if($request->has('is_joining_date_update_approved')){
-            
-            if ($request->has('is_joining_date_update_approved') && auth()->user()->role != 'candidate') {
-                
-                $request->get('is_joining_date_update_approved') == 1  ? 
-                $employee->user->notify(new DateOfJoiningChangeApprovedNotification($updatedDateOfJoining = $request->get('updated_joining_date')))  : 
-                    $employee->user->notify(new DateOfJoiningChangeRejectedNotification());
-            }
-
-            if ($request->has('requested_joining_date') && 
+        if ($request->has('requested_joining_date') && 
                      is_null($request->get('is_joining_date_update_approved')) && 
                             auth()->user()->role == 'candidate') {
-
-                $admins = User::where('role', 'admin')->get();
-
-                foreach ($admins as $key => $admin) {
-
-                    $admin->notify(new DateOfJoiningChangeRequestedNotification(
-                        $requestedDateOfJoining = $request->get('requested_joining_date'),
-                        $requestedEmployeeName = auth()->user()->name
-                    ));
-                }
-            }
-            
-        }
-    
-
-        if ($request->has('status') && $request->get('status') == 4 && auth()->user()->role != 'candidate') {
-            
-            Activity::create([
-                'employee_id' => $employee->id,
-                'performed_by_user_id' => auth()->user()->id,
-                'user_type' => 'hr',
-                'type' => 'verify.details.candidate',
-                'title' => 'Details of candidate ' . $employee->name . ' verified by ' . auth()->user()->name,
-            ]);
-
+            app(RequestJoiningDateChangeAction::class)->execute(
+                employee: $employee,
+                requestedJoiningDate: $request->requested_joining_date
+            );
         }
 
-        if ($request->has('status') && $request->get('status') != 4) {
-            
-            Activity::create([
-                'employee_id' => $employee->id,
-                'performed_by_user_id' => auth()->user()->id,
-                'user_type' => 'hr',
-                'type' => 'update.details.candidate',
-                'title' => 'Details of candidate ' . $employee->name . ' updated by ' . auth()->user()->name,
-            ]);
-        }
-
-        return response()->json($employee);
+        return response()->json($updatedEmployee);
     }
 
     /**
