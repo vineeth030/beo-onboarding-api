@@ -25,7 +25,7 @@ class UpdateEmployeeAction
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'update.details.candidate',
-            'title' => ($data['status'] != 4) ? 
+            'title' => (($data['status'] ?? null) != 4) ? 
                             'Details of candidate ' . $employee->name . ' updated by ' . auth()->user()->name : 
                             'Details of candidate ' . $employee->name . ' verified by ' . auth()->user()->name,
         ]);
