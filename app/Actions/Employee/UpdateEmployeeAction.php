@@ -5,7 +5,6 @@ namespace App\Actions\Employee;
 use App\Models\Activity;
 use App\Models\Employee;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Auth;
 
 class UpdateEmployeeAction
 {

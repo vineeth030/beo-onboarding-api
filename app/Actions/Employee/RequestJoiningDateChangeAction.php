@@ -4,8 +4,6 @@ namespace App\Actions\Employee;
 
 use App\Models\Employee;
 use App\Models\User;
-use App\Notifications\DateOfJoiningChangeApprovedNotification;
-use App\Notifications\DateOfJoiningChangeRejectedNotification;
 use App\Notifications\DateOfJoiningChangeRequestedNotification;
 
 class RequestJoiningDateChangeAction

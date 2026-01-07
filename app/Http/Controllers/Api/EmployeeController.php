@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Actions\Employee\ApproveJoiningDateChangeAction;
+use App\Actions\Employee\BackgroundVerificationFormResubmittedAction;
+use App\Actions\Employee\BackgroundVerificationFormSubmittedAction;
+use App\Actions\Employee\BackgroundVerificationReopenedAction;
 use App\Actions\Employee\RequestJoiningDateChangeAction;
 use App\Actions\Employee\UpdateEmployeeAction;
 use App\Http\Controllers\Controller;
@@ -78,23 +81,27 @@ class EmployeeController extends Controller
     {
         $dataForEmployeeUpdate = Arr::except(
             $request->validated(),
-            [
-                'is_joining_date_update_approved',
-                'updated_joining_date',
-                'requested_joining_date'
-            ]
+            ['is_joining_date_update_approved','updated_joining_date','requested_joining_date', 'is_open']
         );
 
         $updatedEmployee = $updateEmployeeAction->execute(
-            employee: $employee,
-            data: $dataForEmployeeUpdate,
-            file: $request->file('file')
+            employee: $employee, data: $dataForEmployeeUpdate, file: $request->file('file')
         );
 
-        if (
-            $request->has('is_joining_date_update_approved') &&
-            auth()->user()->role !== 'candidate'
-        ) {
+        if ($request->has('status') && $request->status == 2 && auth()->user()->role == 'candidate') {
+            app(BackgroundVerificationFormSubmittedAction::class)->execute(employee: $employee);
+        }
+
+        if ($request->has('is_background_verification_form_resubmitted') 
+            && $request->is_background_verification_form_resubmitted == 1 && auth()->user()->role == 'candidate') {
+            app(BackgroundVerificationFormResubmittedAction::class)->execute(employee: $employee);
+        }
+
+        if ($request->has('is_open') && $request->is_open && auth()->user()->role !== 'candidate') {
+            app(BackgroundVerificationReopenedAction::class)->execute(employee: $employee);
+        }
+
+        if ($request->has('is_joining_date_update_approved') && auth()->user()->role !== 'candidate') {
             app(ApproveJoiningDateChangeAction::class)->execute(
                 employee: $employee,
                 isJoiningDateUpdateApproved: $request->is_joining_date_update_approved,
@@ -102,9 +109,7 @@ class EmployeeController extends Controller
             );
         }
 
-        if ($request->has('requested_joining_date') && 
-                     is_null($request->get('is_joining_date_update_approved')) && 
-                            auth()->user()->role == 'candidate') {
+        if ($request->has('requested_joining_date') && is_null($request->get('is_joining_date_update_approved')) && auth()->user()->role == 'candidate') {
             app(RequestJoiningDateChangeAction::class)->execute(
                 employee: $employee,
                 requestedJoiningDate: $request->requested_joining_date

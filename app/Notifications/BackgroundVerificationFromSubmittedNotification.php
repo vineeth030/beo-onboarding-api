@@ -7,14 +7,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DateOfJoiningChangeApprovedNotification extends Notification
+class BackgroundVerificationFromSubmittedNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $updatedDateOfJoining)
+    public function __construct(public string $employeeName)
     {
         //
     }
@@ -29,26 +29,26 @@ class DateOfJoiningChangeApprovedNotification extends Notification
         return ['database', 'mail'];
     }
 
-    public function toDatabase($notifiable)
-    {
-        return [
-            'title' => 'Date of joining changed approved.',
-            'message' => 'Date of joining changed approved!',
-            'employee_id' => $notifiable->id
-        ];
-    }
-
     /**
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Date of Joining Change Request - Approved')
-            ->line('Hi,')
-            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
-            ->line('Please contact the HR team for more information.')
-            ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
+            ->subject('Background Verification Form - Submitted')
+            //->greeting("Date of Joining change request")
+            ->line("Background verification form has been submitted by $this->employeeName.")
+            ->line('Please contact the candidate for more information.')
+            ->salutation('Thanks');
+    }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'title' => "Background verification form has been submitted by $this->employeeName.",
+            'message' => "Background verification form has been submitted by $this->employeeName.",
+            'employee_id' => $notifiable->id
+        ];
     }
 
     /**

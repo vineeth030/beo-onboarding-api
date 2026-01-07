@@ -7,14 +7,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DateOfJoiningChangeApprovedNotification extends Notification
+class BackgroundVerificationReopenedNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $updatedDateOfJoining)
+    public function __construct(public string $employeeName)
     {
         //
     }
@@ -32,8 +32,8 @@ class DateOfJoiningChangeApprovedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Date of joining changed approved.',
-            'message' => 'Date of joining changed approved!',
+            'title' => "Backgroud verification form has been reopened.",
+            'message' => "Backgroud verification form has been reopened.",
             'employee_id' => $notifiable->id
         ];
     }
@@ -44,11 +44,16 @@ class DateOfJoiningChangeApprovedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Date of Joining Change Request - Approved')
-            ->line('Hi,')
-            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
+            ->subject('Background Verification Form - Reopened')
+            //->greeting('Hi,')
+            ->line("Hi $this->employeeName,")
+            ->line("Backgroud verification form has been reopened to make changes.")
             ->line('Please contact the HR team for more information.')
-            ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
+            ->line('')
+            ->line('')
+            ->line('Thanks,')
+            ->line('HR Team')
+            ->line('BEO Software');
     }
 
     /**

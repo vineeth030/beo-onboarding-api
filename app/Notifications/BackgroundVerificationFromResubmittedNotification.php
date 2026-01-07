@@ -7,14 +7,14 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class DateOfJoiningChangeApprovedNotification extends Notification
+class BackgroundVerificationFromResubmittedNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $updatedDateOfJoining)
+    public function __construct(public string $employeeName)
     {
         //
     }
@@ -26,16 +26,7 @@ class DateOfJoiningChangeApprovedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
-    }
-
-    public function toDatabase($notifiable)
-    {
-        return [
-            'title' => 'Date of joining changed approved.',
-            'message' => 'Date of joining changed approved!',
-            'employee_id' => $notifiable->id
-        ];
+        return ['database','mail'];
     }
 
     /**
@@ -44,11 +35,20 @@ class DateOfJoiningChangeApprovedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Date of Joining Change Request - Approved')
-            ->line('Hi,')
-            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
-            ->line('Please contact the HR team for more information.')
-            ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
+            ->subject('Background Verification Form - Resubmitted')
+            //->greeting("Date of Joining change request")
+            ->line("Background verification form has been resubmitted by $this->employeeName.")
+            ->line('Please contact the candidate for more information.')
+            ->salutation('Thanks');
+    }
+
+    public function toDatabase($notifiable)
+    {
+        return [
+            'title' => "Background verification form has been resubmitted by $this->employeeName.",
+            'message' => "Background verification form has been resubmitted by $this->employeeName.",
+            'employee_id' => $notifiable->id
+        ];
     }
 
     /**
