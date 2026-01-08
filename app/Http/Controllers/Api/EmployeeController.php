@@ -6,6 +6,7 @@ use App\Actions\Employee\ApproveJoiningDateChangeAction;
 use App\Actions\Employee\BackgroundVerificationFormResubmittedAction;
 use App\Actions\Employee\BackgroundVerificationFormSubmittedAction;
 use App\Actions\Employee\BackgroundVerificationReopenedAction;
+use App\Actions\Employee\DayOneTicketAssignedAction;
 use App\Actions\Employee\PreJoiningFormDownloadedNotificationAction;
 use App\Actions\Employee\RequestJoiningDateChangeAction;
 use App\Actions\Employee\UpdateEmployeeAction;
@@ -116,6 +117,10 @@ class EmployeeController extends Controller
 
         if($request->has('is_pre_joining_form_downloaded') && $request->get('is_pre_joining_form_downloaded')) {
             app(PreJoiningFormDownloadedNotificationAction::class)->execute(employee: $employee);
+        }
+
+        if($request->has('is_day_one_ticket_assigned') && $request->get('is_day_one_ticket_assigned')) {
+            app(DayOneTicketAssignedAction::class)->execute(employee: $employee);
         }
 
         return response()->json($updatedEmployee);
