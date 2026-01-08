@@ -27,7 +27,7 @@ class DayOneTicketAssignedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return ['database', 'mail'];
     }
 
     /**
@@ -37,7 +37,8 @@ class DayOneTicketAssignedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Day one ticket assigned')
-            ->line('Hi,')
+            ->greeting(' ')
+            ->line("Hi {$this->employee->first_name},")
             ->line("A day one ticket has been assigned to you. Please login to the portal and check the day one ticket.")
             ->line('Please contact the HR team for more information.')
             ->line('')
@@ -45,7 +46,7 @@ class DayOneTicketAssignedNotification extends Notification
             ->line('Thanks,')
             ->line('HR Team')
             ->line('BEO Software')
-            ->salutation('');
+            ->salutation(' ');
     }
 
     public function toDatabase($notifiable)

@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('mobile')->unique();
             $table->string('photo_path')->nullable();
-            $table->string('blood_group')->nullable();
+            $table->integer('blood_group')->nullable();
             $table->string('joining_date')->nullable(); //Kept as string after insistance from the HR team.
             $table->integer('status')->default(0);
             $table->integer('offer_letter_status')->default(0);

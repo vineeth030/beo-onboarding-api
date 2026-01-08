@@ -57,7 +57,7 @@ class Employee extends Model
         'division',
         'category',
         'is_verified',
-        'is_pre_joining_completed',
+        'is_pre_joining_form_downloaded',
         'is_joining_date_update_approved',
         'updated_joining_date',
         'requested_joining_date',

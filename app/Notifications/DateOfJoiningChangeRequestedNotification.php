@@ -47,7 +47,7 @@ class DateOfJoiningChangeRequestedNotification extends Notification
             ->line('Thanks,')
             ->line('HR Team')
             ->line('BEO Software')
-            ->salutation('');
+            ->salutation(' ');
     }
 
     public function toDatabase($notifiable)

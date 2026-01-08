@@ -45,6 +45,7 @@ class DateOfJoiningChangeApprovedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Date of Joining Change Request - Approved')
+            ->greeting(' ')
             ->line('Hi,')
             ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
             ->line('Please contact the HR team for more information.')
@@ -53,7 +54,7 @@ class DateOfJoiningChangeApprovedNotification extends Notification
             ->line('Thanks,')
             ->line('HR Team')
             ->line('BEO Software')
-            ->salutation('');
+            ->salutation(' ');
     }
 
     /**

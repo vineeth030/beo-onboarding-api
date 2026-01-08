@@ -36,7 +36,7 @@ class BackgroundVerificationFromResubmittedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Background Verification Form - Resubmitted')
-            ->greeting("")
+            ->greeting(" ")
             ->line("Background verification form has been resubmitted by $this->employeeName.")
             ->line('Please contact the candidate for more information.')
             ->line('')
@@ -44,7 +44,7 @@ class BackgroundVerificationFromResubmittedNotification extends Notification
             ->line('Thanks,')
             ->line('HR Team')
             ->line('BEO Software')
-            ->salutation('');
+            ->salutation(' ');
     }
 
     public function toDatabase($notifiable)
