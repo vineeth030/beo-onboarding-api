@@ -42,7 +42,12 @@ class DateOfJoiningChangeRequestedNotification extends Notification
             ->greeting("Date of Joining change request")
             ->line("There has been a request from candidate named $this->requestedEmployeeName to change the Date of Joining to $this->requestedDateOfJoining.")
             ->line('Please contact the candidate for more information.')
-            ->salutation('Thanks');
+            ->line('')
+            ->line('')
+            ->line('Thanks,')
+            ->line('HR Team')
+            ->line('BEO Software')
+            ->salutation('');
     }
 
     public function toDatabase($notifiable)

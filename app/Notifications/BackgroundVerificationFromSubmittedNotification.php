@@ -36,10 +36,15 @@ class BackgroundVerificationFromSubmittedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Background Verification Form - Submitted')
-            //->greeting("Date of Joining change request")
+            ->greeting("")
             ->line("Background verification form has been submitted by $this->employeeName.")
             ->line('Please contact the candidate for more information.')
-            ->salutation('Thanks');
+            ->line('')
+            ->line('')
+            ->line('Thanks,')
+            ->line('HR Team')
+            ->line('BEO Software')
+            ->salutation('');
     }
 
     public function toDatabase($notifiable)

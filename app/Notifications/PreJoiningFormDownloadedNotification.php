@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BackgroundVerificationFromResubmittedNotification extends Notification
+class PreJoiningFormDownloadedNotification extends Notification
 {
     use Queueable;
 
@@ -26,32 +26,22 @@ class BackgroundVerificationFromResubmittedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database','mail'];
+        return ['database'];
     }
 
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    public function toMail(object $notifiable)
     {
-        return (new MailMessage)
-            ->subject('Background Verification Form - Resubmitted')
-            ->greeting("")
-            ->line("Background verification form has been resubmitted by $this->employeeName.")
-            ->line('Please contact the candidate for more information.')
-            ->line('')
-            ->line('')
-            ->line('Thanks,')
-            ->line('HR Team')
-            ->line('BEO Software')
-            ->salutation('');
+        //
     }
 
     public function toDatabase($notifiable)
     {
         return [
-            'title' => "Background verification form has been resubmitted by $this->employeeName.",
-            'message' => "Background verification form has been resubmitted by $this->employeeName.",
+            'title' => 'Prejoining form downloaded.',
+            'message' => "Prejoining form downloaded by $this->employeeName",
             'employee_id' => $notifiable->id
         ];
     }

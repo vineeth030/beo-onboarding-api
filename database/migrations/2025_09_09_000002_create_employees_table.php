@@ -37,7 +37,7 @@ return new class extends Migration
             $table->integer('division')->default(0);
             $table->integer('category')->default(0);
             $table->boolean('is_verified')->default(0);
-            $table->boolean('is_pre_joining_completed')->default(0);
+            $table->boolean('is_pre_joining_form_downloaded')->default(0);
             $table->boolean('is_joining_date_update_approved')->nullable()->default(null);
             $table->date('updated_joining_date')->nullable();
             $table->date('requested_joining_date')->nullable();

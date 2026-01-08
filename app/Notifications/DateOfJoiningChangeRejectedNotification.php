@@ -45,10 +45,16 @@ class DateOfJoiningChangeRejectedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Date of Joining Change Request - Rejected')
-            ->greeting('Hi,')
+            ->greeting('')
+            ->line('Hi,')
             ->line("Your request to change the Date of Joining has been rejected by the HR team.")
             ->line('Please contact the HR team for more information.')
-            ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
+            ->line('')
+            ->line('')
+            ->line('Thanks,')
+            ->line('HR Team')
+            ->line('BEO Software')
+            ->salutation('');
     }
 
     /**

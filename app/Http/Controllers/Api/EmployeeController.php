@@ -6,6 +6,7 @@ use App\Actions\Employee\ApproveJoiningDateChangeAction;
 use App\Actions\Employee\BackgroundVerificationFormResubmittedAction;
 use App\Actions\Employee\BackgroundVerificationFormSubmittedAction;
 use App\Actions\Employee\BackgroundVerificationReopenedAction;
+use App\Actions\Employee\PreJoiningFormDownloadedNotificationAction;
 use App\Actions\Employee\RequestJoiningDateChangeAction;
 use App\Actions\Employee\UpdateEmployeeAction;
 use App\Http\Controllers\Controller;
@@ -16,9 +17,6 @@ use App\Models\Employee;
 use App\Models\User;
 use App\Notifications\AssignBuddyNotification;
 use App\Notifications\AssignPocNotification;
-use App\Notifications\DateOfJoiningChangeApprovedNotification;
-use App\Notifications\DateOfJoiningChangeRejectedNotification;
-use App\Notifications\DateOfJoiningChangeRequestedNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -81,7 +79,8 @@ class EmployeeController extends Controller
     {
         $dataForEmployeeUpdate = Arr::except(
             $request->validated(),
-            ['is_joining_date_update_approved','updated_joining_date','requested_joining_date', 'is_open']
+            ['is_joining_date_update_approved','updated_joining_date','requested_joining_date', 
+            'is_open', 'is_pre_joining_form_downloaded']
         );
 
         $updatedEmployee = $updateEmployeeAction->execute(
@@ -113,6 +112,10 @@ class EmployeeController extends Controller
                 employee: $employee,
                 requestedJoiningDate: $request->requested_joining_date
             );
+        }
+
+        if($request->has('is_pre_joining_form_downloaded') && $request->get('is_pre_joining_form_downloaded')) {
+            app(PreJoiningFormDownloadedNotificationAction::class)->execute(employee: $employee);
         }
 
         return response()->json($updatedEmployee);

@@ -48,7 +48,12 @@ class DateOfJoiningChangeApprovedNotification extends Notification
             ->line('Hi,')
             ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
             ->line('Please contact the HR team for more information.')
-            ->salutation('Thanks,' . PHP_EOL . 'HR Team' . PHP_EOL . 'BEO Software');
+            ->line('')
+            ->line('')
+            ->line('Thanks,')
+            ->line('HR Team')
+            ->line('BEO Software')
+            ->salutation('');
     }
 
     /**
