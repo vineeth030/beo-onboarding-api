@@ -92,8 +92,7 @@ class EmployeeController extends Controller
             app(BackgroundVerificationFormSubmittedAction::class)->execute(employee: $employee);
         }
 
-        if ($request->has('is_background_verification_form_resubmitted') 
-            && $request->is_background_verification_form_resubmitted == 1 && auth()->user()->role == 'candidate') {
+        if ($employee->is_open == 1 && auth()->user()->role == 'candidate') {
             app(BackgroundVerificationFormResubmittedAction::class)->execute(employee: $employee);
         }
 
