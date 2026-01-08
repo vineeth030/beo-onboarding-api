@@ -29,7 +29,7 @@ class EmployeeFactory extends Factory
             'email' => $this->faker->unique()->safeEmail,
             'mobile' => $this->faker->unique()->phoneNumber,
             'photo_path' => null,
-            'blood_group' => $this->faker->randomElement(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+            'blood_group' => $this->faker->randomElement([0,1,2,3,4,5,6,7]),
             'status' => $this->faker->randomElement([0, 1, 2, 3, 4]),
             'offer_letter_status' => 0, //$this->faker->randomElement([0, 1, 2]),
         ];
