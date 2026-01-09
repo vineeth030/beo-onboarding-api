@@ -40,7 +40,8 @@ class OfferController extends Controller
 
         $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
-        $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee->id);
+        $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, 
+                                                        $employee->id, $employee->first_name . ' ' . $employee->last_name);
         $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
 
         $employee->user->notify(new OfferSendNotification());
@@ -119,7 +120,7 @@ class OfferController extends Controller
         return response()->json(null, 204);
     }
 
-    private function sendOfferLetterEmailsToClientAndBeo(array $emails, string $emailAttachmentContent, int $employee_id) {
+    private function sendOfferLetterEmailsToClientAndBeo(array $emails, string $emailAttachmentContent, int $employee_id, string $employeeName) {
 
         if (is_string($emailAttachmentContent) && str_starts_with($emailAttachmentContent, '"')) {
             $offerLetterEmailContent = json_decode($emailAttachmentContent, true);
@@ -143,7 +144,8 @@ class OfferController extends Controller
             ->setNpmBinary(env('NPM_BINARY_PATH'))
             ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
 
-        Mail::to($emails)->send(new OfferLetterSend(storage_path('app/public/' . $offerLetterFilePath), true, ""));
+        Mail::to($emails)->send(new OfferLetterSend(
+            offerLetterFilePath: storage_path('app/public/' . $offerLetterFilePath), isClient: true, content:"",employeeName: $employeeName));
     }
 
     private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent) {

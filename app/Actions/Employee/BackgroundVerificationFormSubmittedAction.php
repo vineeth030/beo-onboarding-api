@@ -6,7 +6,6 @@ use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\User;
 use App\Notifications\BackgroundVerificationFromSubmittedNotification;
-use App\Notifications\BackgroundVerificationReopenedNotification;
 
 class BackgroundVerificationFormSubmittedAction
 {

@@ -20,7 +20,8 @@ class OfferLetterSend extends Mailable
     public function __construct(
         private string $offerLetterFilePath = "",
         private bool $isClient = false,
-        private string $content = ""
+        private string $content = "",
+        public ?string $employeeName = null
     ){}
 
     /**
@@ -42,7 +43,8 @@ class OfferLetterSend extends Mailable
             view: 'emails.offers.send',
             with: [
                 'isClient' => $this->isClient,
-                'content' => $this->content   
+                'content' => $this->content,
+                'employeeName' => $this->employeeName   
             ],
         );
     }
