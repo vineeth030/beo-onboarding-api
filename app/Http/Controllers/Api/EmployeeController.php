@@ -104,7 +104,8 @@ class EmployeeController extends Controller
             app(ApproveJoiningDateChangeAction::class)->execute(
                 employee: $employee,
                 isJoiningDateUpdateApproved: $request->is_joining_date_update_approved,
-                updatedJoiningDate: $request->updated_joining_date
+                updatedJoiningDate: $request->updated_joining_date,
+                requestedJoiningDate: $request->requested_joining_date
             );
         }
 

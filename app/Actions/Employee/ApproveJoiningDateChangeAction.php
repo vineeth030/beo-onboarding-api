@@ -9,14 +9,8 @@ use App\Notifications\DateOfJoiningChangeRejectedNotification;
 
 class ApproveJoiningDateChangeAction
 {
-    public function execute(Employee $employee, bool $isJoiningDateUpdateApproved, ?string $updatedJoiningDate = null): void
+    public function execute(Employee $employee, bool $isJoiningDateUpdateApproved, ?string $updatedJoiningDate = null, ?string $requestedJoiningDate = null): void
     {
-        $employee->update([
-            'is_joining_date_update_approved' => $isJoiningDateUpdateApproved,
-            'updated_joining_date' => $updatedJoiningDate,
-            'requested_joining_date' => null,
-        ]);
-
         if ($isJoiningDateUpdateApproved) {
 
             $employee->user->notify(
@@ -24,6 +18,12 @@ class ApproveJoiningDateChangeAction
                     employeeName: $employee->first_name . ' ' . $employee->last_name,
                     updatedDateOfJoining: $updatedJoiningDate)
             );
+
+            $employee->update([
+                'is_joining_date_update_approved' => $isJoiningDateUpdateApproved,
+                'updated_joining_date' => $updatedJoiningDate,
+                'requested_joining_date' => null,
+            ]);
 
             Activity::create([
                 'employee_id' => $employee->id,
@@ -40,6 +40,12 @@ class ApproveJoiningDateChangeAction
                     requestedDateOfJoining: $updatedJoiningDate
                 )
             );
+
+            $employee->update([
+                'is_joining_date_update_approved' => $isJoiningDateUpdateApproved,
+                'updated_joining_date' => null,
+                'requested_joining_date' => null,
+            ]);
 
             Activity::create([
                 'employee_id' => $employee->id,
