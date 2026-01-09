@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class BackgroundVerificationReopenedNotification extends Notification
 {
@@ -52,7 +53,7 @@ class BackgroundVerificationReopenedNotification extends Notification
             ->line('If you have any questions, please contact the HR team.')
             ->line('')
             ->line('')
-            ->line("Thanks,\nHR Team\nBEO Software")
+            ->line(new HtmlString('Thanks,<br>HR Team<br>BEO Software'))
             ->salutation(' ');
     }
 

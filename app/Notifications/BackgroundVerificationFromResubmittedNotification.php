@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class BackgroundVerificationFromResubmittedNotification extends Notification
 {
@@ -42,7 +43,7 @@ class BackgroundVerificationFromResubmittedNotification extends Notification
             ->line('Please log in to the onboarding portal to review the updated information and continue the verification process.')
             ->line('')
             ->line('')
-            ->line("Thanks,\nBEO ONBOARDING")
+            ->line(new HtmlString('Thanks,<br>BEO ONBOARDING'))
             ->salutation(' ');
     }
 

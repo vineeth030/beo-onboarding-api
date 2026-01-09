@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\HtmlString;
 
 class DateOfJoiningChangeRequestedNotification extends Notification
 {
@@ -45,7 +46,7 @@ class DateOfJoiningChangeRequestedNotification extends Notification
             ->line('Please log in to the onboarding portal to review the request and take the necessary action.')
             ->line('')
             ->line('')
-            ->line("Thanks,\nBEO ONBOARDING")
+            ->line(new HtmlString('Thanks,<br>BEO ONBOARDING'))
             ->salutation(' ');
     }
 
