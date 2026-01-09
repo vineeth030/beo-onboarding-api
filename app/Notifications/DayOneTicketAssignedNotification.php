@@ -15,7 +15,7 @@ class DayOneTicketAssignedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public Employee $employee)
+    public function __construct(public string $employeeName)
     {
         //
     }
@@ -36,16 +36,15 @@ class DayOneTicketAssignedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Day one ticket assigned')
+            ->subject('Day One Ticket Assigned')
             ->greeting(' ')
-            ->line("Hi {$this->employee->first_name},")
-            ->line("A day one ticket has been assigned to you. Please login to the portal and check the day one ticket.")
-            ->line('Please contact the HR team for more information.')
+            ->line("Hi $this->employeeName,")
+            ->line("A day one ticket has been assigned to you.")
+            ->line('Please log in to the onboarding portal to view the ticket details.')
+            ->line('If you have any questions, please contact the HR team.')
             ->line('')
             ->line('')
-            ->line('Thanks,')
-            ->line('HR Team')
-            ->line('BEO Software')
+            ->line("Thanks,\nHR Team\nBEO Software")
             ->salutation(' ');
     }
 

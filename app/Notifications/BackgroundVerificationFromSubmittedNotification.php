@@ -35,15 +35,14 @@ class BackgroundVerificationFromSubmittedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Background Verification Form - Submitted')
+            ->subject("Background Verification Form Submitted by $this->employeeName")
             ->greeting(" ")
-            ->line("Background verification form has been submitted by $this->employeeName.")
-            ->line('Please contact the candidate for more information.')
+            ->line("Hi Team")
+            ->line("The candidate, $this->employeeName has successfully submitted the background verification form.")
+            ->line('Please log in to the onboarding portal to review the submitted details and proceed with the next steps.')
             ->line('')
             ->line('')
-            ->line('Thanks,')
-            ->line('HR Team')
-            ->line('BEO Software')
+            ->line("Thanks,\nBEO ONBOARDING")
             ->salutation(' ');
     }
 

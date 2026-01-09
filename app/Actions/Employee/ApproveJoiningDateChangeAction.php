@@ -20,7 +20,9 @@ class ApproveJoiningDateChangeAction
         if ($isJoiningDateUpdateApproved) {
 
             $employee->user->notify(
-                new DateOfJoiningChangeApprovedNotification($updatedJoiningDate)
+                new DateOfJoiningChangeApprovedNotification(
+                    employeeName: $employee->first_name . ' ' . $employee->last_name,
+                    updatedDateOfJoining: $updatedJoiningDate)
             );
 
             Activity::create([
@@ -33,7 +35,10 @@ class ApproveJoiningDateChangeAction
 
         } else {
             $employee->user->notify(
-                new DateOfJoiningChangeRejectedNotification()
+                new DateOfJoiningChangeRejectedNotification(
+                    employeeName: $employee->first_name . ' ' . $employee->last_name,
+                    requestedDateOfJoining: $updatedJoiningDate
+                )
             );
 
             Activity::create([

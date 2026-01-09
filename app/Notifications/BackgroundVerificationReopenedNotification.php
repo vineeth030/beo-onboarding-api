@@ -33,7 +33,7 @@ class BackgroundVerificationReopenedNotification extends Notification
     {
         return [
             'title' => "Backgroud verification form has been reopened.",
-            'message' => "Backgroud verification form has been reopened.",
+            'message' => "Backgroud verification form has been reopened for updates.",
             'employee_id' => $notifiable->id
         ];
     }
@@ -47,13 +47,12 @@ class BackgroundVerificationReopenedNotification extends Notification
             ->subject('Background Verification Form - Reopened')
             ->greeting(' ')
             ->line("Hi $this->employeeName,")
-            ->line("Backgroud verification form has been reopened to make changes.")
-            ->line('Please contact the HR team for more information.')
+            ->line("Your background verification form has been reopened for updates.")
+            ->line('Please log in to the onboarding portal and resubmit the form with the required changes.')
+            ->line('If you have any questions, please contact the HR team.')
             ->line('')
             ->line('')
-            ->line('Thanks,')
-            ->line('HR Team')
-            ->line('BEO Software')
+            ->line("Thanks,\nHR Team\nBEO Software")
             ->salutation(' ');
     }
 

@@ -13,11 +13,11 @@
                     <table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:6px;overflow:hidden;">
                         
                         <!-- Header -->
-                        <tr>
+                        <!-- <tr>
                             <td style="background:#2563eb;color:#ffffff;padding:20px 30px;">
                                 <h2 style="margin:0;font-size:20px;">{{ config('app.name') }}</h2>
                             </td>
-                        </tr>
+                        </tr> -->
 
                         <!-- Content -->
                         <tr>
@@ -41,7 +41,7 @@
 
                                 <p>
                                     Thanks,<br>
-                                    <strong>{{ config('app.name') }} Team</strong>
+                                    {{ config('app.name') }}
                                 </p>
                             </td>
                         </tr>

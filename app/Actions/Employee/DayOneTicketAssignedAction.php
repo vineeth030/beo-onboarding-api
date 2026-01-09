@@ -15,7 +15,7 @@ class DayOneTicketAssignedAction
         $employee->update(['is_day_one_ticket_assigned' => 1]);
 
         $employee->user->notify( 
-            new DayOneTicketAssignedNotification(employee: $employee) 
+            new DayOneTicketAssignedNotification(employeeName: $employee->first_name . ' ' . $employee->last_name) 
         );
 
         Activity::create([

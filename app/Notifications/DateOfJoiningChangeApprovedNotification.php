@@ -14,7 +14,7 @@ class DateOfJoiningChangeApprovedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $updatedDateOfJoining)
+    public function __construct(public string $employeeName, public string $updatedDateOfJoining)
     {
         //
     }
@@ -46,14 +46,12 @@ class DateOfJoiningChangeApprovedNotification extends Notification
         return (new MailMessage)
             ->subject('Date of Joining Change Request - Approved')
             ->greeting(' ')
-            ->line('Hi,')
-            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved by the HR team.")
-            ->line('Please contact the HR team for more information.')
+            ->line("Hi $this->employeeName,")
+            ->line("Your request to change the Date of Joining to $this->updatedDateOfJoining has been approved.")
+            ->line('If you have any questions, feel free to contact the HR team.')
             ->line('')
             ->line('')
-            ->line('Thanks,')
-            ->line('HR Team')
-            ->line('BEO Software')
+            ->line("Thanks,\nHR Team\nBEO Software")
             ->salutation(' ');
     }
 
