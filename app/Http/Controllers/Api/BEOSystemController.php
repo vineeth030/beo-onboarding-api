@@ -11,6 +11,7 @@ use App\Http\Requests\StoreDepartmentRequest;
 use App\Models\BeoEmployee;
 use App\Models\Department;
 use App\Models\Designation;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -352,12 +353,12 @@ class BEOSystemController extends Controller
             "retypePassword"=> $validatedEmployeeDetails['confirm_password'],
             "prfLang"=> $validatedEmployeeDetails['preferred_language'],
             "empId"=> $validatedEmployeeDetails['employee_id'],
-            "dob"=> "",$validatedEmployeeDetails['date_of_birth'],
+            "dob"=> Carbon::parse('d-m-Y', $validatedEmployeeDetails['date_of_birth'])->timestamp * 1000,
             "gender"=> $validatedEmployeeDetails['gender'],
             "designation"=> $validatedEmployeeDetails['designation_id'],
             "group"=> $validatedEmployeeDetails['group_id'],
             "grade"=> 0,
-            "doj"=> "",$validatedEmployeeDetails['date_of_joining'],
+            "doj"=> Carbon::parse('d-m-Y', $validatedEmployeeDetails['date_of_joining'])->timestamp * 1000,
             "noticePeriodStart"=> "",
             "noticePeriodEnd"=> "",
             "relievingDate"=> "",
