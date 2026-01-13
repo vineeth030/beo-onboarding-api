@@ -170,33 +170,26 @@ class BEOSystemController extends Controller
     /**
      * Store a newly created employee in storage.
      */
-    public function store(StoreBEOEmployeeRequest $request): array
+    public function store(StoreBEOEmployeeRequest $request): JsonResponse
     {
-        //Log::info('Request: ', [$request->validated()]);
-
         $requestBody = $this->prepareStoreUserPayload($request->validated());
-
-        Log::info('Request body: ', [$requestBody]);
-        Log::info('Request flag one session token.' , [$request->get('sessionToken')]);
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
                         ->post(config('beosystem.base_url') . self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
-        
-        Log::info('Request flag two');
 
         if ($response->failed()) {
-            return [null, 'BEO system unavailable. Please try again later.'];
+            return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 503]);
         }
 
         $data = $response->json();
 
         if (($data['status'] ?? null) != 200) {
-            return [null,'Internal Server Error'];
+            return response()->json([
+                'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status']
+            ]);
         }
 
-        return [
-            'message' => 'New employee created successfully.' 
-        ];
+        return response()->json(['message' => 'New employee created successfully.', 'code' => 200]);
     }
 
     /**
@@ -329,8 +322,6 @@ class BEOSystemController extends Controller
     
     private function prepareStoreUserPayload(array $validatedEmployeeDetails){
 
-        Log::info('Request: ', [$validatedEmployeeDetails]);
-
         return [
             "userIdCode"=> $validatedEmployeeDetails['user_id_code'],
             "editUid" => 0,
@@ -345,7 +336,7 @@ class BEOSystemController extends Controller
             "communAddstate"=> $validatedEmployeeDetails['communication_address_state'],
             "communAddcountry"=> $validatedEmployeeDetails['communication_address_country_id'],
             "mobile"=> $validatedEmployeeDetails['mobile'],
-            "landLine"=> "123456",
+            "landLine"=> "",
             "permntAddSameAsCommun"=> $validatedEmployeeDetails['permanent_address_same_as_communication'],
             "permntAddressLine1"=> $validatedEmployeeDetails['permanent_address_line_1'],
             "permntAddressLine2"=> $validatedEmployeeDetails['permanent_address_line_2'],
@@ -361,12 +352,12 @@ class BEOSystemController extends Controller
             "retypePassword"=> $validatedEmployeeDetails['confirm_password'],
             "prfLang"=> $validatedEmployeeDetails['preferred_language'],
             "empId"=> $validatedEmployeeDetails['employee_id'],
-            "dob"=> $validatedEmployeeDetails['date_of_birth'],
+            "dob"=> "",$validatedEmployeeDetails['date_of_birth'],
             "gender"=> $validatedEmployeeDetails['gender'],
             "designation"=> $validatedEmployeeDetails['designation_id'],
             "group"=> $validatedEmployeeDetails['group_id'],
             "grade"=> 0,
-            "doj"=> $validatedEmployeeDetails['date_of_joining'],
+            "doj"=> "",$validatedEmployeeDetails['date_of_joining'],
             "noticePeriodStart"=> "",
             "noticePeriodEnd"=> "",
             "relievingDate"=> "",
