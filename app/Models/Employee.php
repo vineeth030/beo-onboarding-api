@@ -59,6 +59,7 @@ class Employee extends Model
         'is_verified',
         'is_pre_joining_form_downloaded',
         'is_joining_date_update_approved',
+        'is_onboarded',
         'updated_joining_date',
         'requested_joining_date',
         'is_open',
