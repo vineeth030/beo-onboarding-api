@@ -246,13 +246,13 @@ class BEOSystemController extends Controller
             return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 500]);
         }
 
-        // if ($response->json()['status'] == 120) {
-        //     return response()->json(['message' => 'BEO System session token expired.', 'code' => 500]);
-        // }
+        if ($response->json()['status'] == 120) {
+            return response()->json(['message' => 'BEO System session token expired.', 'code' => 500]);
+        }
 
-        // if ($response->json()['status'] == 119) {
-        //     return response()->json(['message' => 'BEO System invalid session token.', 'code' => 500]);
-        // }
+        if ($response->json()['status'] == 119) {
+            return response()->json(['message' => 'BEO System invalid session token.', 'code' => 500]);
+        }
 
         $designationsFromBEOSystem = $response->json('AUserNeccesaryDesigList_lists');
 
