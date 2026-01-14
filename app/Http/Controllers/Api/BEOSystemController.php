@@ -35,6 +35,7 @@ class BEOSystemController extends Controller
     private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/api/Users/NeccessaryUsersDetailsInfoForMobApp';
     private const BEO_SYSTEM_GROUPS_API_URL = '/api/Users/GetGroupListForMobApp';
     private const BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL = '/api/Users/GetGroupListWithEmployessInfoForMobApp';
+    private const BEO_SYSTEM_SINGLE_EMPLOYEE_DETAILS_API_URL = '/api/Users/GetUserEditDetailsForMobApp';
 
     public function __construct()
     {
@@ -191,6 +192,35 @@ class BEOSystemController extends Controller
         }
 
         return response()->json(['message' => 'New employee created successfully.', 'code' => 200]);
+    }
+
+    public function show(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'sessionToken' => ['required', 'string'],
+            'user_id_code_of_hr' => ['required', 'integer'],
+            'employee_id' => ['required', 'integer'],
+        ]);
+
+        $response = Http::withOptions(['query' => ['sessionToken' => $validated['sessionToken']]])
+                        ->post(
+                            config('beosystem.base_url') . self::BEO_SYSTEM_SINGLE_EMPLOYEE_DETAILS_API_URL, 
+                            ['userIdCode' => $validated['user_id_code'], 'userEditId' => $validated['employee_id']]
+                        )->throw();
+
+        if ($response->failed()) {
+            return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 503]);
+        }
+
+        $data = $response->json();
+
+        if (($data['status'] ?? null) != 200) {
+            return response()->json([
+                'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status']
+            ]);
+        }
+
+        return response()->json(['data' => $data, 'code' => 200]);
     }
 
     /**
