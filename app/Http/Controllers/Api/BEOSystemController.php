@@ -205,7 +205,7 @@ class BEOSystemController extends Controller
         $response = Http::withOptions(['query' => ['sessionToken' => $validated['sessionToken']]])
                         ->post(
                             config('beosystem.base_url') . self::BEO_SYSTEM_SINGLE_EMPLOYEE_DETAILS_API_URL, 
-                            ['userIdCode' => $validated['user_id_code'], 'userEditId' => $validated['employee_id']]
+                            ['userIdCode' => $validated['user_id_code_of_hr'], 'userEditId' => $validated['employee_id']]
                         )->throw();
 
         if ($response->failed()) {
