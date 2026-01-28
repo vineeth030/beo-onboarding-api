@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Employee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -21,7 +22,7 @@ class OfferLetterSend extends Mailable
         private string $offerLetterFilePath = "",
         private bool $isClient = false,
         private string $content = "",
-        public ?string $employeeName = null
+        public ?Employee $employee
     ){}
 
     /**
@@ -44,7 +45,7 @@ class OfferLetterSend extends Mailable
             with: [
                 'isClient' => $this->isClient,
                 'content' => $this->content,
-                'employeeName' => $this->employeeName   
+                'employee' => $this->employee
             ],
         );
     }

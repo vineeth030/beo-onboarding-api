@@ -22,26 +22,29 @@
                         <!-- Content -->
                         <tr>
                             <td style="padding:30px;color:#333333;">
-                                <p>Hi,</p>
+                                <p>Hello,</p>
 
                                 <p>
-                                    We would like to inform you that the offer letter for
-                                    the candidate, {{ $employeeName }} has been successfully generated.
+                                    We would like to inform you that the offer letter for the candidate, {{ $employee->first_name . ' ' . $employee->last_name }} for the position of {{ $employee->designation->name }} has been sent.
                                 </p>
 
                                 <p>
-                                    All relevant details regarding the offer — including compensation, joining date,
-                                    and terms of employment — have been included in the attached document.
+                                    All relevant details regarding compensation and employment terms are included in the attached document.
                                 </p>
 
-                                <p>
-                                    Kindly review the attachment at your convenience.<br>
-                                    If you need any clarification or further changes, please feel free to reach out.
-                                </p>
+                                @if (str_contains($employee->joining_date, 'month'))
+                                    <p>
+                                        The candidate is expected to join "{{ $employee->joining_date }}" from today. However, you will be notified of the exact date once the candidate accepts the offer.
+                                    </p>    
+                                    @else
+                                    <p>
+                                        The candidate is expected to join {{ $employee->joining_date }}
+                                    </p>
+                                @endif
 
                                 <p>
                                     Thanks,<br>
-                                    {{ config('app.name') }}
+                                    BEO HR Team
                                 </p>
                             </td>
                         </tr>
