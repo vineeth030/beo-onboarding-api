@@ -35,7 +35,6 @@ class Employee extends Model
         'user_id',
         'department_id',
         'office_id',
-        'department_id',
         'designation_id',
         'first_name',
         'middle_name',
@@ -74,6 +73,8 @@ class Employee extends Model
         'division' => 'integer',
         'category' => 'integer',
     ];
+
+    protected $appends = ['full_name'];
 
     public function getStatusLabelAttribute()
     {
@@ -115,6 +116,11 @@ class Employee extends Model
             self::CATEGORY_INTERN => 'INTERN',
             default => 'unknown',
         };
+    }
+
+    public function getFullNameAttribute(): string
+    {
+        return trim("{$this->first_name} {$this->last_name}");
     }
 
     public function client(): HasOne

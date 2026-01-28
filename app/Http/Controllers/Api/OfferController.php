@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Offer\AcceptOfferAction;
+use App\Actions\Offer\DeclineOfferAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
-use App\Mail\OfferLetterSend;
+use App\Mail\OfferLetterSendMail;
 use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\Offer;
@@ -77,32 +79,22 @@ class OfferController extends Controller
     {
         $offerData = $request->validated();
 
+        // Accept offer
+        if ($request->boolean('is_accepted')) {
+            app(AcceptOfferAction::class)->execute(offer: $offer);
+            return response()->json($offer);
+        }
+        
+        // Decline offer
+        if ($request->boolean('is_declined')) {
+            app(DeclineOfferAction::class)->execute(offer: $offer);
+            return response()->json($offer);
+        }
+
+        // Update offer details
         if ($request->hasFile('sign_file_path')) {
             $path = $request->file('sign_file_path')->store("documents/{$offer->employee->employee_id}", 'public');
             $offerData['sign_file_path'] = $path;   
-        }
-
-        if ($request->boolean('is_accepted')) {
-            $offer->employee()->update(['offer_letter_status' => 2]);
-
-            Activity::create([
-                'employee_id' => $offer->employee->id,
-                'performed_by_user_id' => auth()->user()->id,
-                'user_type' => 'candidate',
-                'type' => 'accept.offer.candidate',
-                'title' => 'Offer accepted by ' . $offer->employee->name,
-            ]);
-
-        } elseif ($request->boolean('is_declined')) {
-            $offer->employee()->update(['offer_letter_status' => 3]);
-
-            Activity::create([
-                'employee_id' => $offer->employee->id,
-                'performed_by_user_id' => auth()->user()->id,
-                'user_type' => 'candidate',
-                'type' => 'decline.offer.candidate',
-                'title' => 'Offer declined by ' . $offer->employee->name,
-            ]);
         }
 
         $offer->update($offerData);
@@ -139,7 +131,7 @@ class OfferController extends Controller
             ->setNpmBinary(env('NPM_BINARY_PATH'))
             ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
 
-        Mail::to($emails)->send(new OfferLetterSend(
+        Mail::to($emails)->send(new OfferLetterSendMail(
             offerLetterFilePath: storage_path('app/public/' . $offerLetterFilePath), 
             isClient: true, content:"", employee: $employee));
     }
@@ -158,6 +150,6 @@ class OfferController extends Controller
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
-        Mail::to($email)->send(new OfferLetterSend(content: $html, employee: null));
+        Mail::to($email)->send(new OfferLetterSendMail(content: $html, employee: null));
     }
 }
