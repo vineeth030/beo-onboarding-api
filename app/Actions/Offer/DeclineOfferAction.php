@@ -2,8 +2,11 @@
 
 namespace App\Actions\Offer;
 
+use App\Mail\OfferDeclinedMail;
 use App\Models\Activity;
 use App\Models\Offer;
+use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 
 class DeclineOfferAction 
 {
@@ -18,5 +21,10 @@ class DeclineOfferAction
             'type' => 'decline.offer.candidate',
             'title' => 'Offer declined by ' . $offer->employee->name,
         ]);
+
+        $hrEmailIds = User::where('role', 'admin')->pluck('email')->toArray();
+
+        //Send email notification to hr & client email ids.
+        Mail::to($hrEmailIds)->send(new OfferDeclinedMail(employee: $offer->employee));
     }
 }

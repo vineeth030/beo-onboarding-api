@@ -26,16 +26,26 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    This is to inform you that the candidate, {{ $this->employee->full_name }} has accepted the offer for the position of {{ $this->employee->designation?->name }}.
+                                    Thank you for accepting our offer.
+                                </p>
+
+                                <p>
+                                    A warm welcome in advance to BEO Software.
                                 </p>
 
                                 @if (str_contains($employee->joining_date, 'month'))
                                 <p>
-                                    The proposed joining date is "{{ $this->employee->requested_joining_date }}". Should there be any change to this date, the candidate will inform us in advance.
+                                    Your can join on "{{ $this->employee->requested_joining_date }}". We will be in touch with you shortly regarding the next steps in the onboarding process.
+                                </p>
+                                <p>
+                                    Additionally, please share the resignation acceptance letter from your current employer once it becomes available.
+                                </p>
+                                <p>
+                                    We look forward to having you on board.
                                 </p>
                                 @else
                                 <p>
-                                    The joining date will be {{ $this->employee->joining_date }}
+                                    We will be in touch with you soon regarding the next steps.
                                 </p>
                                 @endif
 

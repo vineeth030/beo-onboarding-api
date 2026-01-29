@@ -39,13 +39,13 @@ class DayOneTicketAssignedNotification extends Notification
         return (new MailMessage)
             ->subject('Day One Ticket Assigned')
             ->greeting(' ')
-            ->line("Hi $this->employeeName,")
+            ->line("Hello $this->employeeName,")
             ->line("A day one ticket has been assigned to you.")
             ->line('Please log in to the onboarding portal to view the ticket details.')
             ->line('If you have any questions, please contact the HR team.')
             ->line('')
             ->line('')
-            ->line(new HtmlString('Thanks,<br>HR Team<br>BEO Software'))
+            ->line(new HtmlString('Thanks,<br>BEO HR Team'))
             ->salutation(' ');
     }
 

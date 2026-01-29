@@ -23,16 +23,11 @@ class AcceptOfferAction
             'title' => 'Offer accepted by ' . $offer->employee->name,
         ]);
 
-        $emails = $offer->employee?->department?->emails->pluck('email')->toArray();
+        $clientEmailIds = $offer->employee?->department?->emails->pluck('email')->toArray();
 
-        //Send email notification to client email ids.
-        Mail::to($emails)->send(new OfferAcceptedMail(employee: $offer->employee));
+        $hrEmailIds = User::where('role', 'admin')->pluck('email')->toArray();
 
-        //Send email/database notifications to HR team.
-        User::where('role', 'admin')->each(fn ($admin) => (
-            $admin->notify(
-                new OfferAcceptNotification($offer->employee->full_name)
-            )
-        ));
+        //Send email notification to hr & client email ids.
+        Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new OfferAcceptedMail(employee: $offer->employee));
     }
 }
