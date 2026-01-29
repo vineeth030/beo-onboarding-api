@@ -38,7 +38,7 @@ class OfferController extends Controller
         $offer = Offer::create($request->validated());
 
         $employee = Employee::select(['id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'])->with(['designation'])->where('id', $request->get('employee_id'))?->first();
-        $employee->update(['offer_letter_status' => 1]);
+        $employee->update(['offer_letter_status' => 1, 'designation_id' => $request->get('designation_id')]);
 
         $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
