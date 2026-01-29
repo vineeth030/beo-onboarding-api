@@ -22,7 +22,7 @@ class OfferLetterSendMail extends Mailable
         private string $offerLetterFilePath = "",
         private bool $isClient = false,
         private string $content = "",
-        public ?Employee $employee
+        public ?Employee $employee = null
     ){}
 
     /**
