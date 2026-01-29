@@ -37,11 +37,15 @@ class OfferController extends Controller
     {
         $offer = Offer::create($request->validated());
 
-        $employee = Employee::select(['id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'])->where('id', $request->get('employee_id'))?->first();
+        $employee = Employee::select(['id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'])->where('id', $request->get('employee_id'))?->first();
+        abort_if(! $employee, 404, 'Employee not found');
+
         $employee->update(['offer_letter_status' => 1, 'designation_id' => $request->get('designation_id')]);
 
         // To refresh designation relationship.
-        $employee->load(['designation:id,name']);
+        $employee->load(['designation:id,name', 'user:id,name,email']);
+        abort_if(! $employee->user, 422, 'Employee has no associated user');
+        abort_if(! $employee->designation, 422, 'Employee has no associated designation');
 
         $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
