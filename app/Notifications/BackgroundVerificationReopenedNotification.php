@@ -47,13 +47,13 @@ class BackgroundVerificationReopenedNotification extends Notification
         return (new MailMessage)
             ->subject('Background Verification Form - Reopened')
             ->greeting(' ')
-            ->line("Hi $this->employeeName,")
+            ->line("Hello $this->employeeName,")
             ->line("Your background verification form has been reopened for updates.")
             ->line('Please log in to the onboarding portal and resubmit the form with the required changes.')
             ->line('If you have any questions, please contact the HR team.')
             ->line('')
             ->line('')
-            ->line(new HtmlString('Thanks,<br>HR Team<br>BEO Software'))
+            ->line(new HtmlString('Thanks,<br>BEO HR Team'))
             ->salutation(' ');
     }
 

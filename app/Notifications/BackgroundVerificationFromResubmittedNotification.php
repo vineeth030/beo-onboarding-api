@@ -38,12 +38,12 @@ class BackgroundVerificationFromResubmittedNotification extends Notification
         return (new MailMessage)
             ->subject('Background Verification Form - Resubmitted')
             ->greeting(" ")
-            ->line('Hi Team,')
+            ->line('Hello,')
             ->line("The candidate, $this->employeeName has resubmitted the background verification form after making the requested changes.")
             ->line('Please log in to the onboarding portal to review the updated information and continue the verification process.')
             ->line('')
             ->line('')
-            ->line(new HtmlString('Thanks,<br>BEO ONBOARDING'))
+            ->line(new HtmlString('Thanks,<br>BEO HR Team'))
             ->salutation(' ');
     }
 

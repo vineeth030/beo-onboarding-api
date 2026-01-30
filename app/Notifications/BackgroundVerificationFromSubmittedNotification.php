@@ -38,12 +38,12 @@ class BackgroundVerificationFromSubmittedNotification extends Notification
         return (new MailMessage)
             ->subject("Background Verification Form Submitted by $this->employeeName")
             ->greeting(" ")
-            ->line("Hi Team")
+            ->line("Hello,")
             ->line("The candidate, $this->employeeName has successfully submitted the background verification form.")
             ->line('Please log in to the onboarding portal to review the submitted details and proceed with the next steps.')
             ->line('')
             ->line('')
-            ->line(new HtmlString('Thanks,<br>BEO ONBOARDING'))
+            ->line(new HtmlString('Thanks,<br>BEO HR Team'))
             ->salutation(' ');
     }
 
