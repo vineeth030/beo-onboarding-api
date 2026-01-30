@@ -2,6 +2,7 @@
 
 namespace App\Actions\Offer;
 
+use App\Mail\OfferAcceptanceAcknowledgementMail;
 use App\Mail\OfferAcceptedMail;
 use App\Models\Activity;
 use App\Models\Offer;
@@ -29,5 +30,9 @@ class AcceptOfferAction
 
         //Send email notification to hr & client email ids.
         Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new OfferAcceptedMail(employee: $offer->employee));
+
+        Mail::to($offer->employee->email)
+            ->cc([...$hrEmailIds, ...$clientEmailIds])
+            ->send(new OfferAcceptanceAcknowledgementMail(employee: $offer->employee));
     }
 }
