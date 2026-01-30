@@ -26,7 +26,7 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    This is to inform you that the candidate, {{ $this->employee->full_name }} has accepted the offer for the position of {{ $employee->designation?->name }}.
+                                    This is to inform you that the candidate, {{ $employee->full_name }} has accepted the offer for the position of {{ $employee->designation?->name }}.
                                 </p>
 
                                 @if (str_contains($employee->joining_date, 'month'))
