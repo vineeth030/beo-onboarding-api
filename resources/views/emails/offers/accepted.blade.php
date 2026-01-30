@@ -26,16 +26,16 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    This is to inform you that the candidate, {{ $this->employee->full_name }} has accepted the offer for the position of {{ $this->employee->designation?->name }}.
+                                    This is to inform you that the candidate, {{ $this->employee->full_name }} has accepted the offer for the position of {{ $employee->designation?->name }}.
                                 </p>
 
                                 @if (str_contains($employee->joining_date, 'month'))
                                 <p>
-                                    The proposed joining date is "{{ $this->employee->requested_joining_date }}". Should there be any change to this date, the candidate will inform us in advance.
+                                    The proposed joining date is "{{ $employee->requested_joining_date }}". Should there be any change to this date, the candidate will inform us in advance.
                                 </p>
                                 @else
                                 <p>
-                                    The joining date will be {{ $this->employee->joining_date }}
+                                    The joining date will be {{ $employee->joining_date }}
                                 </p>
                                 @endif
 
