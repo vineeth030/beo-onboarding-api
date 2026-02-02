@@ -31,6 +31,7 @@ class UpdateOfferRequest extends FormRequest
             'sign_file_path' => ['sometimes'],
             'is_accepted' => ['sometimes'],
             'is_declined' => ['sometimes'],
+            'is_revoked' => ['sometimes'],
             'decline_reason' => ['sometimes']
         ];
     }
