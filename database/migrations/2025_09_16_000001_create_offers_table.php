@@ -26,6 +26,7 @@ return new class extends Migration
             $table->boolean('is_accepted')->default(0);
             $table->boolean('is_declined')->default(0);
             $table->string('decline_reason')->nullable();
+            $table->boolean('is_revoked')->default(false);
             $table->timestamps();
         });
     }

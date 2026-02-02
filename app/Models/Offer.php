@@ -6,8 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-use function PHPSTORM_META\map;
-
 class Offer extends Model
 {
     /** @use HasFactory<\Database\Factories\OfferFactory> */
@@ -26,12 +24,16 @@ class Offer extends Model
         'sign_file_path',
         'is_accepted',
         'is_declined',
-        'decline_reason'
+        'decline_reason',
+        'is_revoked',
     ];
 
     protected $casts = [
         'client_emails' => 'array',
         'beo_emails' => 'array',
+        'is_accepted' => 'boolean',
+        'is_declined' => 'boolean',
+        'is_revoked' => 'boolean',
     ];
 
     public function user(): BelongsTo
