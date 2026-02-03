@@ -22,7 +22,7 @@ class EmployeeResource extends JsonResource
             'email' => $this->email,
             'password' => $this->password,
             'status' => $this->status,
-            'offer_status' => $this->activeOffer?->status?->value ?? 0,
+            'offer_status' => $this->offers->last()->status?->value ?? 0,
             'mobile' => $this->mobile,
             'category' => $this->category,
             'division' => $this->division,

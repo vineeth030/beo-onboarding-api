@@ -30,6 +30,7 @@ return new class extends Migration
             $table->string('revoke_reason')->nullable();
             $table->boolean('is_family_insurance_paid_by_client')->default(false);
             $table->tinyInteger('status')->default(0)->comment('Offer status');
+            $table->timestamp('last_reminder_sent_at')->nullable()->comment('Tracks when last reminder email was sent for 2-day frequency');
             $table->timestamps();
         });
     }

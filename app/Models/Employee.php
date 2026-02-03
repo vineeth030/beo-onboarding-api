@@ -95,17 +95,6 @@ class Employee extends Model
         };
     }
 
-    public function getOfferLetterStatusLabelAttribute()
-    {
-        return match ($this->offer_letter_status) {
-            self::OFFER_STATUS_NOT_STARTED => 'not started',
-            self::OFFER_STATUS_PENDING => 'pending',
-            self::OFFER_STATUS_ACCEPTED => 'accepted',
-            self::OFFER_STATUS_REJECTED => 'rejected',
-            default => 'unknown',
-        };
-    }
-
     public function getDivisionLabelAttribute()
     {
         return match ($this->division) {

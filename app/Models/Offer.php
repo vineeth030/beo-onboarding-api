@@ -30,6 +30,7 @@ class Offer extends Model
         'revoke_reason',
         'is_family_insurance_paid_by_client',
         'status',
+        'last_reminder_sent_at',
     ];
 
     protected $casts = [
@@ -40,6 +41,7 @@ class Offer extends Model
         'is_revoked' => 'boolean',
         'is_family_insurance_paid_by_client' => 'boolean',
         'status' => OfferStatus::class,
+        'last_reminder_sent_at' => 'datetime',
     ];
 
     public function user(): BelongsTo
