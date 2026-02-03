@@ -27,6 +27,9 @@ return new class extends Migration
             $table->boolean('is_declined')->default(0);
             $table->string('decline_reason')->nullable();
             $table->boolean('is_revoked')->default(false);
+            $table->string('revoke_reason')->nullable();
+            $table->boolean('is_family_insurance_paid_by_client')->default(false);
+            $table->tinyInteger('status')->default(0)->comment('Offer status');
             $table->timestamps();
         });
     }

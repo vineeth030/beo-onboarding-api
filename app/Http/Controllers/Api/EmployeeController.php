@@ -10,9 +10,11 @@ use App\Actions\Employee\DayOneTicketAssignedAction;
 use App\Actions\Employee\PreJoiningFormDownloadedNotificationAction;
 use App\Actions\Employee\RequestJoiningDateChangeAction;
 use App\Actions\Employee\UpdateEmployeeAction;
+use App\Enums\OfferStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
+use App\Http\Resources\EmployeeResource;
 use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\User;
@@ -21,8 +23,8 @@ use App\Notifications\AssignPocNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class EmployeeController extends Controller
 {
@@ -31,7 +33,11 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return Employee::with(['addresses', 'documents', 'educations', 'employments'])->orderBy('id', 'desc')->get();
+        $employees = Employee::with(['offers', 'department', 'activeOffer'])
+            ->orderBy('id', 'desc')
+            ->get();
+
+        return EmployeeResource::collection($employees);
     }
 
     /**
@@ -42,16 +48,16 @@ class EmployeeController extends Controller
         $randomPassword = Str::random(8);
 
         $employeeUser = User::create([
-            'name' => $request->get('first_name') . ' ' . $request->get('last_name'), 
-            'email' => $request->get('email'), 
+            'name' => $request->get('first_name').' '.$request->get('last_name'),
+            'email' => $request->get('email'),
             'password' => Hash::make($randomPassword),
-            'role' => 'candidate'
+            'role' => 'candidate',
         ]);
 
         $employee = Employee::create($request->validated() + [
-            'user_id' => $employeeUser->id, 
+            'user_id' => $employeeUser->id,
             'password' => $randomPassword,
-            'department_id' => $request->get('department_id')
+            'department_id' => $request->get('department_id'),
         ]);
 
         Activity::create([
@@ -59,9 +65,9 @@ class EmployeeController extends Controller
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'add.candidate',
-            'title' => 'New candidate ' . $employeeUser->name . ' added by ' . auth()->user()->name,
+            'title' => 'New candidate '.$employeeUser->name.' added by '.auth()->user()->name,
         ]);
-        
+
         return response()->json($employee, 201);
     }
 
@@ -70,7 +76,17 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        return $employee->load(['office', 'addresses', 'documents', 'educations', 'employments.salarySlips', 'offers']);
+        $employee->load([
+            'activeOffer',
+            'office',
+            'addresses',
+            'documents',
+            'educations',
+            'employments.salarySlips',
+            'offers',
+        ]);
+
+        return new EmployeeResource($employee);
     }
 
     /**
@@ -80,8 +96,8 @@ class EmployeeController extends Controller
     {
         $dataForEmployeeUpdate = Arr::except(
             $request->validated(),
-            ['is_joining_date_update_approved','updated_joining_date','requested_joining_date', 
-            'is_open', 'is_pre_joining_form_downloaded']
+            ['is_joining_date_update_approved', 'updated_joining_date', 'requested_joining_date',
+                'is_open', 'is_pre_joining_form_downloaded']
         );
 
         $updatedEmployee = $updateEmployeeAction->execute(
@@ -116,12 +132,16 @@ class EmployeeController extends Controller
             );
         }
 
-        if($request->has('is_pre_joining_form_downloaded') && $request->get('is_pre_joining_form_downloaded')) {
+        if ($request->has('is_pre_joining_form_downloaded') && $request->get('is_pre_joining_form_downloaded')) {
             app(PreJoiningFormDownloadedNotificationAction::class)->execute(employee: $employee);
         }
 
-        if($request->has('is_day_one_ticket_assigned') && $request->get('is_day_one_ticket_assigned')) {
+        if ($request->has('is_day_one_ticket_assigned') && $request->get('is_day_one_ticket_assigned')) {
             app(DayOneTicketAssignedAction::class)->execute(employee: $employee);
+        }
+
+        if ($request->has('is_onboarded') && $request->get('is_onboarded')) {
+            $employee->activeOffer()->update(['status' => OfferStatus::REGISTERED_EMPLOYEE]);
         }
 
         return response()->json($updatedEmployee);
@@ -133,26 +153,28 @@ class EmployeeController extends Controller
     public function destroy(Employee $employee)
     {
         $employee->delete();
+
         return response()->json(null, 204);
     }
 
     /**
      * buddy_is is the employee_id in beo_employees table.
      */
-    public function assignBuddy(Employee $employee, Request $request) : JsonResponse {
+    public function assignBuddy(Employee $employee, Request $request): JsonResponse
+    {
 
         $employee->update([
-            'buddy_id' => $request->get('beo_employee_id')
+            'buddy_id' => $request->get('beo_employee_id'),
         ]);
 
-        $employee->user->notify(new AssignBuddyNotification());
+        $employee->user->notify(new AssignBuddyNotification);
 
         Activity::create([
             'employee_id' => $employee->id,
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'assign.buddy.candidate',
-            'title' => 'Assigned buddy to candidate ' . $employee->name . ' by ' . auth()->user()->name,
+            'title' => 'Assigned buddy to candidate '.$employee->name.' by '.auth()->user()->name,
         ]);
 
         return response()->json(null, 200);
@@ -161,21 +183,22 @@ class EmployeeController extends Controller
     /**
      * buddy_is is the employee_id in beo_employees table.
      */
-    public function assignPocs(Employee $employee, Request $request) : JsonResponse {
+    public function assignPocs(Employee $employee, Request $request): JsonResponse
+    {
 
         $employee->update([
             'poc_1_id' => $request->get('beo_employee_1_id'),
-            'poc_2_id' => $request->get('beo_employee_2_id')
+            'poc_2_id' => $request->get('beo_employee_2_id'),
         ]);
 
-        $employee->user->notify(new AssignPocNotification());
+        $employee->user->notify(new AssignPocNotification);
 
         Activity::create([
             'employee_id' => $employee->id,
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'assign.pocs.candidate',
-            'title' => 'Assigned POCs to candidate ' . $employee->name . ' by ' . auth()->user()->name,
+            'title' => 'Assigned POCs to candidate '.$employee->name.' by '.auth()->user()->name,
         ]);
 
         return response()->json(null, 200);

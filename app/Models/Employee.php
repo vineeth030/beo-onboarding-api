@@ -7,28 +7,37 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Notifications\Notifiable;
 
 class Employee extends Model
 {
     use HasFactory;
 
     const STATUS_YET_TO_START = 0;
+
     const STATUS_STARTED = 1;
+
     const STATUS_IN_PROGRESS = 2;
+
     const STATUS_SUCCESS = 3;
+
     const STATUS_REJECTED = 4;
 
     const OFFER_STATUS_NOT_STARTED = 0;
+
     const OFFER_STATUS_PENDING = 1;
+
     const OFFER_STATUS_ACCEPTED = 2;
+
     const OFFER_STATUS_REJECTED = 3;
 
     const DIVISION_BEO_INDIA = 0;
+
     const DIVISION_INDIA_4IT = 1;
 
     const CATEGORY_EXPERIENCED = 0;
+
     const CATEGORY_FRESHER = 1;
+
     const CATEGORY_INTERN = 2;
 
     protected $fillable = [
@@ -52,7 +61,6 @@ class Employee extends Model
         'blood_group',
         'joining_date',
         'status',
-        'offer_letter_status',
         'division',
         'category',
         'is_verified',
@@ -64,12 +72,11 @@ class Employee extends Model
         'is_open',
         'buddy_id',
         'poc_1_id',
-        'poc_2_id'
+        'poc_2_id',
     ];
 
     protected $casts = [
         'status' => 'integer',
-        'offer_letter_status' => 'integer',
         'division' => 'integer',
         'category' => 'integer',
     ];
@@ -156,6 +163,11 @@ class Employee extends Model
     public function offers(): HasMany
     {
         return $this->hasMany(Offer::class);
+    }
+
+    public function activeOffer(): HasOne
+    {
+        return $this->hasOne(Offer::class)->where('is_revoked', false);
     }
 
     public function user()

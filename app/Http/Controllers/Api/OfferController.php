@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\Offer\AcceptOfferAction;
 use App\Actions\Offer\DeclineOfferAction;
+use App\Enums\OfferStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
 use App\Http\Requests\UpdateOfferRequest;
@@ -11,14 +12,11 @@ use App\Mail\OfferLetterSendMail;
 use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\Offer;
-use App\Notifications\OfferCreated;
 use App\Notifications\OfferSendNotification;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Browsershot\Browsershot;
 use Illuminate\Support\Str;
+use Spatie\Browsershot\Browsershot;
 
 class OfferController extends Controller
 {
@@ -40,7 +38,8 @@ class OfferController extends Controller
         $employee = Employee::select(['id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'])->where('id', $request->get('employee_id'))?->first();
         abort_if(! $employee, 404, 'Employee not found');
 
-        $employee->update(['offer_letter_status' => 1, 'designation_id' => $request->get('designation_id')]);
+        $employee->update(['designation_id' => $request->get('designation_id')]);
+        $offer->update(['status' => OfferStatus::PENDING]);
 
         // To refresh designation relationship.
         $employee->load(['designation:id,name', 'user:id,name,email']);
@@ -52,14 +51,14 @@ class OfferController extends Controller
         $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee);
         $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
 
-        $employee->user->notify(new OfferSendNotification());
+        $employee->user->notify(new OfferSendNotification);
 
         Activity::create([
             'employee_id' => $employee->id,
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'add.candidate',
-            'title' => 'Offer created for ' . $employee->name . ' by ' . auth()->user()->name,
+            'title' => 'Offer created for '.$employee->name.' by '.auth()->user()->name,
         ]);
 
         return response()->json($offer, 201);
@@ -71,8 +70,6 @@ class OfferController extends Controller
     public function show(Offer $offer)
     {
         $offer->load(['user', 'employee', 'client']);
-
-        Log::info('Content: ', [stripslashes($offer->content)]);
 
         $offer->content = stripslashes($offer->content);
 
@@ -89,19 +86,21 @@ class OfferController extends Controller
         // Accept offer
         if ($request->boolean('is_accepted')) {
             app(AcceptOfferAction::class)->execute(offer: $offer);
+
             return response()->json($offer);
         }
-        
+
         // Decline offer
         if ($request->boolean('is_declined')) {
             app(DeclineOfferAction::class)->execute(offer: $offer);
+
             return response()->json($offer);
         }
 
         // Update offer details
         if ($request->hasFile('sign_file_path')) {
             $path = $request->file('sign_file_path')->store("documents/{$offer->employee->employee_id}", 'public');
-            $offerData['sign_file_path'] = $path;   
+            $offerData['sign_file_path'] = $path;
         }
 
         $offer->update($offerData);
@@ -115,10 +114,12 @@ class OfferController extends Controller
     public function destroy(Offer $offer)
     {
         $offer->delete();
+
         return response()->json(null, 204);
     }
 
-    private function sendOfferLetterEmailsToClientAndBeo(array $emails, string $emailAttachmentContent, Employee $employee) {
+    private function sendOfferLetterEmailsToClientAndBeo(array $emails, string $emailAttachmentContent, Employee $employee)
+    {
 
         if (is_string($emailAttachmentContent)) {
             $htmlContent = stripslashes($emailAttachmentContent);
@@ -128,22 +129,23 @@ class OfferController extends Controller
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
-        $offerLetterFileName = $employee->id . '-' . Str::random(8) . '.pdf';
-        $offerLetterFilePath = 'offer-letters/' . $employee->id . '/' . $offerLetterFileName;
+        $offerLetterFileName = $employee->id.'-'.Str::random(8).'.pdf';
+        $offerLetterFilePath = 'offer-letters/'.$employee->id.'/'.$offerLetterFileName;
 
-        Storage::disk('public')->makeDirectory('offer-letters/' . $employee->id);
+        Storage::disk('public')->makeDirectory('offer-letters/'.$employee->id);
 
         Browsershot::html($html)
             ->setNodeBinary(env('NODE_BINARY_PATH'))
             ->setNpmBinary(env('NPM_BINARY_PATH'))
-            ->noSandbox()->save(storage_path('app/public/' . $offerLetterFilePath));
+            ->noSandbox()->save(storage_path('app/public/'.$offerLetterFilePath));
 
         Mail::to($emails)->send(new OfferLetterSendMail(
-            offerLetterFilePath: storage_path('app/public/' . $offerLetterFilePath), 
-            isClient: true, content:"", employee: $employee));
+            offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
+            isClient: true, content: '', employee: $employee));
     }
 
-    private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent) {
+    private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent)
+    {
 
         if (is_string($offerLetterEmailContent) && str_starts_with($offerLetterEmailContent, '"')) {
             $offerLetterEmailContent = json_decode($offerLetterEmailContent, true);

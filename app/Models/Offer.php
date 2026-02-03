@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\OfferStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -26,6 +27,9 @@ class Offer extends Model
         'is_declined',
         'decline_reason',
         'is_revoked',
+        'revoke_reason',
+        'is_family_insurance_paid_by_client',
+        'status',
     ];
 
     protected $casts = [
@@ -34,6 +38,8 @@ class Offer extends Model
         'is_accepted' => 'boolean',
         'is_declined' => 'boolean',
         'is_revoked' => 'boolean',
+        'is_family_insurance_paid_by_client' => 'boolean',
+        'status' => OfferStatus::class,
     ];
 
     public function user(): BelongsTo

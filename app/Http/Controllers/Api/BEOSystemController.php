@@ -2,56 +2,65 @@
 
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreBEOEmployeeRequest;
-use App\Http\Requests\StoreDepartmentRequest;
 use App\Models\BeoEmployee;
 use App\Models\Department;
 use App\Models\Designation;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
-
-use function Illuminate\Log\log;
 
 class BEOSystemController extends Controller
 {
     private string $aesKey;
+
     private string $aesIV;
+
     private string $firebaseId;
+
     private const BEO_SYSTEM_LOGIN_SUCCESS_CODE = 104;
+
     private const BEO_SYSTEM_INVALID_CREDENTIALS_CODE = 102;
+
     private const BEO_SYSTEM_LOGIN_API_URL = '/api/Login/UserLoginForMobApp?deviceId=9e528a0c-2302-4474-b5be-8bf829b30e5a';
+
     private const BEO_SYSTEM_USER_DETAILS_API_URL = '/api/Login/UserInfoForMobApp';
+
     private const BEO_SYSTEM_CREATE_USER_API_URL = '/api/Users/SaveUserDetailsForMobApp';
+
     private const BEO_SYSTEM_COUNTRIES_API_URL = '/api/Users/GetCountryListForMobApp';
+
     private const BEO_SYSTEM_STATES_API_URL = '/api/Users/GetStateListForMobApp';
+
     private const BEO_SYSTEM_DESIGNATIONS_API_URL = '/api/Users/NeccessaryUsersDetailsInfoForMobApp';
+
     private const BEO_SYSTEM_GROUPS_API_URL = '/api/Users/GetGroupListForMobApp';
+
     private const BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL = '/api/Users/GetGroupListWithEmployessInfoForMobApp';
+
     private const BEO_SYSTEM_SINGLE_EMPLOYEE_DETAILS_API_URL = '/api/Users/GetUserEditDetailsForMobApp';
 
     public function __construct()
     {
         $this->aesKey = config('beosystem.aes_key');
-        $this->aesIV  = config('beosystem.aes_iv');
-        $this->firebaseId  = config('beosystem.firebase_id');
+        $this->aesIV = config('beosystem.aes_iv');
+        $this->firebaseId = config('beosystem.firebase_id');
     }
 
     /**
      * Login an employee.
      */
-    public function login( string $userName, string $password ): array
+    public function login(string $userName, string $password): array
     {
         $requestBody = $this->prepareLoginPayload($userName, $password);
 
-        $response = Http::post(config('beosystem.base_url') . self::BEO_SYSTEM_LOGIN_API_URL, $requestBody)->throw();
+        $response = Http::post(config('beosystem.base_url').self::BEO_SYSTEM_LOGIN_API_URL, $requestBody)->throw();
 
         if ($response->failed()) {
             return [null, 0, 'BEO system unavailable. Please try again later.'];
@@ -60,18 +69,19 @@ class BEOSystemController extends Controller
         $data = $response->json();
 
         if (($data['status'] ?? null) == self::BEO_SYSTEM_INVALID_CREDENTIALS_CODE) {
-            return [null,'Invalid Credentials.'];
+            return [null, 'Invalid Credentials.'];
         }
 
-        return [ $data['sessionToken'], $data['userIdCode'], 'Login success.' ];
+        return [$data['sessionToken'], $data['userIdCode'], 'Login success.'];
     }
 
-    public function countries() : array {
+    public function countries(): array
+    {
 
         return Cache::remember('beo_countries', now()->addMonths(3), function () {
 
             $response = Http::get(
-                config('beosystem.base_url') . self::BEO_SYSTEM_COUNTRIES_API_URL
+                config('beosystem.base_url').self::BEO_SYSTEM_COUNTRIES_API_URL
             );
 
             if ($response->failed()) {
@@ -82,11 +92,12 @@ class BEOSystemController extends Controller
         });
     }
 
-    public function states() : array {
+    public function states(): array
+    {
 
         return Cache::remember('beo_states', now()->addMonths(3), function () {
 
-            $response = Http::get(config('beosystem.base_url') . self::BEO_SYSTEM_STATES_API_URL)->throw();
+            $response = Http::get(config('beosystem.base_url').self::BEO_SYSTEM_STATES_API_URL)->throw();
 
             if ($response->failed()) {
                 return [null, 'BEO system unavailable. Please try again later.'];
@@ -99,15 +110,16 @@ class BEOSystemController extends Controller
     /**
      * This method is not used at the moment.
      */
-    public function groups(string $sessionToken, int $userIdCode) : array {
+    public function groups(string $sessionToken, int $userIdCode): array
+    {
 
         return Cache::remember('beo_groups', now()->addMonths(1), function () use ($sessionToken, $userIdCode) {
 
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                            ->post(
-                                config('beosystem.base_url') . self::BEO_SYSTEM_GROUPS_API_URL,
-                                ['userIdCode' => $userIdCode]
-                            )->throw();
+                ->post(
+                    config('beosystem.base_url').self::BEO_SYSTEM_GROUPS_API_URL,
+                    ['userIdCode' => $userIdCode]
+                )->throw();
 
             if ($response->failed()) {
                 return [null, 'BEO system unavailable. Please try again later.'];
@@ -120,15 +132,16 @@ class BEOSystemController extends Controller
     /**
      * This method is not used at the moment.
      */
-    public function designations(string $sessionToken, int $userIdCode) : array {
+    public function designations(string $sessionToken, int $userIdCode): array
+    {
 
         return Cache::remember('beo_designations', now()->addMonths(1), function () use ($sessionToken, $userIdCode) {
 
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                            ->post(
-                                config('beosystem.base_url') . self::BEO_SYSTEM_DESIGNATIONS_API_URL,
-                                ['userIdCode' => $userIdCode]
-                            )->throw();
+                ->post(
+                    config('beosystem.base_url').self::BEO_SYSTEM_DESIGNATIONS_API_URL,
+                    ['userIdCode' => $userIdCode]
+                )->throw();
 
             if ($response->failed()) {
                 return [null, 'BEO system unavailable. Please try again later.'];
@@ -144,10 +157,10 @@ class BEOSystemController extends Controller
     public function retrive(string $sessionToken, int $userIdCode): array
     {
         $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                        ->post(
-                            config('beosystem.base_url') . self::BEO_SYSTEM_USER_DETAILS_API_URL, 
-                            ['userIdCode' => $userIdCode]
-                        )->throw();
+            ->post(
+                config('beosystem.base_url').self::BEO_SYSTEM_USER_DETAILS_API_URL,
+                ['userIdCode' => $userIdCode]
+            )->throw();
 
         if ($response->failed()) {
             return [null, 'BEO system unavailable. Please try again later.'];
@@ -156,16 +169,16 @@ class BEOSystemController extends Controller
         $data = $response->json();
 
         if (($data['status'] ?? null) != 200) {
-            return [null,'Internal Server Error'];
+            return [null, 'Internal Server Error'];
         }
 
-        return [ 
-            'email' => $data['email'], 
-            'name' => $data['firstName'] . ' ' . $data['lastName'], 
-            'designation' => $data['designation'], 
-            'group' => trim($data['sGroupName']), 
-            'assessmentView' => $data['assessmentView'], 
-            'message' => 'Success.' 
+        return [
+            'email' => $data['email'],
+            'name' => $data['firstName'].' '.$data['lastName'],
+            'designation' => $data['designation'],
+            'group' => trim($data['sGroupName']),
+            'assessmentView' => $data['assessmentView'],
+            'message' => 'Success.',
         ];
     }
 
@@ -177,7 +190,7 @@ class BEOSystemController extends Controller
         $requestBody = $this->prepareStoreUserPayload($request->validated());
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
-                        ->post(config('beosystem.base_url') . self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
+            ->post(config('beosystem.base_url').self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
 
         if ($response->failed()) {
             return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 503]);
@@ -187,7 +200,7 @@ class BEOSystemController extends Controller
 
         if (($data['status'] ?? null) != 200) {
             return response()->json([
-                'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status']
+                'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status'],
             ]);
         }
 
@@ -203,10 +216,10 @@ class BEOSystemController extends Controller
         ]);
 
         $response = Http::withOptions(['query' => ['sessionToken' => $validated['sessionToken']]])
-                        ->post(
-                            config('beosystem.base_url') . self::BEO_SYSTEM_SINGLE_EMPLOYEE_DETAILS_API_URL, 
-                            ['userIdCode' => $validated['user_id_code_of_hr'], 'userEditId' => $validated['employee_id']]
-                        )->throw();
+            ->post(
+                config('beosystem.base_url').self::BEO_SYSTEM_SINGLE_EMPLOYEE_DETAILS_API_URL,
+                ['userIdCode' => $validated['user_id_code_of_hr'], 'userEditId' => $validated['employee_id']]
+            )->throw();
 
         if ($response->failed()) {
             return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 503]);
@@ -216,7 +229,7 @@ class BEOSystemController extends Controller
 
         if (($data['status'] ?? null) != 200) {
             return response()->json([
-                'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status']
+                'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status'],
             ]);
         }
 
@@ -225,13 +238,14 @@ class BEOSystemController extends Controller
 
     /**
      * Store BEO employees data to onboarding app database.
-     * 
+     *
      * Seed beo_employees table with this data evey time admin hit refresh data.
      */
-    public function storeBEOEmployeesToOnboarding(Request $request) : array {
+    public function storeBEOEmployeesToOnboarding(Request $request): array
+    {
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken'), 'userIdCode' => $request->get('userIdCode')]])
-                        ->post( config('beosystem.base_url') . self::BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL )->throw();
+            ->post(config('beosystem.base_url').self::BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL)->throw();
 
         if ($response->failed()) {
             return [null, 'BEO system unavailable. Please try again later.'];
@@ -248,29 +262,30 @@ class BEOSystemController extends Controller
         // Loop through groups and employees
         foreach ($data['groupList'] as $group) {
             foreach ($group['employeeLists'] as $employee) {
-                 BeoEmployee::create([
+                BeoEmployee::create([
                     'name' => $employee['employeeName'],
                     'employee_id' => $employee['employeeId'],
                     'photo_path' => $employee['imageUrl'],
                     'designation' => $employee['designation'],
                     'phone' => $employee['mobileNumber'],
-                    'email' => $employee['email']
+                    'email' => $employee['email'],
                 ]);
             }
         }
 
         // When BEO System API session is expired, make the onboarding app logout.
-        
+
         return ['message' => 'success', 'code' => 200];
     }
 
-    public function storeDesignationsToOnboarding(Request $request) : JsonResponse {
+    public function storeDesignationsToOnboarding(Request $request): JsonResponse
+    {
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
-                            ->post(
-                                config('beosystem.base_url') . self::BEO_SYSTEM_DESIGNATIONS_API_URL,
-                                ['userIdCode' => $request->get('userIdCode')]
-                            )->throw();
+            ->post(
+                config('beosystem.base_url').self::BEO_SYSTEM_DESIGNATIONS_API_URL,
+                ['userIdCode' => $request->get('userIdCode')]
+            )->throw();
 
         if ($response->failed()) {
             return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 500]);
@@ -293,21 +308,21 @@ class BEOSystemController extends Controller
         foreach ($designationsFromBEOSystem as $designation) {
             Designation::create([
                 'id' => $designation['dId'],
-                'name' => $designation['designation']
+                'name' => $designation['designation'],
             ]);
         }
 
         return response()->json(['message' => 'success', 'code' => 200]);
     }
 
-
-    public function storeDepartmentsToOnboarding(Request $request) : JsonResponse {
+    public function storeDepartmentsToOnboarding(Request $request): JsonResponse
+    {
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
-                            ->post(
-                                config('beosystem.base_url') . self::BEO_SYSTEM_GROUPS_API_URL,
-                                ['userIdCode' => $request->get('userIdCode')]
-                            )->throw();
+            ->post(
+                config('beosystem.base_url').self::BEO_SYSTEM_GROUPS_API_URL,
+                ['userIdCode' => $request->get('userIdCode')]
+            )->throw();
 
         if ($response->failed()) {
             return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 500]);
@@ -322,24 +337,27 @@ class BEOSystemController extends Controller
         foreach ($departmentsFromBEOSystem as $department) {
             Department::create([
                 'id' => $department['group_id'],
-                'name' => $department['group_name']
+                'name' => $department['group_name'],
             ]);
         }
 
         return response()->json(['message' => 'success', 'code' => 200]);
     }
 
-    public function getBEOEmployees() : Collection {
+    public function getBEOEmployees(): Collection
+    {
 
         return BeoEmployee::all();
     }
 
-    public function getSingleBEOEmployee($employee_id) : BeoEmployee {
-        
+    public function getSingleBEOEmployee($employee_id): BeoEmployee
+    {
+
         return BeoEmployee::where('employee_id', $employee_id)->first();
     }
 
-    private function prepareLoginPayload($userName, $password){
+    private function prepareLoginPayload($userName, $password)
+    {
 
         $encryptedUserName = openssl_encrypt($userName, 'AES-256-CBC', $this->aesKey, 0, $this->aesIV);
         $encryptedPassword = openssl_encrypt($password, 'AES-256-CBC', $this->aesKey, 0, $this->aesIV);
@@ -347,120 +365,65 @@ class BEOSystemController extends Controller
         return [
             'accessId' => $encryptedUserName,
             'blockId' => $encryptedPassword,
-            'firbaseId' => $this->firebaseId
+            'firbaseId' => $this->firebaseId,
         ];
     }
-    
-    private function prepareStoreUserPayload(array $validatedEmployeeDetails){
+
+    private function prepareStoreUserPayload(array $validatedEmployeeDetails)
+    {
 
         return [
-            "userIdCode"=> $validatedEmployeeDetails['user_id_code'],
-            "editUid" => 0,
-            "userID" => $validatedEmployeeDetails['user_id'],
-            "firstName" => $validatedEmployeeDetails['first_name'],
-            "lastName" => $validatedEmployeeDetails['last_name'],
-            "fatherName" => $validatedEmployeeDetails['father_name'],
-            "communAddressLine1" => $validatedEmployeeDetails['communication_address_line_1'],
-            "communAddressLine2"=> $validatedEmployeeDetails['communication_address_line_2'],
-            "communAddDistrict"=> $validatedEmployeeDetails['communication_address_district'],
-            "communAddPinCode"=> $validatedEmployeeDetails['communication_address_pin_code'],
-            "communAddstate"=> $validatedEmployeeDetails['communication_address_state'],
-            "communAddcountry"=> $validatedEmployeeDetails['communication_address_country_id'],
-            "mobile"=> $validatedEmployeeDetails['mobile'],
-            "landLine"=> "",
-            "permntAddSameAsCommun"=> $validatedEmployeeDetails['permanent_address_same_as_communication'],
-            "permntAddressLine1"=> $validatedEmployeeDetails['permanent_address_line_1'],
-            "permntAddressLine2"=> $validatedEmployeeDetails['permanent_address_line_2'],
-            "permntAddDistrict"=> $validatedEmployeeDetails['permanent_address_district'],
-            "permntAddpinCode"=> $validatedEmployeeDetails['permanent_address_pin_code'],
-            "permntAddstate"=> $validatedEmployeeDetails['permanent_address_state'],
-            "permntAddcountry"=> $validatedEmployeeDetails['permanent_address_country_id'], 
-            "nationality" => $validatedEmployeeDetails['country_id'],
-            "emailId"=> $validatedEmployeeDetails['email_id'],
-            "BEOChat"=> "d.ara@fff.mmm",
-            "fax"=> "12345678",
-            "password"=> $validatedEmployeeDetails['password'],
-            "retypePassword"=> $validatedEmployeeDetails['confirm_password'],
-            "prfLang"=> $validatedEmployeeDetails['preferred_language'],
-            "empId"=> $validatedEmployeeDetails['employee_id'],
-            "dob"=> Carbon::createFromFormat('d-m-Y', $validatedEmployeeDetails['date_of_birth'])->timestamp * 1000,
-            "gender"=> $validatedEmployeeDetails['gender'],
-            "designation"=> $validatedEmployeeDetails['designation_id'],
-            "group"=> $validatedEmployeeDetails['group_id'],
-            "grade"=> 0,
-            "doj"=> Carbon::createFromFormat('d-m-Y', $validatedEmployeeDetails['date_of_joining'])->timestamp * 1000,
-            "noticePeriodStart"=> "",
-            "noticePeriodEnd"=> "",
-            "relievingDate"=> "",
-            "floorId"=> $validatedEmployeeDetails['floor_id'],
-            "chkHalfDay"=> false,
-            "chkHour"=> false,
-            "timeType"=> 0,
-            "bloodGroupId"=> $validatedEmployeeDetails['blood_group_id'],
-            "bloodGroup"=> $validatedEmployeeDetails['blood_group'],
-            "tshirtSize"=> $validatedEmployeeDetails['t_shirt_size'],
-            "weeklyWorkingHour"=> "",
-            "assessmentType"=> 0,
-            "month"=> 0,
-            "specialTypeUser"=> 0,
-            "sType"=> "New",
-            "permntWfh"=> 0
+            'userIdCode' => $validatedEmployeeDetails['user_id_code'],
+            'editUid' => 0,
+            'userID' => $validatedEmployeeDetails['user_id'],
+            'firstName' => $validatedEmployeeDetails['first_name'],
+            'lastName' => $validatedEmployeeDetails['last_name'],
+            'fatherName' => $validatedEmployeeDetails['father_name'],
+            'communAddressLine1' => $validatedEmployeeDetails['communication_address_line_1'],
+            'communAddressLine2' => $validatedEmployeeDetails['communication_address_line_2'],
+            'communAddDistrict' => $validatedEmployeeDetails['communication_address_district'],
+            'communAddPinCode' => $validatedEmployeeDetails['communication_address_pin_code'],
+            'communAddstate' => $validatedEmployeeDetails['communication_address_state'],
+            'communAddcountry' => $validatedEmployeeDetails['communication_address_country_id'],
+            'mobile' => $validatedEmployeeDetails['mobile'],
+            'landLine' => '',
+            'permntAddSameAsCommun' => $validatedEmployeeDetails['permanent_address_same_as_communication'],
+            'permntAddressLine1' => $validatedEmployeeDetails['permanent_address_line_1'],
+            'permntAddressLine2' => $validatedEmployeeDetails['permanent_address_line_2'],
+            'permntAddDistrict' => $validatedEmployeeDetails['permanent_address_district'],
+            'permntAddpinCode' => $validatedEmployeeDetails['permanent_address_pin_code'],
+            'permntAddstate' => $validatedEmployeeDetails['permanent_address_state'],
+            'permntAddcountry' => $validatedEmployeeDetails['permanent_address_country_id'],
+            'nationality' => $validatedEmployeeDetails['country_id'],
+            'emailId' => $validatedEmployeeDetails['email_id'],
+            'BEOChat' => 'd.ara@fff.mmm',
+            'fax' => '12345678',
+            'password' => $validatedEmployeeDetails['password'],
+            'retypePassword' => $validatedEmployeeDetails['confirm_password'],
+            'prfLang' => $validatedEmployeeDetails['preferred_language'],
+            'empId' => $validatedEmployeeDetails['employee_id'],
+            'dob' => Carbon::createFromFormat('d-m-Y', $validatedEmployeeDetails['date_of_birth'])->timestamp * 1000,
+            'gender' => $validatedEmployeeDetails['gender'],
+            'designation' => $validatedEmployeeDetails['designation_id'],
+            'group' => $validatedEmployeeDetails['group_id'],
+            'grade' => 0,
+            'doj' => Carbon::createFromFormat('d-m-Y', $validatedEmployeeDetails['date_of_joining'])->timestamp * 1000,
+            'noticePeriodStart' => '',
+            'noticePeriodEnd' => '',
+            'relievingDate' => '',
+            'floorId' => $validatedEmployeeDetails['floor_id'],
+            'chkHalfDay' => false,
+            'chkHour' => false,
+            'timeType' => 0,
+            'bloodGroupId' => $validatedEmployeeDetails['blood_group_id'],
+            'bloodGroup' => $validatedEmployeeDetails['blood_group'],
+            'tshirtSize' => $validatedEmployeeDetails['t_shirt_size'],
+            'weeklyWorkingHour' => '',
+            'assessmentType' => 0,
+            'month' => 0,
+            'specialTypeUser' => 0,
+            'sType' => 'New',
+            'permntWfh' => 0,
         ];
     }
-    
-    /*
-
-    "userIdCode": 198,
-    "editUid": 0, // Set to zero when creating an employee.
-    "userID": "asdasdasd.a",
-    "firstName": "abcd",
-    "lastName": "a",
-    "fatherName": "a",
-    "nationality": 100, // BEO Country API
-    "communAddressLine1": "communAddressLine1",
-    "communAddressLine2": "communAddressLine2",
-    "communAddDistrict": "communAddDistrict",
-    "communAddPinCode": "communAddPinCode",
-    "communAddstate": "communAddstate", // BEO State API
-    "communAddcountry": 101, // BEO Country API
-    "mobile": "987654321",
-    "landLine": "123456",
-    "permntAddSameAsCommun": 0,
-    "permntAddressLine1": "permntAddressLine1",
-    "permntAddressLine2": "permntAddressLine2",
-    "permntAddDistrict": "permntAddDistrict",
-    "permntAddpinCode": "permntAddpinCode",
-    "permntAddstate": "Kerala",
-    "permntAddcountry": 102, 
-    "emailId": "d.ara@asdasd.mmm",
-    "BEOChat": "d.ara@fff.mmm", // Can be empty.
-    "fax": "12345678", // Can be empty
-    "password": "a",
-    "retypePassword": "a",
-    "prfLang": "en-GB",
-    "empId": 732, // To be entered manually.
-    "dob": "",
-    "gender": "F",
-    "designation": 0, // BEO API
-    "group": 3, // BEO API
-    "grade": 0,
-    "doj": "",
-    "noticePeriodStart": "",
-    "noticePeriodEnd": "",
-    "relievingDate": "",
-    "floorId": 0,
-    "chkHalfDay": false,
-    "chkHour": false,
-    "timeType": 0,
-    "bloodGroupId": 6,
-    "bloodGroup": "O-",
-    "tshirtSize": "S",
-    "weeklyWorkingHour": "",
-    "assessmentType": 0,
-    "month": 0,
-    "specialTypeUser": 0,
-    "sType": "Edit",
-    "permntWfh": 0
-    */
-    
 }
