@@ -97,6 +97,11 @@ class OfferController extends Controller
             return response()->json($offer);
         }
 
+        // Revert offer
+        if ($request->boolean('is_revoked')) {
+            $offer->update(['status' => OfferStatus::OFFER_REVOKED]);
+        }
+
         // Update offer details
         if ($request->hasFile('sign_file_path')) {
             $path = $request->file('sign_file_path')->store("documents/{$offer->employee->employee_id}", 'public');

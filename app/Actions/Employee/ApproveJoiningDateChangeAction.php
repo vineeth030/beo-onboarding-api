@@ -2,10 +2,13 @@
 
 namespace App\Actions\Employee;
 
+use App\Mail\JoiningDateChangeApprovedMail;
 use App\Models\Activity;
 use App\Models\Employee;
+use App\Models\User;
 use App\Notifications\DateOfJoiningChangeApprovedNotification;
 use App\Notifications\DateOfJoiningChangeRejectedNotification;
+use Illuminate\Support\Facades\Mail;
 
 class ApproveJoiningDateChangeAction
 {
@@ -15,7 +18,7 @@ class ApproveJoiningDateChangeAction
 
             $employee->user->notify(
                 new DateOfJoiningChangeApprovedNotification(
-                    employeeName: $employee->first_name . ' ' . $employee->last_name,
+                    employeeName: $employee->first_name.' '.$employee->last_name,
                     updatedDateOfJoining: $updatedJoiningDate)
             );
 
@@ -24,6 +27,13 @@ class ApproveJoiningDateChangeAction
                 'updated_joining_date' => $updatedJoiningDate,
                 'requested_joining_date' => null,
             ]);
+
+            $clientEmailIds = $employee->department?->emails->pluck('email')->toArray() ?? [];
+
+            $hrEmailIds = User::where('role', 'admin')->pluck('email')->toArray();
+
+            // Send email notification to hr & client email ids.
+            Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new JoiningDateChangeApprovedMail(employee: $employee, updatedJoiningDate: $updatedJoiningDate));
 
             Activity::create([
                 'employee_id' => $employee->id,
@@ -36,7 +46,7 @@ class ApproveJoiningDateChangeAction
         } else {
             $employee->user->notify(
                 new DateOfJoiningChangeRejectedNotification(
-                    employeeName: $employee->first_name . ' ' . $employee->last_name,
+                    employeeName: $employee->first_name.' '.$employee->last_name,
                     requestedDateOfJoining: $updatedJoiningDate
                 )
             );

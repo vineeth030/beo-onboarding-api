@@ -40,7 +40,7 @@ class UpdateEmployeeRequest extends FormRequest
             'mobile' => ['sometimes', 'required', 'string', 'max:255', 'unique:employees,mobile,'.$employeeId],
             'blood_group' => ['sometimes', 'integer', 'in:0,1,2,3,4,5,6,7'],
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
-            'offer_status' => ['sometimes', 'integer', 'in:0,1,2'],
+            'offer_status' => ['sometimes', 'integer', 'in:0,1,2,3,4,5,6,7'],
             'division' => ['sometimes', 'integer', 'in:0,1'],
             'category' => ['sometimes', 'integer'],
             'joining_date' => ['sometimes', 'nullable', 'string'],
