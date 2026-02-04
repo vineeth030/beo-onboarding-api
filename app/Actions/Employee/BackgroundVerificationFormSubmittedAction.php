@@ -11,11 +11,11 @@ class BackgroundVerificationFormSubmittedAction
 {
     public function execute(Employee $employee): void
     {
-        //$employee->update(['is_open' => 1]);
+        $employee->update(['status' => 2]);
 
         User::where('role', 'admin')->each(function ($admin) use ($employee) {
             $admin->notify(
-                new BackgroundVerificationFromSubmittedNotification($employee->first_name . ' ' . $employee->last_name)
+                new BackgroundVerificationFromSubmittedNotification($employee->first_name.' '.$employee->last_name)
             );
         });
 

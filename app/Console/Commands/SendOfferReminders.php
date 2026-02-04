@@ -37,17 +37,8 @@ class SendOfferReminders extends Command
             ->where('is_declined', false)
             ->where('is_revoked', false)
             ->where(function ($query) use ($twoDaysAgo) {
-                // Never sent a reminder, but offer is at least 2 days old
-                $query->whereNull('last_reminder_sent_at')
-                    ->where('created_at', '<=', $twoDaysAgo);
-            })
-            ->orWhere(function ($query) use ($twoDaysAgo) {
-                // Last reminder was sent 2+ days ago
-                $query->where('is_accepted', false)
-                    ->where('is_declined', false)
-                    ->where('is_revoked', false)
-                    ->whereNotNull('last_reminder_sent_at')
-                    ->where('last_reminder_sent_at', '<=', $twoDaysAgo);
+                $query->where('last_reminder_sent_at', '<=', $twoDaysAgo)
+                        ->orWhereNull('last_reminder_sent_at');
             })
             ->get();
 

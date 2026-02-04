@@ -13,7 +13,7 @@ class UpdateEmployeeAction
         // Handle file upload
         if ($file) {
             $path = $file->store("documents/{$employee->id}", 'public');
-            $data['photo_path'] = '/storage/' . $path;
+            $data['photo_path'] = '/storage/'.$path;
         }
 
         // Update employee
@@ -24,9 +24,9 @@ class UpdateEmployeeAction
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'update.details.candidate',
-            'title' => (($data['status'] ?? null) != 4) ? 
-                            'Details of candidate ' . $employee->name . ' updated by ' . auth()->user()->name : 
-                            'Details of candidate ' . $employee->name . ' verified by ' . auth()->user()->name,
+            'title' => (($data['status'] ?? null) != 4) ?
+                            'Details of candidate '.$employee->name.' updated by '.auth()->user()->name :
+                            'Details of candidate '.$employee->name.' verified by '.auth()->user()->name,
         ]);
 
         return $employee;

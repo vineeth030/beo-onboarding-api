@@ -79,6 +79,8 @@ class Employee extends Model
         'status' => 'integer',
         'division' => 'integer',
         'category' => 'integer',
+        'background_verification_started_at' => 'datetime',
+        'last_bv_reminder_sent_at' => 'datetime',
     ];
 
     protected $appends = ['full_name'];
