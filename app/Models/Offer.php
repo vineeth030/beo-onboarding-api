@@ -28,7 +28,6 @@ class Offer extends Model
         'decline_reason',
         'is_revoked',
         'revoke_reason',
-        'is_family_insurance_paid_by_client',
         'status',
         'last_reminder_sent_at',
     ];
@@ -39,7 +38,6 @@ class Offer extends Model
         'is_accepted' => 'boolean',
         'is_declined' => 'boolean',
         'is_revoked' => 'boolean',
-        'is_family_insurance_paid_by_client' => 'boolean',
         'status' => OfferStatus::class,
         'last_reminder_sent_at' => 'datetime',
     ];

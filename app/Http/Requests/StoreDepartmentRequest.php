@@ -25,6 +25,7 @@ class StoreDepartmentRequest extends FormRequest
             'id' => ['required', 'integer', 'unique:departments'],
             'name' => ['required', 'string', 'max:255'],
             'notice_period' => ['sometimes', 'integer', 'min:0'],
+            'is_family_insurance_paid_by_client' => ['sometimes', 'boolean'],
         ];
     }
 }

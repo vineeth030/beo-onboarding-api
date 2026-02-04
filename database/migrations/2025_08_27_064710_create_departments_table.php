@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('notice_period')->default(3);
+            $table->boolean('is_family_insurance_paid_by_client')->default(false);
             $table->timestamps();
         });
     }

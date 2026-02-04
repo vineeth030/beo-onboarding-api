@@ -24,7 +24,8 @@ class UpdateDepartmentRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'notice_period' => ['sometimes', 'integer', 'min:0'],
-            'emails.*' => ['sometimes','email','max:255'],
+            'is_family_insurance_paid_by_client' => ['sometimes', 'boolean'],
+            'emails.*' => ['sometimes', 'email', 'max:255'],
         ];
     }
 }

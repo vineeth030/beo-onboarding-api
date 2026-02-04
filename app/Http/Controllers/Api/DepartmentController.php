@@ -15,7 +15,7 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        return Department::select('id', 'name', 'notice_period')->with('emails')->get();
+        return Department::select('id', 'name', 'notice_period', 'is_family_insurance_paid_by_client')->with('emails')->get();
     }
 
     /**
@@ -43,16 +43,17 @@ class DepartmentController extends Controller
     {
         $department->update($request->validated());
 
-        if ($request->has('emails')) {
-
-            $department->emails()->delete();
-
-            $emails = collect($request->input('emails'))->map(function ($email) {
-                return ['email' => $email];
-            });
-
-            $department->emails()->createMany($emails);
+        if (! $request->has('emails')) {
+            return response()->json($department->with('emails')->first());
         }
+
+        $department->emails()->delete();
+
+        $emails = collect($request->input('emails'))->map(function ($email) {
+            return ['email' => $email];
+        });
+
+        $department->emails()->createMany($emails);
 
         return response()->json($department->with('emails')->first());
     }

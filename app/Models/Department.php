@@ -11,7 +11,7 @@ class Department extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id', 'name', 'notice_period'
+        'id', 'name', 'notice_period', 'is_family_insurance_paid_by_client',
     ];
 
     public function employees(): HasMany
