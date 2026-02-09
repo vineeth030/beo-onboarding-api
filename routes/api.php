@@ -1,23 +1,26 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ActivityController;
 use App\Http\Controllers\Api\AddressController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BEOSystemController;
+use App\Http\Controllers\Api\ClientController;
+use App\Http\Controllers\Api\ClientEmailController;
 use App\Http\Controllers\Api\DepartmentController;
 use App\Http\Controllers\Api\DesignationController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EducationController;
+use App\Http\Controllers\Api\EmployeeBackgroundVerificationController;
 use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\EmployeeDayOneTicketController;
+use App\Http\Controllers\Api\EmployeeJoiningDateController;
+use App\Http\Controllers\Api\EmployeeOnboardingController;
 use App\Http\Controllers\Api\EmploymentController;
-use App\Http\Controllers\Api\ClientController;
-use App\Http\Controllers\Api\ClientEmailController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SalaryComponentController;
-use App\Models\User;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +36,7 @@ use App\Models\User;
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/test', function(){
+Route::get('/test', function () {
     return response()->json(['Success! API works!']);
 });
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -45,6 +48,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('employees.documents', DocumentController::class)->shallow();
     Route::apiResource('employees.educations', EducationController::class)->shallow();
     Route::apiResource('employees.employments', EmploymentController::class)->shallow();
+
+    // Employee workflow endpoints
+    Route::post('employees/{employee}/background-verification/submit', [EmployeeBackgroundVerificationController::class, 'submit']);
+    Route::post('employees/{employee}/background-verification/resubmit', [EmployeeBackgroundVerificationController::class, 'resubmit']);
+    Route::post('employees/{employee}/background-verification/reopen', [EmployeeBackgroundVerificationController::class, 'reopen']);
+
+    Route::post('employees/{employee}/joining-date/request', [EmployeeJoiningDateController::class, 'request']);
+    Route::post('employees/{employee}/joining-date/approve', [EmployeeJoiningDateController::class, 'approve']);
+    Route::post('employees/{employee}/joining-date/reject', [EmployeeJoiningDateController::class, 'reject']);
+
+    Route::post('employees/{employee}/day-one-ticket/assign', [EmployeeDayOneTicketController::class, 'assign']);
+
+    Route::post('employees/{employee}/onboard', [EmployeeOnboardingController::class, 'onboard']);
 
     Route::post('employees/{employee}', [EmployeeController::class, 'verify']);
     Route::post('employments/{employment}/verify', [EmploymentController::class, 'verify']);

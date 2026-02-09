@@ -91,31 +91,47 @@ class EmployeeController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *
+     * @deprecated Workflow flags (status, is_open, requested_joining_date, is_joining_date_update_approved,
+     *             is_day_one_ticket_assigned, is_onboarded) will be removed. Use dedicated endpoints instead:
+     *             - POST /employees/{employee}/background-verification/submit
+     *             - POST /employees/{employee}/background-verification/resubmit
+     *             - POST /employees/{employee}/background-verification/reopen
+     *             - POST /employees/{employee}/joining-date/request
+     *             - POST /employees/{employee}/joining-date/approve
+     *             - POST /employees/{employee}/joining-date/reject
+     *             - POST /employees/{employee}/day-one-ticket/assign
+     *             - POST /employees/{employee}/onboard
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee, UpdateEmployeeAction $updateEmployeeAction)
     {
         $dataForEmployeeUpdate = Arr::except(
             $request->validated(),
             ['is_joining_date_update_approved', 'updated_joining_date', 'requested_joining_date',
-                'is_open', 'is_pre_joining_form_downloaded']
+                'is_open', 'is_pre_joining_form_downloaded', 'is_day_one_ticket_assigned', 'is_onboarded']
         );
 
         $updatedEmployee = $updateEmployeeAction->execute(
             employee: $employee, data: $dataForEmployeeUpdate, file: $request->file('file')
         );
 
+        // TODO: Remove these workflow handlers once React team switches to dedicated endpoints
+        // Background verification: submit
         if ($request->has('status') && $request->status == 2 && auth()->user()->role == 'candidate') {
             app(BackgroundVerificationFormSubmittedAction::class)->execute(employee: $employee);
         }
 
+        // Background verification: resubmit
         if ($employee->is_open == 1 && auth()->user()->role == 'candidate') {
             app(BackgroundVerificationFormResubmittedAction::class)->execute(employee: $employee);
         }
 
+        // Background verification: reopen
         if ($request->has('is_open') && $request->is_open && auth()->user()->role !== 'candidate') {
             app(BackgroundVerificationReopenedAction::class)->execute(employee: $employee);
         }
 
+        // Joining date: approve/reject
         if ($request->has('is_joining_date_update_approved') && auth()->user()->role !== 'candidate') {
             app(ApproveJoiningDateChangeAction::class)->execute(
                 employee: $employee,
@@ -125,6 +141,7 @@ class EmployeeController extends Controller
             );
         }
 
+        // Joining date: request
         if ($request->has('requested_joining_date') && is_null($request->get('is_joining_date_update_approved')) && auth()->user()->role == 'candidate') {
             app(RequestJoiningDateChangeAction::class)->execute(
                 employee: $employee,
@@ -132,14 +149,17 @@ class EmployeeController extends Controller
             );
         }
 
+        // Pre-joining form downloaded (keeping as is, not extracted to new endpoint)
         if ($request->has('is_pre_joining_form_downloaded') && $request->get('is_pre_joining_form_downloaded')) {
             app(PreJoiningFormDownloadedNotificationAction::class)->execute(employee: $employee);
         }
 
+        // Day one ticket: assign
         if ($request->has('is_day_one_ticket_assigned') && $request->get('is_day_one_ticket_assigned')) {
             app(DayOneTicketAssignedAction::class)->execute(employee: $employee);
         }
 
+        // Onboarding: mark as onboarded
         if ($request->has('is_onboarded') && $request->get('is_onboarded')) {
             $employee->activeOffer()->update(['status' => OfferStatus::REGISTERED_EMPLOYEE]);
         }

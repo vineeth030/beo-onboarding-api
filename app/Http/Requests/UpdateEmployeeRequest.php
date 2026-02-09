@@ -45,17 +45,20 @@ class UpdateEmployeeRequest extends FormRequest
             'category' => ['sometimes', 'integer'],
             'joining_date' => ['sometimes', 'nullable', 'string'],
             'is_verified' => ['sometimes', 'boolean'],
-            'is_open' => ['sometimes', 'boolean'],
-            'is_pre_joining_form_downloaded' => ['sometimes', 'boolean'],
-            'is_joining_date_update_approved' => ['sometimes', 'nullable', 'integer'],
-            'is_onboarded' => ['sometimes', 'boolean'],
-            'updated_joining_date' => ['sometimes', 'nullable', 'date'],
-            'requested_joining_date' => ['sometimes', 'nullable', 'date'],
             'buddy_id' => ['sometimes', 'integer'],
             'poc_1_id' => ['sometimes', 'integer'],
             'poc_2_id' => ['sometimes', 'integer'],
             'department_id' => ['sometimes', 'nullable', 'integer'],
             'designation_id' => ['sometimes', 'integer'],
+
+            // @deprecated Workflow flags - will be removed once React team switches to dedicated endpoints
+            'is_open' => ['sometimes', 'boolean'],
+            'is_pre_joining_form_downloaded' => ['sometimes', 'boolean'],
+            'is_joining_date_update_approved' => ['sometimes', 'nullable', 'integer'],
+            'is_day_one_ticket_assigned' => ['sometimes', 'boolean'],
+            'is_onboarded' => ['sometimes', 'boolean'],
+            'updated_joining_date' => ['sometimes', 'nullable', 'date'],
+            'requested_joining_date' => ['sometimes', 'nullable', 'date'],
         ];
     }
 }
