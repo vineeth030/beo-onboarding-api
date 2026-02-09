@@ -21,7 +21,7 @@ class BackgroundVerificationReopenedAction
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'update.backgroundverification.reopened',
-            'title' => "Backgroud verification of $employee->name has been reopened by " . auth()->user()->name,
+            'title' => "Backgroud verification of $employee->fullname has been reopened by " . auth()->user()->name,
         ]);
     }
 }

@@ -26,7 +26,7 @@ class AcceptOfferAction
 
         $clientEmailIds = $offer->employee?->department?->emails->pluck('email')->toArray();
 
-        $hrEmailIds = User::where('role', 'admin')->pluck('email')->toArray();
+        $hrEmailIds = config('app.hr_emails');
 
         // Send email notification to hr & client email ids.
         Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new OfferAcceptedMail(employee: $offer->employee));

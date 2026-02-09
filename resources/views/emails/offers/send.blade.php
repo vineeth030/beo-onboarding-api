@@ -25,7 +25,7 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    We would like to inform you that the offer letter for the candidate, {{ $employee->first_name . ' ' . $employee->last_name }} for the position of {{ $employee->designation->name }} has been sent.
+                                    We would like to inform you that the offer letter for the candidate, <strong>{{ $employee->fullname }}</strong> for the position of {{ $employee->designation->name }} has been sent.
                                 </p>
 
                                 <p>
@@ -34,11 +34,11 @@
 
                                 @if (str_contains($employee->joining_date, 'month'))
                                     <p>
-                                        The candidate is expected to join "{{ $employee->joining_date }}" from today. However, you will be notified of the exact date once the candidate accepts the offer.
+                                        The candidate is expected to join <strong>{{ $employee->joining_date }}</strong> from today. However, you will be notified of the exact date once the candidate accepts the offer.
                                     </p>    
                                     @else
                                     <p>
-                                        The candidate is expected to join {{ $employee->joining_date }}
+                                        The candidate is expected to join <strong>{{ $employee->joining_date }}</strong>.
                                     </p>
                                 @endif
 

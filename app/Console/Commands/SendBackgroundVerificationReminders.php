@@ -35,7 +35,7 @@ class SendBackgroundVerificationReminders extends Command
         $offers = Offer::query()
             ->where('is_revoked', false)
             ->where('is_declined', false)
-            ->where('status', 1)
+            ->where('status', 2)
             ->where(function ($query) use ($fourDaysAgo) {
                 $query->where('last_background_verification_reminder_sent_at', '<=', $fourDaysAgo)
                     ->orWhereNull('last_background_verification_reminder_sent_at');

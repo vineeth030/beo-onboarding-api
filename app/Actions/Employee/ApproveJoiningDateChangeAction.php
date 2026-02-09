@@ -30,7 +30,7 @@ class ApproveJoiningDateChangeAction
 
             $clientEmailIds = $employee->department?->emails->pluck('email')->toArray() ?? [];
 
-            $hrEmailIds = User::where('role', 'admin')->pluck('email')->toArray();
+            $hrEmailIds = config('app.hr_emails');
 
             // Send email notification to hr & client email ids.
             Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new JoiningDateChangeApprovedMail(employee: $employee, updatedJoiningDate: $updatedJoiningDate));
@@ -40,7 +40,7 @@ class ApproveJoiningDateChangeAction
                 'performed_by_user_id' => auth()->user()->id,
                 'user_type' => 'hr',
                 'type' => 'update.dateofjoiningchange.approved',
-                'title' => "Request to change the Date of Joining of $employee->name to $updatedJoiningDate has been approved",
+                'title' => "Request to change the Date of Joining of $employee->fullname to $updatedJoiningDate has been approved",
             ]);
 
         } else {
@@ -62,7 +62,7 @@ class ApproveJoiningDateChangeAction
                 'performed_by_user_id' => auth()->user()->id,
                 'user_type' => 'hr',
                 'type' => 'update.dateofjoiningchange.rejected',
-                'title' => "Request to change the Date of Joining of $employee->name to $updatedJoiningDate has been rejected",
+                'title' => "Request to change the Date of Joining of $employee->fullname to $updatedJoiningDate has been rejected",
             ]);
         }
     }

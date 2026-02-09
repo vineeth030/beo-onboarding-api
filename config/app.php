@@ -84,6 +84,10 @@ return [
 
     'faker_locale' => env('APP_FAKER_LOCALE', 'en_US'),
 
+    'hr_emails' => env('APP_HR_EMAILS', [
+        'gopikrishnan.pm@beo.in','jayakrishnan.g@beo.in'
+    ]),
+
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

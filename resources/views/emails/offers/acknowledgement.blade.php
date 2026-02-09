@@ -23,7 +23,7 @@
                         <!-- Content -->
                         <tr>
                             <td style="padding:30px;color:#333333;">
-                                <p>Hello,</p>
+                                <p>Hello {{ ucfirst(strtolower($employee->first_name)) }},</p>
 
                                 <p>
                                     Thank you for accepting our offer.
@@ -35,7 +35,7 @@
 
                                 @if (str_contains($employee->joining_date, 'month'))
                                 <p>
-                                    Your can join on "{{ $employee->requested_joining_date }}". We will be in touch with you shortly regarding the next steps in the onboarding process.
+                                    Your can join on <strong>{{ $employee->requested_joining_date }}</strong>. We will be in touch with you shortly regarding the next steps in the onboarding process.
                                 </p>
                                 <p>
                                     Additionally, please share the resignation acceptance letter from your current employer once it becomes available.

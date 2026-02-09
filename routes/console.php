@@ -13,7 +13,7 @@ Artisan::command('inspire', function () {
 Schedule::command('offers:send-reminders')
     ->dailyAt('09:00')
     ->withoutOverlapping()
-    ->onOneServer() // Ensures job runs on only one server in multi-server setup
+    //->onOneServer() // Ensures job runs on only one server in multi-server setup
     ->runInBackground();
 
 // Schedule background verification reminder emails to run daily at 9:00 AM
@@ -21,5 +21,5 @@ Schedule::command('offers:send-reminders')
 Schedule::command('background-verification:send-reminders')
     ->dailyAt('09:00')
     ->withoutOverlapping()
-    ->onOneServer() // Ensures job runs on only one server in multi-server setup
+    //->onOneServer() // Ensures job runs on only one server in multi-server setup
     ->runInBackground();

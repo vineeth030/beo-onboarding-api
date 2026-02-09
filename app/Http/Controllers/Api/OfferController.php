@@ -58,7 +58,7 @@ class OfferController extends Controller
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'add.candidate',
-            'title' => 'Offer created for '.$employee->name.' by '.auth()->user()->name,
+            'title' => 'Offer created for '.$employee->fullname.' by '.auth()->user()->name,
         ]);
 
         return response()->json($offer, 201);

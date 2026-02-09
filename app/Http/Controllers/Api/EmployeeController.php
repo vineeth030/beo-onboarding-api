@@ -174,7 +174,7 @@ class EmployeeController extends Controller
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'assign.buddy.candidate',
-            'title' => 'Assigned buddy to candidate '.$employee->name.' by '.auth()->user()->name,
+            'title' => 'Assigned buddy to candidate '.$employee->fullname.' by '.auth()->user()->name,
         ]);
 
         return response()->json(null, 200);
@@ -198,7 +198,7 @@ class EmployeeController extends Controller
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'assign.pocs.candidate',
-            'title' => 'Assigned POCs to candidate '.$employee->name.' by '.auth()->user()->name,
+            'title' => 'Assigned POCs to candidate '.$employee->fullname.' by '.auth()->user()->name,
         ]);
 
         return response()->json(null, 200);

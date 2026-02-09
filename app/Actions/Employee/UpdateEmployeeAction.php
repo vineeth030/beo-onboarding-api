@@ -25,8 +25,8 @@ class UpdateEmployeeAction
             'user_type' => 'hr',
             'type' => 'update.details.candidate',
             'title' => (($data['status'] ?? null) != 4) ?
-                            'Details of candidate '.$employee->name.' updated by '.auth()->user()->name :
-                            'Details of candidate '.$employee->name.' verified by '.auth()->user()->name,
+                            'Details of candidate '.$employee->fullname.' updated by '.auth()->user()->name :
+                            'Details of candidate '.$employee->fullname.' verified by '.auth()->user()->name,
         ]);
 
         return $employee;

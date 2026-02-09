@@ -23,7 +23,7 @@ class DeclineOfferAction
             'title' => 'Offer declined by '.$offer->employee->name,
         ]);
 
-        $hrEmailIds = User::where('role', 'admin')->pluck('email')->toArray();
+        $hrEmailIds = config('app.hr_emails');
 
         // Send email notification to hr & client email ids.
         Mail::to($hrEmailIds)->send(new OfferDeclinedMail(employee: $offer->employee));
