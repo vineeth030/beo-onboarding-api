@@ -15,6 +15,8 @@ class EmployeeOnboardingController extends Controller
             'status' => OfferStatus::REGISTERED_EMPLOYEE,
         ]);
 
+        $employee->update(['is_onboarded' => 1]);
+
         return response()->noContent();
     }
 }
