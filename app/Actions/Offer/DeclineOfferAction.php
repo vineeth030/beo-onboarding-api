@@ -7,13 +7,16 @@ use App\Mail\OfferDeclinedMail;
 use App\Models\Activity;
 use App\Models\Offer;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 
 class DeclineOfferAction
 {
-    public function execute(Offer $offer): void
+    public function execute(Offer $offer, UploadedFile $signFile): void
     {
-        $offer->update(['status' => OfferStatus::REJECTED]);
+        $path = $signFile->store("documents/{$offer->employee->employee_id}", 'public');
+
+        $offer->update(['status' => OfferStatus::REJECTED, 'sign_file_path' => $path]);
 
         Activity::create([
             'employee_id' => $offer->employee->id,

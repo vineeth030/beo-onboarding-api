@@ -82,17 +82,21 @@ class OfferController extends Controller
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
         $offerData = $request->validated();
-
+        
         // Accept offer
         if ($request->boolean('is_accepted')) {
-            app(AcceptOfferAction::class)->execute(offer: $offer);
+            if($request->hasFile('sign_file_path') == false) return response()->json(['message' => 'Signature file is required'], 422);
+
+            app(AcceptOfferAction::class)->execute(offer: $offer, signFile: $request->file('sign_file_path'));
 
             return response()->json($offer);
         }
 
         // Decline offer
         if ($request->boolean('is_declined')) {
-            app(DeclineOfferAction::class)->execute(offer: $offer);
+            if($request->hasFile('sign_file_path') == false) return response()->json(['message' => 'Signature file is required'], 422);
+            
+            app(DeclineOfferAction::class)->execute(offer: $offer, signFile: $request->file('sign_file_path'));
 
             return response()->json($offer);
         }
@@ -103,11 +107,6 @@ class OfferController extends Controller
         }
 
         // Update offer details
-        if ($request->hasFile('sign_file_path')) {
-            $path = $request->file('sign_file_path')->store("documents/{$offer->employee->employee_id}", 'public');
-            $offerData['sign_file_path'] = $path;
-        }
-
         $offer->update($offerData);
 
         return response()->json($offer);

@@ -8,13 +8,16 @@ use App\Mail\OfferAcceptedMail;
 use App\Models\Activity;
 use App\Models\Offer;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 
 class AcceptOfferAction
 {
-    public function execute(Offer $offer): void
+    public function execute(Offer $offer, UploadedFile $signFile): void
     {
-        $offer->update(['status' => OfferStatus::ACCEPTED]);
+        $path = $signFile->store("documents/{$offer->employee->employee_id}", 'public');
+
+        $offer->update(['status' => OfferStatus::ACCEPTED, 'sign_file_path' => $path]);
 
         Activity::create([
             'employee_id' => $offer->employee->id,

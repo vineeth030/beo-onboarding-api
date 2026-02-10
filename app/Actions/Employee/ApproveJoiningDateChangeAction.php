@@ -47,7 +47,7 @@ class ApproveJoiningDateChangeAction
             $employee->user->notify(
                 new DateOfJoiningChangeRejectedNotification(
                     employeeName: $employee->first_name.' '.$employee->last_name,
-                    requestedDateOfJoining: $updatedJoiningDate
+                    requestedDateOfJoining: $requestedJoiningDate
                 )
             );
 
