@@ -38,6 +38,7 @@ class EmployeeResource extends JsonResource
             'department_id' => $this->department_id,
             'department_name' => $this->department?->name,
             'updated_joining_date' => $this->updated_joining_date,
+            'is_open' => $this->is_open,
             'is_joining_date_update_approved' => $this->is_joining_date_update_approved,
             'is_pre_joining_form_downloaded' => $this->is_pre_joining_form_downloaded,
             'is_onboarded' => $this->is_onboarded,

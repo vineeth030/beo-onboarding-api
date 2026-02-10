@@ -42,7 +42,9 @@ class DateOfJoiningChangeRequestedNotification extends Notification
             ->subject('Request to change Date of Joining from candidate')
             ->greeting(" ")
             ->line('Hello,')
-            ->line("The candidate, $this->requestedEmployeeName has requested a change to their Date of Joining to $this->requestedDateOfJoining.")
+            ->line(new HtmlString(
+                "The candidate, <strong>{$this->requestedEmployeeName}</strong> has requested a change to their Date of Joining to <strong>{$this->requestedDateOfJoining}</strong>."
+            ))
             ->line('Please log in to the onboarding portal to review the request and take the necessary action.')
             ->line('')
             ->line('')

@@ -17,7 +17,6 @@ class RejectJoiningDateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'updated_joining_date' => ['required', 'date'],
             'requested_joining_date' => ['required', 'date'],
         ];
     }

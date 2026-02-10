@@ -54,7 +54,7 @@ class ApproveJoiningDateChangeAction
             $employee->update([
                 'is_joining_date_update_approved' => $isJoiningDateUpdateApproved,
                 'updated_joining_date' => null,
-                'requested_joining_date' => null,
+                'requested_joining_date' => $requestedJoiningDate,
             ]);
 
             Activity::create([

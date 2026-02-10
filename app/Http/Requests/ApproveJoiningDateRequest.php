@@ -18,7 +18,6 @@ class ApproveJoiningDateRequest extends FormRequest
     {
         return [
             'updated_joining_date' => ['required', 'date'],
-            'requested_joining_date' => ['required', 'date'],
         ];
     }
 }

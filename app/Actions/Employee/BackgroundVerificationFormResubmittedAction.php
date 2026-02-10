@@ -11,7 +11,7 @@ class BackgroundVerificationFormResubmittedAction
 {
     public function execute(Employee $employee): void
     {
-        //$employee->update(['is_open' => 1]);
+        $employee->update(['is_open' => 0]);
 
         User::where('role', 'admin')->each(function ($admin) use ($employee) {
             $admin->notify(
