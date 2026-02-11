@@ -83,32 +83,23 @@ class OfferController extends Controller
     {
         $offerData = $request->validated();
         
-        // Accept offer
         if ($request->boolean('is_accepted')) {
             if($request->hasFile('sign_file_path') == false) return response()->json(['message' => 'Signature file is required'], 422);
 
             app(AcceptOfferAction::class)->execute(offer: $offer, signFile: $request->file('sign_file_path'));
-
             return response()->json($offer);
         }
 
-        // Decline offer
         if ($request->boolean('is_declined')) {
-            if($request->hasFile('sign_file_path') == false) return response()->json(['message' => 'Signature file is required'], 422);
-            
-            app(DeclineOfferAction::class)->execute(offer: $offer, signFile: $request->file('sign_file_path'));
-
+            app(DeclineOfferAction::class)->execute(offer: $offer);
             return response()->json($offer);
         }
 
-        // Revert offer
         if ($request->boolean('is_revoked')) {
             $offer->update(['status' => OfferStatus::OFFER_REVOKED]);
         }
 
-        // Update offer details
         $offer->update($offerData);
-
         return response()->json($offer);
     }
 

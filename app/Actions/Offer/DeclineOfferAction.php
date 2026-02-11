@@ -12,11 +12,9 @@ use Illuminate\Support\Facades\Mail;
 
 class DeclineOfferAction
 {
-    public function execute(Offer $offer, UploadedFile $signFile): void
+    public function execute(Offer $offer): void
     {
-        $path = $signFile->store("documents/{$offer->employee->employee_id}", 'public');
-
-        $offer->update(['status' => OfferStatus::REJECTED, 'sign_file_path' => $path]);
+        $offer->update(['status' => OfferStatus::REJECTED]);
 
         Activity::create([
             'employee_id' => $offer->employee->id,
