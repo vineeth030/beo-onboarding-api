@@ -91,7 +91,7 @@ class OfferController extends Controller
         }
 
         if ($request->boolean('is_declined')) {
-            app(DeclineOfferAction::class)->execute(offer: $offer);
+            app(DeclineOfferAction::class)->execute(offer: $offer, declineReason: $request->get('decline_reason'));
             return response()->json($offer);
         }
 
