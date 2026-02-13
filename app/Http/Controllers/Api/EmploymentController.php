@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Employee\NotifyHrOnResubmissionAction;
+use App\Enums\ResubmissionType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmploymentRequest;
 use App\Http\Requests\UpdateEmploymentRequest;
 use App\Models\Employee;
 use App\Models\Employment;
-use App\Models\SalarySlip;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -30,20 +31,20 @@ class EmploymentController extends Controller
 
             if ($request->hasFile("employments.{$index}.resignation_acceptance_letter_file")) {
                 $employmentData['resignation_acceptance_letter_file'] = $request->file("employments.{$index}.resignation_acceptance_letter_file")
-                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.resignation_acceptance_letter_file")->getClientOriginalExtension(), 'public');
+                    ->storeAs("documents/{$employee->id}", uniqid().'.'.$request->file("employments.{$index}.resignation_acceptance_letter_file")->getClientOriginalExtension(), 'public');
                 $employmentData['resignation_acceptance_letter_preview_url'] = Storage::url($employmentData['resignation_acceptance_letter_file']);
             }
 
             if ($request->hasFile("employments.{$index}.experience_letter_file")) {
                 $employmentData['experience_letter_file'] = $request->file("employments.{$index}.experience_letter_file")
-                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.experience_letter_file")->getClientOriginalExtension(), 'public');
+                    ->storeAs("documents/{$employee->id}", uniqid().'.'.$request->file("employments.{$index}.experience_letter_file")->getClientOriginalExtension(), 'public');
                 $employmentData['experience_letter_preview_url'] = Storage::url($employmentData['experience_letter_file']);
             }
 
             $employment = $employee->employments()->create($employmentData);
 
             foreach ($salarySlipFiles as $salarySlipFile) {
-                $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips",uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(),'public');
+                $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips", uniqid().'.'.$salarySlipFile->getClientOriginalExtension(), 'public');
 
                 $employment->salarySlips()->create([
                     'file_path' => $filePath,
@@ -66,14 +67,7 @@ class EmploymentController extends Controller
     {
         $employee = Employee::where('id', $employee_id)->first();
 
-        // $employee->employments()->each(function ($employment) {
-        //     if ($employment->resignation_acceptance_letter_file) {
-        //         Storage::disk('public')->delete($employment->resignation_acceptance_letter_file);
-        //     }
-        //     if ($employment->experience_letter_file) {
-        //         Storage::disk('public')->delete($employment->experience_letter_file);
-        //     }
-        // });
+        $wasAnyEmploymentOpen = $employee->employments()->where('is_open', 1)->exists();
 
         $employee->employments()->delete();
 
@@ -85,7 +79,7 @@ class EmploymentController extends Controller
 
             if ($request->hasFile("employments.{$index}.resignation_acceptance_letter_file")) {
                 $employmentData['resignation_acceptance_letter_file'] = $request->file("employments.{$index}.resignation_acceptance_letter_file")
-                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.resignation_acceptance_letter_file")->getClientOriginalExtension(), 'public');
+                    ->storeAs("documents/{$employee->id}", uniqid().'.'.$request->file("employments.{$index}.resignation_acceptance_letter_file")->getClientOriginalExtension(), 'public');
                 $employmentData['resignation_acceptance_letter_preview_url'] = Storage::url($employmentData['resignation_acceptance_letter_file']);
             } elseif (isset($employmentData['resignation_acceptance_letter_file']) && is_string($employmentData['resignation_acceptance_letter_file']) && str_starts_with($employmentData['resignation_acceptance_letter_file'], '/storage/')) {
                 $employmentData['resignation_acceptance_letter_preview_url'] = $employmentData['resignation_acceptance_letter_file'];
@@ -94,7 +88,7 @@ class EmploymentController extends Controller
 
             if ($request->hasFile("employments.{$index}.experience_letter_file")) {
                 $employmentData['experience_letter_file'] = $request->file("employments.{$index}.experience_letter_file")
-                    ->storeAs("documents/{$employee->id}", uniqid() . '.' . $request->file("employments.{$index}.experience_letter_file")->getClientOriginalExtension(), 'public');
+                    ->storeAs("documents/{$employee->id}", uniqid().'.'.$request->file("employments.{$index}.experience_letter_file")->getClientOriginalExtension(), 'public');
                 $employmentData['experience_letter_preview_url'] = Storage::url($employmentData['experience_letter_file']);
             } elseif (isset($employmentData['experience_letter_file']) && is_string($employmentData['experience_letter_file']) && str_starts_with($employmentData['experience_letter_file'], '/storage/')) {
                 $employmentData['experience_letter_preview_url'] = $employmentData['experience_letter_file'];
@@ -104,10 +98,10 @@ class EmploymentController extends Controller
             $employment = $employee->employments()->create($employmentData + ['employee_id' => $employee->id]);
 
             foreach ($salarySlipFiles as $salarySlipFile) {
-                
+
                 if (is_file($salarySlipFile)) {
-                    $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips", uniqid() . '.' . $salarySlipFile->getClientOriginalExtension(), 'public');
-                }elseif(isset($salarySlipFile) && is_string($salarySlipFile) && str_starts_with($salarySlipFile, '/storage/')){
+                    $filePath = $salarySlipFile->storeAs("documents/{$employee->id}/salary_slips", uniqid().'.'.$salarySlipFile->getClientOriginalExtension(), 'public');
+                } elseif (isset($salarySlipFile) && is_string($salarySlipFile) && str_starts_with($salarySlipFile, '/storage/')) {
                     $filePath = str_replace('/storage/', '', $salarySlipFile);
                 }
 
@@ -120,13 +114,22 @@ class EmploymentController extends Controller
             $employments[] = $employment->load('salarySlips');
         }
 
+        if ($wasAnyEmploymentOpen && auth()->user()->role == 'candidate') {
+            $employee->employments()->update(['is_open' => 0]);
+            app(NotifyHrOnResubmissionAction::class)->execute(
+                employee: $employee,
+                type: ResubmissionType::Employment
+            );
+        }
+
         return response()->json($employments);
     }
 
-    public function verify(Employment $employment, Request $request) : JsonResponse {
+    public function verify(Employment $employment, Request $request): JsonResponse
+    {
 
         $validated = $request->validate([
-            'is_verified' => ['required', 'boolean']
+            'is_verified' => ['required', 'boolean'],
         ]);
 
         $employment->update(['is_verified' => $validated['is_verified']]);
@@ -134,10 +137,11 @@ class EmploymentController extends Controller
         return response()->json(null, 200);
     }
 
-    public function open(Employment $employment, Request $request) : JsonResponse {
+    public function open(Employment $employment, Request $request): JsonResponse
+    {
 
         $validated = $request->validate([
-            'is_open' => ['required', 'boolean']
+            'is_open' => ['required', 'boolean'],
         ]);
 
         $employment->update(['is_open' => $validated['is_open']]);
@@ -148,6 +152,7 @@ class EmploymentController extends Controller
     public function destroy(Employee $employee, Employment $employment)
     {
         $employment->delete();
+
         return response()->json(null, 204);
     }
 }

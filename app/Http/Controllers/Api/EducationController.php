@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Employee\NotifyHrOnResubmissionAction;
+use App\Enums\ResubmissionType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEducationRequest;
 use App\Http\Requests\UpdateEducationRequest;
 use App\Models\Education;
 use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Redis;
 use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 
 class EducationController extends Controller
 {
@@ -49,6 +49,8 @@ class EducationController extends Controller
     {
         $employee = Employee::where('id', $employee_id)->first();
 
+        $wasAnyEducationOpen = $employee->educations()->where('is_open', 1)->exists();
+
         $employee->educations()->delete();
 
         $educations = [];
@@ -61,8 +63,8 @@ class EducationController extends Controller
 
             if ($file instanceof UploadedFile) {
                 $path = $file->store("documents/{$employee->id}", 'public');
-                $certificatePath = '/storage/' . $path;
-            }elseif (is_string($file) && str_starts_with($file, '/storage/')) {
+                $certificatePath = '/storage/'.$path;
+            } elseif (is_string($file) && str_starts_with($file, '/storage/')) {
                 $certificatePath = $file;
             }
 
@@ -73,13 +75,22 @@ class EducationController extends Controller
             $educations[] = $education;
         }
 
+        if ($wasAnyEducationOpen && auth()->user()->role == 'candidate') {
+            $employee->educations()->update(['is_open' => 0]);
+            app(NotifyHrOnResubmissionAction::class)->execute(
+                employee: $employee,
+                type: ResubmissionType::Education
+            );
+        }
+
         return response()->json($educations);
     }
 
-    public function verify(Education $education, Request $request) : JsonResponse {
+    public function verify(Education $education, Request $request): JsonResponse
+    {
 
         $validated = $request->validate([
-            'is_verified' => ['required', 'boolean']
+            'is_verified' => ['required', 'boolean'],
         ]);
 
         $education->update(['is_verified' => $validated['is_verified']]);
@@ -87,10 +98,11 @@ class EducationController extends Controller
         return response()->json(null, 200);
     }
 
-    public function open(Education $education, Request $request) : JsonResponse {
+    public function open(Education $education, Request $request): JsonResponse
+    {
 
         $validated = $request->validate([
-            'is_open' => ['required', 'boolean']
+            'is_open' => ['required', 'boolean'],
         ]);
 
         $education->update(['is_open' => $validated['is_open']]);
@@ -101,6 +113,7 @@ class EducationController extends Controller
     public function destroy(Employee $employee, Education $education)
     {
         $education->delete();
+
         return response()->json(null, 204);
     }
 }

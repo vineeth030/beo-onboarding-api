@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Employee\NotifyHrOnResubmissionAction;
+use App\Enums\ResubmissionType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
-use App\Models\Employee;
 use App\Models\Document;
+use App\Models\Employee;
 use Illuminate\Support\Arr;
 
 class DocumentController extends Controller
@@ -20,7 +22,7 @@ class DocumentController extends Controller
     {
         $path = $request->file('file')->store("documents/{$employee->id}", 'public');
 
-        $document = $employee->documents()->create(Arr::except($request->validated(), ['file']) + ['file_path' => '/storage/' . $path]);
+        $document = $employee->documents()->create(Arr::except($request->validated(), ['file']) + ['file_path' => '/storage/'.$path]);
 
         return response()->json($document, 201);
     }
@@ -32,20 +34,30 @@ class DocumentController extends Controller
 
     public function update(UpdateDocumentRequest $request, Document $document)
     {
+        $wasOpenForChanges = $document->is_open == 1;
+
         if ($request->hasFile('file')) {
             $path = $request->file('file')->store("documents/{$document->employee_id}", 'public');
-            $document->update(Arr::except($request->validated(), ['file']) + ['file_path' => '/storage/' . $path]);
-        }else{
+            $document->update(Arr::except($request->validated(), ['file']) + ['file_path' => '/storage/'.$path]);
+        } else {
             $document->update(Arr::except($request->validated(), ['file']));
         }
 
-        
+        if ($wasOpenForChanges && auth()->user()->role == 'candidate') {
+            $document->update(['is_open' => 0]);
+            app(NotifyHrOnResubmissionAction::class)->execute(
+                employee: $document->employee,
+                type: ResubmissionType::Document
+            );
+        }
+
         return response()->json($document);
     }
 
     public function destroy(Employee $employee, Document $document)
     {
         $document->delete();
+
         return response()->json(null, 204);
     }
 }

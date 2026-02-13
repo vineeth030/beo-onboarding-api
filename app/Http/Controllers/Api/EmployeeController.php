@@ -7,10 +7,12 @@ use App\Actions\Employee\BackgroundVerificationFormResubmittedAction;
 use App\Actions\Employee\BackgroundVerificationFormSubmittedAction;
 use App\Actions\Employee\BackgroundVerificationReopenedAction;
 use App\Actions\Employee\DayOneTicketAssignedAction;
+use App\Actions\Employee\NotifyHrOnResubmissionAction;
 use App\Actions\Employee\PreJoiningFormDownloadedNotificationAction;
 use App\Actions\Employee\RequestJoiningDateChangeAction;
 use App\Actions\Employee\UpdateEmployeeAction;
 use App\Enums\OfferStatus;
+use App\Enums\ResubmissionType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
@@ -114,6 +116,15 @@ class EmployeeController extends Controller
         $updatedEmployee = $updateEmployeeAction->execute(
             employee: $employee, data: $dataForEmployeeUpdate, file: $request->file('file')
         );
+
+        // Profile resubmission notification
+        if ($employee->is_open == 1 && auth()->user()->role == 'candidate' && ! empty($dataForEmployeeUpdate)) {
+            $employee->update(['is_open' => 0]);
+            app(NotifyHrOnResubmissionAction::class)->execute(
+                employee: $employee,
+                type: ResubmissionType::Profile
+            );
+        }
 
         // TODO: Remove these workflow handlers once React team switches to dedicated endpoints
         // Background verification: submit
