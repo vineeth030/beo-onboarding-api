@@ -23,4 +23,9 @@ enum ResubmissionType: string
     {
         return "update.{$this->value}.resubmitted";
     }
+
+    public function getReopenActivityType(): string
+    {
+        return "reopen.{$this->value}";
+    }
 }

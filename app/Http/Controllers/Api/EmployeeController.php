@@ -7,6 +7,7 @@ use App\Actions\Employee\BackgroundVerificationFormResubmittedAction;
 use App\Actions\Employee\BackgroundVerificationFormSubmittedAction;
 use App\Actions\Employee\BackgroundVerificationReopenedAction;
 use App\Actions\Employee\DayOneTicketAssignedAction;
+use App\Actions\Employee\NotifyCandidateOnReopenAction;
 use App\Actions\Employee\NotifyHrOnResubmissionAction;
 use App\Actions\Employee\PreJoiningFormDownloadedNotificationAction;
 use App\Actions\Employee\RequestJoiningDateChangeAction;
@@ -176,6 +177,18 @@ class EmployeeController extends Controller
         }
 
         return response()->json($updatedEmployee);
+    }
+
+    public function open(Employee $employee): JsonResponse
+    {
+        $employee->update(['is_open' => 1]);
+
+        app(NotifyCandidateOnReopenAction::class)->execute(
+            employee: $employee,
+            type: ResubmissionType::Profile
+        );
+
+        return response()->json(null, 200);
     }
 
     /**

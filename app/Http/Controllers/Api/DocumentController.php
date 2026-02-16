@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Employee\NotifyCandidateOnReopenAction;
 use App\Actions\Employee\NotifyHrOnResubmissionAction;
 use App\Enums\ResubmissionType;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,8 @@ use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Document;
 use App\Models\Employee;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class DocumentController extends Controller
@@ -59,5 +62,17 @@ class DocumentController extends Controller
         $document->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function open(Document $document): JsonResponse
+    {
+        $document->update(['is_open' => 1]);
+
+        app(NotifyCandidateOnReopenAction::class)->execute(
+            employee: $document->employee,
+            type: ResubmissionType::Document
+        );
+
+        return response()->json(null, 200);
     }
 }

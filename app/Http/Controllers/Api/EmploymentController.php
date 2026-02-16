@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Actions\Employee\NotifyCandidateOnReopenAction;
 use App\Actions\Employee\NotifyHrOnResubmissionAction;
 use App\Enums\ResubmissionType;
 use App\Http\Controllers\Controller;
@@ -137,15 +138,15 @@ class EmploymentController extends Controller
         return response()->json(null, 200);
     }
 
-    public function open(Employment $employment, Request $request): JsonResponse
+    public function open(Employment $employment): JsonResponse
     {
+        $employment->update(['is_open' => 1]);
 
-        $validated = $request->validate([
-            'is_open' => ['required', 'boolean'],
-        ]);
-
-        $employment->update(['is_open' => $validated['is_open']]);
-
+        app(NotifyCandidateOnReopenAction::class)->execute(
+            employee: $employment->employee,
+            type: ResubmissionType::Employment
+        );
+        
         return response()->json(null, 200);
     }
 

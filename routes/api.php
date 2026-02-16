@@ -51,8 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Employee workflow endpoints
     Route::post('employees/{employee}/background-verification/submit', [EmployeeBackgroundVerificationController::class, 'submit']);
-    //Route::post('employees/{employee}/background-verification/resubmit', [EmployeeBackgroundVerificationController::class, 'resubmit']);
-    //Route::post('employees/{employee}/background-verification/reopen', [EmployeeBackgroundVerificationController::class, 'reopen']);
+    // Route::post('employees/{employee}/background-verification/resubmit', [EmployeeBackgroundVerificationController::class, 'resubmit']);
+    // Route::post('employees/{employee}/background-verification/reopen', [EmployeeBackgroundVerificationController::class, 'reopen']);
 
     Route::post('employees/{employee}/joining-date/request', [EmployeeJoiningDateController::class, 'request']);
     Route::post('employees/{employee}/joining-date/approve', [EmployeeJoiningDateController::class, 'approve']);
@@ -65,6 +65,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('employees/{employee}', [EmployeeController::class, 'verify']);
     Route::post('employments/{employment}/verify', [EmploymentController::class, 'verify']);
     Route::post('educations/{education}/verify', [EducationController::class, 'verify']);
+    Route::post('profile/{employee}/open', [EmployeeController::class, 'open']);
+    Route::post('documents/{document}/open', [DocumentController::class, 'open']);
     Route::post('employments/{employment}/open', [EmploymentController::class, 'open']);
     Route::post('educations/{education}/open', [EducationController::class, 'open']);
 
