@@ -27,7 +27,7 @@ class DesignationService
                 ->post(config('beosystem.base_url').self::CREATE_DESIGNATION_API_URL, [
                     'userIdCode' => $data['userIdCode'],
                     'designationName' => $data['name'],
-                    'companyID' => $data['CompanyID'],
+                    'companyID' => 3,
                 ])
                 ->throw();
 
@@ -99,7 +99,7 @@ class DesignationService
                     'userIdCode' => $data['userIdCode'],
                     'designationID' => $designationId,
                     'designationName' => $data['name'],
-                    'companyID' => $data['CompanyID'],
+                    'companyID' => 3,
                 ])
                 ->throw();
 
