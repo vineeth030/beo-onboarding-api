@@ -38,6 +38,7 @@ class DepartmentController extends Controller
                 'userIdCode' => $validated['userIdCode'],
                 'notice_period' => $validated['notice_period'] ?? 0,
                 'emails' => $validated['emails'] ?? [],
+                'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
             ],
             $validated['sessionToken']
         );
@@ -88,6 +89,7 @@ class DepartmentController extends Controller
                 'userIdCode' => $validated['userIdCode'],
                 'notice_period' => $validated['notice_period'] ?? $department->notice_period ?? 0,
                 'emails' => $validated['emails'] ?? [],
+                'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
             ],
             $validated['sessionToken']
         );
@@ -171,7 +173,7 @@ class DepartmentController extends Controller
                         [
                             'name' => $department['group_name'],
                             'notice_period' => $department['notice_period'] ?? 0,
-                            'is_family_insurance_paid' => $department['is_family_insurance_paid_by_client'] ?? false
+                            'is_family_insurance_paid' => $department['is_family_insurance_paid'] ?? false
                         ]
                     );
 

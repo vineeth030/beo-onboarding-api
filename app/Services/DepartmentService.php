@@ -28,6 +28,7 @@ class DepartmentService
                     'userIdCode' => $data['userIdCode'],
                     'groupName' => $data['name'],
                     'noticePeriod' => $data['notice_period'] ?? 0,
+                    'isFamilyInsurancePaid' => $data['is_family_insurance_paid_by_client'] ?? 0,
                     'emails' => $data['emails'] ?? [],
                 ])
                 ->throw();
@@ -97,6 +98,7 @@ class DepartmentService
                     'groupId' => $departmentId,
                     'groupName' => $data['name'],
                     'noticePeriod' => $data['notice_period'] ?? 0,
+                    'isFamilyInsurancePaid' => $data['is_family_insurance_paid_by_client'] ?? 0,
                     'emails' => $data['emails'] ?? [],
                 ])
                 ->throw();
