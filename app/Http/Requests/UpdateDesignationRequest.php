@@ -23,6 +23,9 @@ class UpdateDesignationRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'sessionToken' => ['required', 'string'],
+            'userIdCode' => ['required', 'integer'],
+            /*'CompanyID' => ['required', 'integer'],*/
         ];
     }
 }
