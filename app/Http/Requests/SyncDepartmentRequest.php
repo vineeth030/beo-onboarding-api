@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateDepartmentRequest extends FormRequest
+class SyncDepartmentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,8 @@ class UpdateDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'notice_period' => ['sometimes', 'integer', 'min:0'],
-            'is_family_insurance_paid_by_client' => ['sometimes', 'boolean'],
             'sessionToken' => ['required', 'string'],
             'userIdCode' => ['required', 'integer'],
-            'emails' => ['sometimes', 'array'],
-            'emails.*' => ['email', 'max:255'],
         ];
     }
 }

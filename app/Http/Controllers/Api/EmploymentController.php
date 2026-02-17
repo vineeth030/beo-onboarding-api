@@ -116,7 +116,10 @@ class EmploymentController extends Controller
         }
 
         if ($wasAnyEmploymentOpen && auth()->user()->role == 'candidate') {
-            $employee->employments()->update(['is_open' => 0]);
+            /*
+            / is_open is set to zero for each individual employments above.
+            / $employee->employments()->update(['is_open' => 0]);
+            */
             app(NotifyHrOnResubmissionAction::class)->execute(
                 employee: $employee,
                 type: ResubmissionType::Employment
@@ -146,7 +149,7 @@ class EmploymentController extends Controller
             employee: $employment->employee,
             type: ResubmissionType::Employment
         );
-        
+
         return response()->json(null, 200);
     }
 

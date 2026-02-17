@@ -77,6 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Department and Designation routes
     Route::apiResource('departments', DepartmentController::class);
+    Route::post('departments-sync', [DepartmentController::class, 'sync']);
     Route::apiResource('designations', DesignationController::class);
     Route::post('designations-sync', [DesignationController::class, 'sync']);
 

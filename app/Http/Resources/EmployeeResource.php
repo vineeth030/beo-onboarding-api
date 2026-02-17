@@ -42,6 +42,7 @@ class EmployeeResource extends JsonResource
             'is_joining_date_update_approved' => $this->is_joining_date_update_approved,
             'is_pre_joining_form_downloaded' => $this->is_pre_joining_form_downloaded,
             'is_onboarded' => $this->is_onboarded,
+            'is_verified' => $this->is_verified,
             'requested_joining_date' => $this->requested_joining_date,
             'created_at' => $this->created_at,
             'buddy_id' => $this->buddy_id,

@@ -5,107 +5,35 @@ namespace App\Services;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
-class DesignationService
+class DepartmentService
 {
-    private const CREATE_DESIGNATION_API_URL = '/api/Users/CreateDesignation';
+    private const CREATE_DEPARTMENT_API_URL = '/api/Users/CreateGroup';
 
-    private const UPDATE_DESIGNATION_API_URL = '/api/Users/UpdateDesignation';
+    private const UPDATE_DEPARTMENT_API_URL = '/api/Users/UpdateGroup';
 
-    private const SYNC_DESIGNATIONS_API_URL = '/api/Users/NeccessaryUsersDetailsInfoForMobApp';
+    private const SYNC_DEPARTMENTS_API_URL = '/api/Users/GetGroupListForMobApp';
 
     private const BEO_SYSTEM_SESSION_EXPIRED_CODE = 120;
 
     private const BEO_SYSTEM_INVALID_SESSION_CODE = 119;
 
     /**
-     * Create a new designation via external API.
+     * Create a new department via external API.
      */
-    public function createDesignation(array $data, string $sessionToken): array
+    public function createDepartment(array $data, string $sessionToken): array
     {
         try {
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                ->post(config('beosystem.base_url').self::CREATE_DESIGNATION_API_URL, [
+                ->post(config('beosystem.base_url').self::CREATE_DEPARTMENT_API_URL, [
                     'userIdCode' => $data['userIdCode'],
-                    'designationName' => $data['name'],
-                    'companyID' => $data['CompanyID'],
+                    'groupName' => $data['name'],
+                    'noticePeriod' => $data['notice_period'] ?? 0,
+                    'emails' => $data['emails'] ?? [],
                 ])
                 ->throw();
 
             if ($response->failed()) {
-                Log::error('Failed to create designation via external API', [
-                    'data' => $data,
-                    'response' => $response->body(),
-                ]);
-
-                return [
-                    'success' => false,
-                    'message' => 'BEO system unavailable. Please try again later.',
-                    'code' => 503,
-                ];
-            }
-
-            $responseData = $response->json();
-
-            if ($this->isSessionError($responseData)) {
-                return $this->handleSessionError($responseData);
-            }
-
-            Log::info('Response when creating designation', [
-                [$responseData]
-            ]);
-
-            if (($responseData['StatusCode'] ?? null) != 200) {
-                Log::error('External API returned error when creating designation', [
-                    'data' => $data,
-                    'response' => $responseData,
-                ]);
-
-                return [
-                    'success' => false,
-                    'message' => $responseData['errorMessage'] ?? 'Failed to create designation.',
-                    'code' => $responseData['status'] ?? 500,
-                ];
-            }
-
-            return [
-                'success' => true,
-                'data' => $responseData,
-                'message' => 'Designation created successfully.',
-                'code' => 200,
-            ];
-
-        } catch (\Exception $e) {
-            Log::error('Exception when creating designation via external API', [
-                'data' => $data,
-                'error' => $e->getMessage(),
-            ]);
-
-            return [
-                'success' => false,
-                'message' => 'Failed to communicate with BEO system.',
-                'code' => 503,
-            ];
-        }
-    }
-
-    /**
-     * Update an existing designation via external API.
-     */
-    public function updateDesignation(int $designationId, array $data, string $sessionToken): array
-    {
-        try {
-            $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                ->post(config('beosystem.base_url').self::UPDATE_DESIGNATION_API_URL, [
-                    'userIdCode' => $data['userIdCode'],
-                    'designationID' => $designationId,
-                    'designationName' => $data['name'],
-                    'companyID' => $data['CompanyID'],
-                ])
-                ->throw();
-
-            if ($response->failed()) {
-                Log::error('Failed to update designation via external API', [
-                    'designation_id' => $designationId,
+                Log::error('Failed to create department via external API', [
                     'data' => $data,
                     'response' => $response->body(),
                 ]);
@@ -124,15 +52,14 @@ class DesignationService
             }
 
             if (($responseData['StatusCode'] ?? null) != 200) {
-                Log::error('External API returned error when updating designation', [
-                    'designation_id' => $designationId,
+                Log::error('External API returned error when creating department', [
                     'data' => $data,
                     'response' => $responseData,
                 ]);
 
                 return [
                     'success' => false,
-                    'message' => $responseData['errorMessage'] ?? 'Failed to update designation.',
+                    'message' => $responseData['errorMessage'] ?? 'Failed to create department.',
                     'code' => $responseData['StatusCode'] ?? 500,
                 ];
             }
@@ -140,13 +67,12 @@ class DesignationService
             return [
                 'success' => true,
                 'data' => $responseData,
-                'message' => 'Designation updated successfully.',
+                'message' => 'Department created successfully.',
                 'code' => 200,
             ];
 
         } catch (\Exception $e) {
-            Log::error('Exception when updating designation via external API', [
-                'designation_id' => $designationId,
+            Log::error('Exception when creating department via external API', [
                 'data' => $data,
                 'error' => $e->getMessage(),
             ]);
@@ -160,22 +86,91 @@ class DesignationService
     }
 
     /**
-     * Sync all designations from external API.
+     * Update an existing department via external API.
      */
-    public function syncDesignations(int $userIdCode, string $sessionToken): array
+    public function updateDepartment(int $departmentId, array $data, string $sessionToken): array
     {
         try {
-            Log::info('sessionToken', [$sessionToken]);
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
-                ->post(config('beosystem.base_url').self::SYNC_DESIGNATIONS_API_URL, [
+                ->post(config('beosystem.base_url').self::UPDATE_DEPARTMENT_API_URL, [
+                    'userIdCode' => $data['userIdCode'],
+                    'groupId' => $departmentId,
+                    'groupName' => $data['name'],
+                    'noticePeriod' => $data['notice_period'] ?? 0,
+                    'emails' => $data['emails'] ?? [],
+                ])
+                ->throw();
+
+            if ($response->failed()) {
+                Log::error('Failed to update department via external API', [
+                    'department_id' => $departmentId,
+                    'data' => $data,
+                    'response' => $response->body(),
+                ]);
+
+                return [
+                    'success' => false,
+                    'message' => 'BEO system unavailable. Please try again later.',
+                    'code' => 503,
+                ];
+            }
+
+            $responseData = $response->json();
+
+            if ($this->isSessionError($responseData)) {
+                return $this->handleSessionError($responseData);
+            }
+
+            if (($responseData['StatusCode'] ?? null) != 200) {
+                Log::error('External API returned error when updating department', [
+                    'department_id' => $departmentId,
+                    'data' => $data,
+                    'response' => $responseData,
+                ]);
+
+                return [
+                    'success' => false,
+                    'message' => $responseData['errorMessage'] ?? 'Failed to update department.',
+                    'code' => $responseData['StatusCode'] ?? 500,
+                ];
+            }
+
+            return [
+                'success' => true,
+                'data' => $responseData,
+                'message' => 'Department updated successfully.',
+                'code' => 200,
+            ];
+
+        } catch (\Exception $e) {
+            Log::error('Exception when updating department via external API', [
+                'department_id' => $departmentId,
+                'data' => $data,
+                'error' => $e->getMessage(),
+            ]);
+
+            return [
+                'success' => false,
+                'message' => 'Failed to communicate with BEO system.',
+                'code' => 503,
+            ];
+        }
+    }
+
+    /**
+     * Sync all departments from external API.
+     */
+    public function syncDepartments(int $userIdCode, string $sessionToken): array
+    {
+        try {
+            $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
+                ->post(config('beosystem.base_url').self::SYNC_DEPARTMENTS_API_URL, [
                     'userIdCode' => $userIdCode,
                 ])
                 ->throw();
 
-            Log::info('response', [$response]);
-
             if ($response->failed()) {
-                Log::error('Failed to sync designations from external API', [
+                Log::error('Failed to sync departments from external API', [
                     'userIdCode' => $userIdCode,
                     'response' => $response->body(),
                 ]);
@@ -193,23 +188,23 @@ class DesignationService
                 return $this->handleSessionError($responseData);
             }
 
-            $designations = $responseData['AUserNeccesaryDesigList_lists'] ?? [];
+            $departments = $responseData['group_list'] ?? [];
 
-            if (empty($designations)) {
-                Log::warning('No designations returned from external API during sync', [
+            if (empty($departments)) {
+                Log::warning('No departments returned from external API during sync', [
                     'userIdCode' => $userIdCode,
                 ]);
             }
 
             return [
                 'success' => true,
-                'designations' => $designations,
-                'message' => 'Designations fetched successfully.',
+                'departments' => $departments,
+                'message' => 'Departments fetched successfully.',
                 'code' => 200,
             ];
 
         } catch (\Exception $e) {
-            Log::error('Exception when syncing designations from external API', [
+            Log::error('Exception when syncing departments from external API', [
                 'userIdCode' => $userIdCode,
                 'error' => $e->getMessage(),
             ]);

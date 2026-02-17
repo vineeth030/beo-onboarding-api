@@ -36,7 +36,7 @@ class DesignationController extends Controller
             [
                 'name' => $validated['name'],
                 'userIdCode' => $validated['userIdCode'],
-                'CompanyID' => 3, // BEO India
+                'companyID' => 3, // BEO India
             ],
             $validated['sessionToken']
         );
@@ -74,7 +74,7 @@ class DesignationController extends Controller
             [
                 'name' => $validated['name'],
                 'userIdCode' => $validated['userIdCode'],
-                'CompanyID' => 3,// BEO India
+                'companyID' => 3,// BEO India
             ],
             $validated['sessionToken']
         );

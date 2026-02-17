@@ -26,6 +26,10 @@ class StoreDepartmentRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'notice_period' => ['sometimes', 'integer', 'min:0'],
             'is_family_insurance_paid_by_client' => ['sometimes', 'boolean'],
+            'sessionToken' => ['required', 'string'],
+            'userIdCode' => ['required', 'integer'],
+            'emails' => ['sometimes', 'array'],
+            'emails.*' => ['email', 'max:255'],
         ];
     }
 }

@@ -77,7 +77,10 @@ class EducationController extends Controller
         }
 
         if ($wasAnyEducationOpen && auth()->user()->role == 'candidate') {
-            $employee->educations()->update(['is_open' => 0]);
+            /*
+            / is_open is set to zero for each individual educations above.
+            / $employee->educations()->update(['is_open' => 0]);
+            */
             app(NotifyHrOnResubmissionAction::class)->execute(
                 employee: $employee,
                 type: ResubmissionType::Education
