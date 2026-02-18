@@ -51,8 +51,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Employee workflow endpoints
     Route::post('employees/{employee}/background-verification/submit', [EmployeeBackgroundVerificationController::class, 'submit']);
-    // Route::post('employees/{employee}/background-verification/resubmit', [EmployeeBackgroundVerificationController::class, 'resubmit']);
-    // Route::post('employees/{employee}/background-verification/reopen', [EmployeeBackgroundVerificationController::class, 'reopen']);
 
     Route::post('employees/{employee}/joining-date/request', [EmployeeJoiningDateController::class, 'request']);
     Route::post('employees/{employee}/joining-date/approve', [EmployeeJoiningDateController::class, 'approve']);

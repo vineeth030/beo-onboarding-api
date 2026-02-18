@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDepartmentRequest;
 use App\Http\Requests\SyncDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
+use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
 use App\Services\DepartmentService;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +23,10 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
-        return Department::select('id', 'name', 'notice_period', 'is_family_insurance_paid_by_client')->with('emails')->get();
+        return DepartmentResource::collection(
+            Department::with('emails:id,department_id,email')->get()
+        );
+
     }
 
     /**
@@ -37,6 +41,9 @@ class DepartmentController extends Controller
                 'name' => $validated['name'],
                 'userIdCode' => $validated['userIdCode'],
                 'notice_period' => $validated['notice_period'] ?? 0,
+                'is_outsource' => $validated['is_outsource'] ?? true,
+                'is_single_swipe' => $validated['is_single_swipe'] ?? false,
+                'is_support_staff_required' => $validated['is_support_staff_required'] ?? false,
                 'emails' => $validated['emails'] ?? [],
                 'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
             ],
@@ -50,7 +57,6 @@ class DepartmentController extends Controller
         }
 
         $department = Department::create([
-            'id' => $validated['id'],
             'name' => $validated['name'],
             'notice_period' => $validated['notice_period'] ?? 0,
             'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
@@ -72,7 +78,9 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
-        return $department->with('emails')->first();
+        return new DepartmentResource(
+            $department->load('emails')
+        );
     }
 
     /**
@@ -88,6 +96,9 @@ class DepartmentController extends Controller
                 'name' => $validated['name'],
                 'userIdCode' => $validated['userIdCode'],
                 'notice_period' => $validated['notice_period'] ?? $department->notice_period ?? 0,
+                'is_outsource' => $validated['is_outsource'] ?? true,
+                'is_single_swipe' => $validated['is_single_swipe'] ?? false,
+                'is_support_staff_required' => $validated['is_support_staff_required'] ?? false,
                 'emails' => $validated['emails'] ?? [],
                 'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
             ],
@@ -168,19 +179,22 @@ class DepartmentController extends Controller
         DB::transaction(function () use ($departments, &$createdCount, &$updatedCount, &$failedCount) {
             foreach ($departments as $department) {
                 try {
-                     $model = Department::updateOrCreate(
+                    $model = Department::updateOrCreate(
                         ['id' => $department['group_id']],
                         [
                             'name' => $department['group_name'],
                             'notice_period' => $department['notice_period'] ?? 0,
-                            'is_family_insurance_paid' => $department['is_family_insurance_paid'] ?? false
+                            'is_family_insurance_paid' => $department['is_family_insurance_paid'] ?? false,
+                            'is_support_staff_required' => $department['supporting_staff'] ?? false,
+                            'is_outsource' => $department['outsource'] ?? false,
+                            'is_single_swipe' => $department['single_swipe'] ?? false,
                         ]
                     );
 
                     // Sync emails
-                    if (!empty($department['emails'])) {
+                    if (! empty($department['emails'])) {
                         $model->emails()->delete();
-                        $emails = collect($department['emails'])->map(fn($email) => ['email' => $email]);
+                        $emails = collect($department['emails'])->map(fn ($email) => ['email' => $email]);
                         $model->emails()->createMany($emails);
                     }
 

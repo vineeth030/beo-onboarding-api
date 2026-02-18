@@ -22,10 +22,13 @@ class StoreDepartmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            /*'id' => ['required', 'integer', 'unique:departments'],*/
+            /* 'id' => ['required', 'integer', 'unique:departments'], */
             'name' => ['required', 'string', 'max:255'],
             'notice_period' => ['sometimes', 'integer', 'min:0'],
             'is_family_insurance_paid_by_client' => ['sometimes', 'boolean'],
+            'is_outsource' => ['required', 'boolean'],
+            'is_single_swipe' => ['required', 'boolean'],
+            'is_support_staff_required' => ['required', 'boolean'],
             'sessionToken' => ['required', 'string'],
             'userIdCode' => ['required', 'integer'],
             'emails' => ['sometimes', 'array'],

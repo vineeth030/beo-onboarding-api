@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Actions\Offer\AcceptOfferAction;
 use App\Actions\Offer\DeclineOfferAction;
+use App\Actions\Offer\RevokeOfferAction;
 use App\Enums\OfferStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreOfferRequest;
@@ -82,24 +83,31 @@ class OfferController extends Controller
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
         $offerData = $request->validated();
-        
+
         if ($request->boolean('is_accepted')) {
-            if($request->hasFile('sign_file_path') == false) return response()->json(['message' => 'Signature file is required'], 422);
+            if ($request->hasFile('sign_file_path') == false) {
+                return response()->json(['message' => 'Signature file is required'], 422);
+            }
 
             app(AcceptOfferAction::class)->execute(offer: $offer, signFile: $request->file('sign_file_path'));
+
             return response()->json($offer);
         }
 
         if ($request->boolean('is_declined')) {
             app(DeclineOfferAction::class)->execute(offer: $offer, declineReason: $request->get('decline_reason'));
+
             return response()->json($offer);
         }
 
         if ($request->boolean('is_revoked')) {
-            $offer->update(['status' => OfferStatus::OFFER_REVOKED]);
+            app(RevokeOfferAction::class)->execute(offer: $offer, reason: $request->get('revoke_reason'));
+
+            return response()->json($offer);
         }
 
         $offer->update($offerData);
+
         return response()->json($offer);
     }
 

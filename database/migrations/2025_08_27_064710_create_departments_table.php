@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->integer('notice_period')->default(3);
             $table->boolean('is_family_insurance_paid_by_client')->default(false);
+            $table->boolean('is_support_staff_required')->default(false);
+            $table->boolean('is_outsource')->default(true);
+            $table->boolean('is_single_swipe')->default(false);
             $table->timestamps();
         });
     }

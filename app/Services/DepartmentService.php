@@ -27,6 +27,10 @@ class DepartmentService
                 ->post(config('beosystem.base_url').self::CREATE_DEPARTMENT_API_URL, [
                     'userIdCode' => $data['userIdCode'],
                     'groupName' => $data['name'],
+                    'companyID' => 3,
+                    'supportingStaff' => $data['supporting_staff'] ?? false,
+                    'outSource' => $data['out_source'] ?? false,
+                    'singleSwipe' => $data['single_swipe'] ?? false,
                     'noticePeriod' => $data['notice_period'] ?? 0,
                     'isFamilyInsurancePaid' => $data['is_family_insurance_paid_by_client'] ?? 0,
                     'emails' => $data['emails'] ?? [],
@@ -99,6 +103,10 @@ class DepartmentService
                     'groupName' => $data['name'],
                     'noticePeriod' => $data['notice_period'] ?? 0,
                     'isFamilyInsurancePaid' => $data['is_family_insurance_paid_by_client'] ?? 0,
+                    'companyID' => 3,
+                    'supportingStaff' => $data['supporting_staff'] ?? false,
+                    'outSource' => $data['out_source'] ?? false,
+                    'singleSwipe' => $data['single_swipe'] ?? false,
                     'emails' => $data['emails'] ?? [],
                 ])
                 ->throw();
