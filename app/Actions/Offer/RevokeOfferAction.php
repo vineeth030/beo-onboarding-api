@@ -13,7 +13,7 @@ class RevokeOfferAction
     {
         $offer->load('employee.user');
 
-        $offer->update(['status' => OfferStatus::OFFER_REVOKED]);
+        $offer->update(['status' => OfferStatus::OFFER_REVOKED, 'is_revoked' => true, 'revoke_reason' => $reason]);
 
         $employee = $offer->employee;
 
