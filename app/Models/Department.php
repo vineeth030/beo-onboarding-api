@@ -12,6 +12,7 @@ class Department extends Model
 
     protected $fillable = [
         'id', 'name', 'notice_period', 'is_family_insurance_paid_by_client',
+        'is_outsource', 'is_single_swipe', 'is_support_staff_required'
     ];
 
     public function employees(): HasMany
