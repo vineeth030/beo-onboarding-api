@@ -95,6 +95,7 @@ class DepartmentService
      */
     public function updateDepartment(int $departmentId, array $data, string $sessionToken): array
     {
+        Log::info('dataaa: ', [$data]);
         try {
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
                 ->post(config('beosystem.base_url').self::UPDATE_DEPARTMENT_API_URL, [
@@ -104,9 +105,9 @@ class DepartmentService
                     'noticePeriod' => $data['notice_period'] ?? 0,
                     'isFamilyInsurancePaid' => $data['is_family_insurance_paid_by_client'] ?? 0,
                     'companyID' => 3,
-                    'supportingStaff' => $data['is_support_staff_required'] ?? false,
-                    'outSource' => $data['is_outsource'] ?? false,
-                    'singleSwipe' => $data['is_single_swipe'] ?? false,
+                    'supportingStaff' => $data['is_support_staff_required'],
+                    'outSource' => $data['is_outsource'],
+                    'singleSwipe' => $data['is_single_swipe'],
                     'emails' => $data['emails'] ?? [],
                 ])
                 ->throw();

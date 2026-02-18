@@ -60,6 +60,9 @@ class DepartmentController extends Controller
             'name' => $validated['name'],
             'notice_period' => $validated['notice_period'] ?? 0,
             'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
+            'is_outsource' => $validated['is_outsource'] ?? true,
+            'is_single_swipe' => $validated['is_single_swipe'] ?? false,
+            'is_support_staff_required' => $validated['is_support_staff_required'] ?? false,
         ]);
 
         if (! empty($validated['emails'])) {
@@ -96,9 +99,9 @@ class DepartmentController extends Controller
                 'name' => $validated['name'],
                 'userIdCode' => $validated['userIdCode'],
                 'notice_period' => $validated['notice_period'] ?? $department->notice_period ?? 0,
-                'is_outsource' => $validated['is_outsource'] ?? true,
-                'is_single_swipe' => $validated['is_single_swipe'] ?? false,
-                'is_support_staff_required' => $validated['is_support_staff_required'] ?? false,
+                'is_outsource' => $validated['is_outsource'],
+                'is_single_swipe' => $validated['is_single_swipe'],
+                'is_support_staff_required' => $validated['is_support_staff_required'],
                 'emails' => $validated['emails'] ?? [],
                 'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? false,
             ],
@@ -115,6 +118,9 @@ class DepartmentController extends Controller
             'name' => $validated['name'],
             'notice_period' => $validated['notice_period'] ?? $department->notice_period,
             'is_family_insurance_paid_by_client' => $validated['is_family_insurance_paid_by_client'] ?? $department->is_family_insurance_paid_by_client,
+            'is_outsource' => $validated['is_outsource'] ?? true,
+            'is_single_swipe' => $validated['is_single_swipe'] ?? false,
+            'is_support_staff_required' => $validated['is_support_staff_required'] ?? false,
         ]);
 
         if ($request->has('emails')) {
@@ -185,9 +191,9 @@ class DepartmentController extends Controller
                             'name' => $department['group_name'],
                             'notice_period' => $department['notice_period'] ?? 0,
                             'is_family_insurance_paid' => $department['is_family_insurance_paid'] ?? false,
-                            'is_support_staff_required' => $department['supporting_staff'] ?? false,
-                            'is_outsource' => $department['outsource'] ?? false,
-                            'is_single_swipe' => $department['single_swipe'] ?? false,
+                            'is_support_staff_required' => $department['is_support_staff_required'] ?? false,
+                            'is_outsource' => $department['is_outsource'] ?? false,
+                            'is_single_swipe' => $department['is_single_swipe'] ?? false,
                         ]
                     );
 
