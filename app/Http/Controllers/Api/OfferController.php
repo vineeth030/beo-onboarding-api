@@ -103,6 +103,8 @@ class OfferController extends Controller
         if ($request->boolean('is_revoked')) {
             app(RevokeOfferAction::class)->execute(offer: $offer, reason: $request->get('revoke_reason'));
 
+            $offer->employee->tokens()->delete();
+
             return response()->json($offer);
         }
 
