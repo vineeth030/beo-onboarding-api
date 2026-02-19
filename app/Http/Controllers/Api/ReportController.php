@@ -24,6 +24,9 @@ class ReportController extends Controller
         $fromDate = $request->input('from_date');
         $toDate = $request->input('to_date');
 
+        $fromDate = Carbon::parse($fromDate)->startOfDay();
+        $toDate   = Carbon::parse($toDate)->endOfDay();
+
         $offerQuery = Offer::query();
         $employeeQuery = Employee::query();
 
