@@ -14,7 +14,7 @@ class DeclineOfferAction
 {
     public function execute(Offer $offer, String $declineReason): void
     {
-        $offer->update(['status' => OfferStatus::REJECTED, 'decline_reason' => $declineReason]);
+        $offer->update(['status' => OfferStatus::REJECTED, 'decline_reason' => $declineReason, 'is_declined' => 1]);
 
         Activity::create([
             'employee_id' => $offer->employee->id,

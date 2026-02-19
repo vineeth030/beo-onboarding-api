@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Enums\OfferStatus;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
 use App\Models\Offer;
@@ -47,11 +48,11 @@ class ReportController extends Controller
 
         $totalOffers = $offerQuery->count();
         $acceptedOffers = (clone $offerQuery)->where('is_accepted', 1)->count();
-        $pendingOffers = (clone $offerQuery)->where('is_accepted', 0)->where('is_declined', 0)->count();
         $declinedOffers = (clone $offerQuery)->where('is_declined', 1)->count();
+        $pendingOffers = (clone $offerQuery)->where('status', OfferStatus::PENDING)->count();
 
-        $backgroundVerificationPending = (clone $employeeQuery)->where('status', 2)->count();
-        $backgroundVerified = (clone $employeeQuery)->where('status', 4)->count();
+        $backgroundVerificationPending = (clone $employeeQuery)->where('status', OfferStatus::ACCEPTED)->count();
+        $backgroundVerified = (clone $employeeQuery)->where('status', OfferStatus::REGISTERED_EMPLOYEE)->count();
 
         return [
             'total_offers' => $totalOffers,

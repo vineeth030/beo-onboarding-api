@@ -17,7 +17,7 @@ class AcceptOfferAction
     {
         $path = $signFile->store("documents/{$offer->employee->employee_id}", 'public');
 
-        $offer->update(['status' => OfferStatus::ACCEPTED, 'sign_file_path' => $path]);
+        $offer->update(['is_accepted' => true, 'status' => OfferStatus::ACCEPTED, 'sign_file_path' => $path]);
 
         Activity::create([
             'employee_id' => $offer->employee->id,
