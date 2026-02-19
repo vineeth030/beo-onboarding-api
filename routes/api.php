@@ -42,7 +42,7 @@ Route::get('/test', function () {
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 // Employee routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::apiResource('employees', EmployeeController::class);
     Route::apiResource('employees.addresses', AddressController::class)->shallow();
     Route::apiResource('employees.documents', DocumentController::class)->shallow();
