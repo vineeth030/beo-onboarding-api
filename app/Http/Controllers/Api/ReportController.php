@@ -21,16 +21,13 @@ class ReportController extends Controller
             'to_date' => 'sometimes|date'    
         ]);
 
-        $fromDate = $request->input('from_date');
-        $toDate = $request->input('to_date');
-
-        $fromDate = Carbon::parse($fromDate)->startOfDay();
-        $toDate   = Carbon::parse($toDate)->endOfDay();
-
         $offerQuery = Offer::query();
         $employeeQuery = Employee::query();
 
-        if ($fromDate && $toDate) {
+        if ($request->filled(['from_date', 'to_date'])) {
+            $fromDate = Carbon::parse($request->from_date)->startOfDay();
+            $toDate   = Carbon::parse($request->to_date)->endOfDay();
+
             $offerQuery->whereBetween('created_at', [$fromDate, $toDate]);
             $employeeQuery->whereBetween('created_at', [$fromDate, $toDate]);
         }

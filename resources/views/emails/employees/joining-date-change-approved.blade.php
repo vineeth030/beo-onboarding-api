@@ -19,7 +19,7 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    This is to inform you that the joining date change request for {{ $employee->fullname }}, {{ $employee->designation?->name }}, has been approved.
+                                    This is to inform you that the joining date change request for {{ $employee->full_name }}, {{ $employee->designation?->name }}, has been approved.
                                 </p>
 
                                 <p>

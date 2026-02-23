@@ -24,7 +24,7 @@ class DayOneTicketAssignedAction
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'update.dayoneticket.assigned',
-            'title' => "A day one ticket has been assigned to $employee->fullname by ".auth()->user()->name,
+            'title' => "A day one ticket has been assigned to $employee->full_name by ".auth()->user()->name,
         ]);
     }
 }

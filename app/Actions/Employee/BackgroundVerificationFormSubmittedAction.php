@@ -24,7 +24,7 @@ class BackgroundVerificationFormSubmittedAction
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'candidate',
             'type' => 'update.backgroundverification.submitted',
-            'title' => "Backgroud verification form has been submitted by $employee->first_name $employee->last_name",
+            'title' => "Backgroud verification form has been submitted by $employee->full_name",
         ]);
     }
 }

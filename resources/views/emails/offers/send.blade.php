@@ -25,7 +25,7 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    We would like to inform you that the offer letter for the candidate, <strong>{{ $employee->fullname }}</strong> for the position of {{ $employee->designation->name }} has been sent.
+                                    We would like to inform you that the offer letter for the candidate, <strong>{{ $employee->full_name }}</strong> for the position of {{ $employee->designation->name }} has been sent.
                                 </p>
 
                                 <p>

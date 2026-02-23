@@ -59,7 +59,7 @@ class OfferController extends Controller
             'performed_by_user_id' => auth()->user()->id,
             'user_type' => 'hr',
             'type' => 'add.candidate',
-            'title' => 'Offer created for '.$employee->fullname.' by '.auth()->user()->name,
+            'title' => 'Offer created for '.$employee->full_name.' by '.auth()->user()->name,
         ]);
 
         return response()->json($offer, 201);
@@ -89,7 +89,7 @@ class OfferController extends Controller
                 return response()->json(['message' => 'Signature file is required'], 422);
             }
 
-            app(AcceptOfferAction::class)->execute(offer: $offer, signFile: $request->file('sign_file_path'));
+            app(AcceptOfferAction::class)->execute(offer: $offer, acceptComment: $request->get('comment'), signFile: $request->file('sign_file_path'));
 
             return response()->json($offer);
         }
@@ -103,7 +103,7 @@ class OfferController extends Controller
         if ($request->boolean('is_revoked')) {
             app(RevokeOfferAction::class)->execute(offer: $offer, reason: $request->get('revoke_reason'));
 
-            $offer->employee->tokens()->delete();
+            $offer->employee->user->tokens()->delete();
 
             return response()->json($offer);
         }

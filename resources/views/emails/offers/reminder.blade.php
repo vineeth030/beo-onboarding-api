@@ -16,7 +16,7 @@
                         <!-- Content -->
                         <tr>
                             <td style="padding:30px;color:#333333;">
-                                <p>Dear {{ $employee->fullname }},</p>
+                                <p>Dear {{ $employee->full_name }},</p>
 
                                 <p>
                                     This is a friendly reminder that your offer letter for the position of <strong>{{ $employee->designation?->name }}</strong> is still pending your acceptance.

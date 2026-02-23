@@ -40,7 +40,7 @@ class ApproveJoiningDateChangeAction
                 'performed_by_user_id' => auth()->user()->id,
                 'user_type' => 'hr',
                 'type' => 'update.dateofjoiningchange.approved',
-                'title' => "Request to change the Date of Joining of $employee->fullname to $updatedJoiningDate has been approved",
+                'title' => "Request to change the Date of Joining of $employee->full_name to $updatedJoiningDate has been approved",
             ]);
 
         } else {
@@ -62,7 +62,7 @@ class ApproveJoiningDateChangeAction
                 'performed_by_user_id' => auth()->user()->id,
                 'user_type' => 'hr',
                 'type' => 'update.dateofjoiningchange.rejected',
-                'title' => "Request to change the Date of Joining of $employee->fullname to $updatedJoiningDate has been rejected",
+                'title' => "Request to change the Date of Joining of $employee->full_name to $updatedJoiningDate has been rejected",
             ]);
         }
     }

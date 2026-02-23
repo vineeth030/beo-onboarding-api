@@ -23,7 +23,7 @@ class EnsureEmployeeHasActiveOffer
 
         $hasActiveOffer = $employee->offers()
             ->where('is_revoked', false)
-            ->where('is_declined', false)
+            //->where('is_declined', false)
             ->exists();
 
         if (! $hasActiveOffer) {

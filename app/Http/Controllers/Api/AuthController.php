@@ -79,7 +79,7 @@ class AuthController extends Controller
                 'performed_by_user_id' => $user->id,
                 'user_type' => 'candidate',
                 'type' => 'candidate.login',
-                'title' => $user->employee?->first_name.' '.$user->employee?->last_name.' logged in successfully.',
+                'title' => $user->employee?->full_name.' logged in successfully.',
             ]);
         }
 
