@@ -147,6 +147,8 @@ class EmployeeController extends Controller
     {
         $employee->delete();
 
+        $employee->user->delete();
+
         return response()->json(null, 204);
     }
 
