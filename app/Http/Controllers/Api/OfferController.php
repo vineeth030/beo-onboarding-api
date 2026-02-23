@@ -89,7 +89,7 @@ class OfferController extends Controller
                 return response()->json(['message' => 'Signature file is required'], 422);
             }
 
-            app(AcceptOfferAction::class)->execute(offer: $offer, acceptComment: $request->get('comment'), signFile: $request->file('sign_file_path'));
+            app(AcceptOfferAction::class)->execute(offer: $offer, acceptComment: $request->get('comment', ''), signFile: $request->file('sign_file_path'));
 
             return response()->json($offer);
         }
