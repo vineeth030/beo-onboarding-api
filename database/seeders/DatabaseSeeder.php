@@ -21,23 +21,23 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(OfficeSeeder::class);
 
-        User::factory()->create([
-            'name' => 'Super Admin',
-            'email' => 'superadmin@ob.com',
-            'role' => 'superadmin'
-        ]);
+        // User::factory()->create([
+        //     'name' => 'Super Admin',
+        //     'email' => 'superadmin@ob.com',
+        //     'role' => 'superadmin'
+        // ]);
 
-        User::factory(10)->create(['role' => 'candidate'])->each(function ($user) {
-            Employee::factory()
-                ->has(Address::factory()->state(['type' => 'current']))
-                ->has(Address::factory()->state(['type' => 'permanent']))
-                ->has(Document::factory()->count(3))
-                ->has(Education::factory()->count(2), 'educations')
-                ->has(Employment::factory()->count(2))
-                ->create(['user_id' => $user->id, 'department_id' => rand(1, 9), 'designation_id' => rand(1, 9), 'office_id' => rand(1,2), 'email' => $user->email, 'password' => 'password']);
-        });
+        // User::factory(10)->create(['role' => 'candidate'])->each(function ($user) {
+        //     Employee::factory()
+        //         ->has(Address::factory()->state(['type' => 'current']))
+        //         ->has(Address::factory()->state(['type' => 'permanent']))
+        //         ->has(Document::factory()->count(3))
+        //         ->has(Education::factory()->count(2), 'educations')
+        //         ->has(Employment::factory()->count(2))
+        //         ->create(['user_id' => $user->id, 'department_id' => rand(1, 9), 'designation_id' => rand(1, 9), 'office_id' => rand(1,2), 'email' => $user->email, 'password' => 'password']);
+        // });
 
-        $this->call(OfferSeeder::class);
+        // $this->call(OfferSeeder::class);
 
         DB::table('salary_components')->insert([
             'basic_percentage' => 0.45,
@@ -53,6 +53,6 @@ class DatabaseSeeder extends Seeder
             'employer_pf_annual' => 21600
         ]);
 
-        $this->call(ActivitySeeder::class);
+        // $this->call(ActivitySeeder::class);
     }
 }
