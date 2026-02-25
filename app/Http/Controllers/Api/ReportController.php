@@ -51,7 +51,7 @@ class ReportController extends Controller
         $declinedOffers = (clone $offerQuery)->where('is_declined', 1)->count();
         $pendingOffers = (clone $offerQuery)->where('status', OfferStatus::PENDING)->count();
 
-        $backgroundVerificationPending = (clone $employeeQuery)->where('status', OfferStatus::ACCEPTED)->count();
+        $backgroundVerificationPending = (clone $employeeQuery)->where('status', 1)->count();
         $backgroundVerified = (clone $employeeQuery)->where('status', OfferStatus::REGISTERED_EMPLOYEE)->count();
 
         return [
@@ -60,7 +60,7 @@ class ReportController extends Controller
             'pending_offers' => $pendingOffers,
             'declined_offers' => $declinedOffers,
             'background_verification_pending' => $backgroundVerificationPending,
-            'background_verified' => $backgroundVerified
+            'employee_registered' => $backgroundVerified
         ];
     }
 
@@ -72,7 +72,7 @@ class ReportController extends Controller
         $offerCounts = Offer::selectRaw('
                 MONTH(created_at) as month,
                 COUNT(*) as offers,
-                SUM(CASE WHEN is_accepted = 1 THEN 1 ELSE 0 END) as accepted
+                SUM(CASE WHEN status = 7 THEN 1 ELSE 0 END) as onboarded
             ')
             ->groupBy('month')
             ->get()
@@ -89,7 +89,7 @@ class ReportController extends Controller
             $months->push([
                 'month' => $monthName,
                 'offers' => isset($offerCounts[$monthKey]) ? (int) $offerCounts[$monthKey]->offers : 0,
-                'accepted' => isset($offerCounts[$monthKey]) ? (int) $offerCounts[$monthKey]->accepted : 0,
+                'onboarded' => isset($offerCounts[$monthKey]) ? (int) $offerCounts[$monthKey]->onboarded : 0,
             ]);
 
             $current->addMonth();
