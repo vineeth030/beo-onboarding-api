@@ -25,7 +25,7 @@ class StoreAddressRequest extends FormRequest
             'addresses' => ['required', 'array', 'size:2'],
             'addresses.*.line1' => ['required', 'string', 'max:255'],
             'addresses.*.line2' => ['nullable', 'string', 'max:255'],
-            'addresses.*.line3' => ['nullable', 'string', 'max:255'],
+            'addresses.*.district' => ['nullable', 'string', 'max:255'],
             'addresses.*.landmark' => ['nullable', 'string', 'max:255'],
             'addresses.*.country' => ['required', 'integer', 'max:255'],
             'addresses.*.state' => ['required', 'string', 'max:255'],

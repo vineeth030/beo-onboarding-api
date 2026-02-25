@@ -14,7 +14,7 @@ class Address extends Model
         'employee_id',
         'line1',
         'line2',
-        'line3',
+        'district',
         'landmark',
         'country',
         'state',

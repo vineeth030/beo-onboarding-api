@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('employee_id')->constrained()->onDelete('cascade');
             $table->string('line1');
             $table->string('line2')->nullable();
-            $table->string('line3')->nullable();
+            $table->string('district')->nullable();
             $table->string('landmark')->nullable();
             $table->integer('country')->nullable();
             $table->string('state')->nullable();

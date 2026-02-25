@@ -46,7 +46,7 @@ class StoreBEOEmployeeRequest extends FormRequest
             'password' => ['required', 'string', 'max:255'],
             'confirm_password' => ['required', 'string', 'max:255'],
             'preferred_language' => ['required', 'string', 'max:255'],
-            'employee_id' => ['required', 'integer'],
+            'employee_type' => ['required', 'string', 'in:S,I,E'],
             'date_of_birth' => ['required', 'date_format:d-m-Y'],
             'gender' => ['required', 'string'],
             'designation_id' => ['required', 'integer'],
