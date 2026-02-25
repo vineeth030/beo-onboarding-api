@@ -29,7 +29,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $employees = Employee::with(['offers', 'department', 'activeOffer'])
+        $employees = Employee::with(['offers', 'department', 'designation', 'activeOffer'])
             ->orderBy('id', 'desc')
             ->get();
 
@@ -78,6 +78,8 @@ class EmployeeController extends Controller
             'addresses',
             'documents',
             'educations',
+            'department',
+            'designation',
             'employments.salarySlips',
             'offers',
         ]);
