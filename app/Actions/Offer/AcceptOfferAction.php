@@ -30,9 +30,11 @@ class AcceptOfferAction
             'title' => 'Offer accepted by '.$offer->employee->full_name,
         ]);
 
-        $clientEmailIds = $offer->employee?->department?->emails->pluck('email')->toArray();
+        //$clientEmailIds = $offer->employee?->department?->emails->pluck('email')->toArray();
+        $clientEmailIds = $offer->client_emails;
 
-        $hrEmailIds = config('app.hr_emails');
+        //$hrEmailIds = config('app.hr_emails');
+        $hrEmailIds = $offer->beo_emails;
 
         // Send email notification to hr & client email ids.
         Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new OfferAcceptedMail(employee: $offer->employee));
