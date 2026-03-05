@@ -5,7 +5,6 @@ namespace App\Actions\Employee;
 use App\Mail\JoiningDateChangeApprovedMail;
 use App\Models\Activity;
 use App\Models\Employee;
-use App\Models\User;
 use App\Notifications\DateOfJoiningChangeApprovedNotification;
 use App\Notifications\DateOfJoiningChangeRejectedNotification;
 use Illuminate\Support\Facades\Mail;

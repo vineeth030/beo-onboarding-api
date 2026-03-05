@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\JoiningDateType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -60,6 +61,7 @@ class Employee extends Model
         'photo_path',
         'blood_group',
         'joining_date',
+        'joining_date_type',
         'status',
         'division',
         'category',
@@ -76,6 +78,7 @@ class Employee extends Model
     ];
 
     protected $casts = [
+        'joining_date_type' => JoiningDateType::class,
         'status' => 'integer',
         'division' => 'integer',
         'category' => 'integer',

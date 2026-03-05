@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\JoiningDateType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
 
 class StoreEmployeeRequest extends FormRequest
 {
@@ -39,6 +41,7 @@ class StoreEmployeeRequest extends FormRequest
             'division' => ['sometimes', 'integer', 'in:0,1'],
             'category' => ['sometimes', 'integer'],
             'joining_date' => ['sometimes', 'string'],
+            'joining_date_type' => ['required', 'string', new Enum(JoiningDateType::class)],
             'department_id' => ['sometimes', 'nullable', 'integer'],
             'designation_id' => ['sometimes', 'integer'],
         ];

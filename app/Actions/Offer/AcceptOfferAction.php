@@ -2,24 +2,24 @@
 
 namespace App\Actions\Offer;
 
+use App\Enums\JoiningDateType;
 use App\Enums\OfferStatus;
 use App\Mail\OfferAcceptanceAcknowledgementMail;
 use App\Mail\OfferAcceptedMail;
 use App\Models\Activity;
 use App\Models\Offer;
-use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 
 class AcceptOfferAction
 {
-    public function execute(Offer $offer, String $acceptComment, UploadedFile $signFile): void
+    public function execute(Offer $offer, string $acceptComment, UploadedFile $signFile): void
     {
         $path = $signFile->store("documents/{$offer->employee->employee_id}", 'public');
 
         $offer->update([
-            'is_accepted' => true, 'status' => OfferStatus::ACCEPTED, 
-            'sign_file_path' => $path, 'comment' => $acceptComment
+            'is_accepted' => true, 'status' => OfferStatus::ACCEPTED,
+            'sign_file_path' => $path, 'comment' => $acceptComment,
         ]);
 
         Activity::create([
@@ -30,17 +30,19 @@ class AcceptOfferAction
             'title' => 'Offer accepted by '.$offer->employee->full_name,
         ]);
 
-        //$clientEmailIds = $offer->employee?->department?->emails->pluck('email')->toArray();
+        // $clientEmailIds = $offer->employee?->department?->emails->pluck('email')->toArray();
         $clientEmailIds = $offer->client_emails;
 
-        //$hrEmailIds = config('app.hr_emails');
+        // $hrEmailIds = config('app.hr_emails');
         $hrEmailIds = $offer->beo_emails;
 
         // Send email notification to hr & client email ids.
         Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new OfferAcceptedMail(employee: $offer->employee));
 
-        Mail::to($offer->employee->email)
-            ->cc([...$hrEmailIds, ...$clientEmailIds])
-            ->send(new OfferAcceptanceAcknowledgementMail(employee: $offer->employee));
+        if ($offer->employee->joining_date_type === JoiningDateType::PRE_APPROVED) {
+            Mail::to($offer->employee->email)
+                ->cc([...$hrEmailIds, ...$clientEmailIds])
+                ->send(new OfferAcceptanceAcknowledgementMail(employee: $offer->employee));
+        }
     }
 }

@@ -35,6 +35,7 @@ class EmployeeResource extends JsonResource
             'category' => $this->category,
             'division' => $this->division,
             'joining_date' => $this->joining_date,
+            'joining_date_type' => $this->joining_date_type,
             'designation_id' => $this->designation_id,
             'department_id' => $this->department_id,
             'department_name' => $this->department?->name,
