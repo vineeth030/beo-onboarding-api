@@ -15,7 +15,9 @@ class PreJoiningFormDownloadedNotificationAction
 
         $employee->activeOffer()->update(['status' => OfferStatus::COMPLETED_PRE_JOINING]);
 
-        User::where('role', 'admin')->each(function ($admin) use ($employee) {
+        $hrEmails = config('app.hr_emails', []);
+
+        User::whereIn('email', $hrEmails)->each(function ($admin) use ($employee) {
             $admin->notify(
                 new PreJoiningFormDownloadedNotification(
                     $employee->first_name.' '.$employee->last_name

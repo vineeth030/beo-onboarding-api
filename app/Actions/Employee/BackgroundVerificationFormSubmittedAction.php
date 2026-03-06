@@ -13,7 +13,9 @@ class BackgroundVerificationFormSubmittedAction
     {
         $employee->update(['status' => 2]);
 
-        User::where('role', 'admin')->each(function ($admin) use ($employee) {
+        $hrEmails = config('app.hr_emails', []);
+
+        User::whereIn('email', $hrEmails)->each(function ($admin) use ($employee) {
             $admin->notify(
                 new BackgroundVerificationFromSubmittedNotification($employee->first_name.' '.$employee->last_name)
             );
