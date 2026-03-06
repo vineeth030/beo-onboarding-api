@@ -27,7 +27,7 @@ class BackgroundVerificationReminderMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reminder: Please Submit Your Background Verification Form',
+            subject: 'Reminder: Please submit your background verification form',
         );
     }
 

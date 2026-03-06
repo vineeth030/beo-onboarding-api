@@ -27,7 +27,7 @@ class JoiningDateChangeApprovedMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Joining Date Change Request Approved',
+            subject: 'Joining date change request approved',
         );
     }
 

@@ -20,7 +20,7 @@ class RequestJoiningDateChangeAction
         if($isProposedDate) return;
 
         if ($requestedJoiningDate) {
-            $hrEmailIds = config('app.hr_emails');
+            $hrEmailIds = $employee->activeOffer->beo_emails;
             
             User::whereIn('email', $hrEmailIds)->each(fn ($admin) => 
                 $admin->notify(

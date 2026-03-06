@@ -32,7 +32,7 @@
                                     All relevant details regarding compensation and employment terms are included in the attached document.
                                 </p>
 
-                                @if (str_contains($employee->joining_date, 'month'))
+                                @if ($employee->joining_date_type === \App\Enums\JoiningDateType::PROPOSED)
                                     <p>
                                         The candidate is expected to join <strong>{{ $employee->joining_date }}</strong> from today. However, you will be notified of the exact date once the candidate accepts the offer.
                                     </p>    

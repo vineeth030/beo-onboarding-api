@@ -31,7 +31,7 @@ class OfferLetterSendMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Offer Letter Send',
+            subject: 'Offer from BEO Software',
         );
     }
 
