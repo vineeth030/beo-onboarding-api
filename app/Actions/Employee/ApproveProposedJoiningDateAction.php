@@ -2,26 +2,17 @@
 
 namespace App\Actions\Employee;
 
-use App\Enums\JoiningDateType;
-use App\Mail\JoiningDateChangeApprovedMail;
 use App\Mail\WelcomeCandidateMail;
 use App\Models\Activity;
 use App\Models\Employee;
-use App\Notifications\DateOfJoiningChangeApprovedNotification;
 use App\Notifications\DateOfJoiningChangeRejectedNotification;
 use Illuminate\Support\Facades\Mail;
 
-class ApproveJoiningDateChangeAction
+class ApproveProposedJoiningDateAction
 {
     public function execute(Employee $employee, bool $isJoiningDateUpdateApproved, ?string $updatedJoiningDate = null, ?string $requestedJoiningDate = null): void
     {
         if ($isJoiningDateUpdateApproved) {
-
-            $employee->user->notify(
-                new DateOfJoiningChangeApprovedNotification(
-                    employeeName: $employee->first_name.' '.$employee->last_name,
-                    updatedDateOfJoining: $updatedJoiningDate)
-            );
 
             $employee->update([
                 'is_joining_date_update_approved' => $isJoiningDateUpdateApproved,
@@ -33,22 +24,24 @@ class ApproveJoiningDateChangeAction
 
             $hrEmailIds = config('app.hr_emails');
 
-            // Send email notification to hr & client email ids.
-            Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new JoiningDateChangeApprovedMail(employee: $employee, updatedJoiningDate: $updatedJoiningDate));
+            Mail::to($employee->email)
+                ->cc([...$hrEmailIds, ...$clientEmailIds])
+                ->send(new WelcomeCandidateMail(employee: $employee));
 
             Activity::create([
                 'employee_id' => $employee->id,
                 'performed_by_user_id' => auth()->user()->id,
                 'user_type' => 'hr',
                 'type' => 'update.dateofjoiningchange.approved',
-                'title' => "Request to change the Date of Joining of $employee->full_name to $updatedJoiningDate has been approved",
+                'title' => "Proposed Date of Joining of $updatedJoiningDate by $employee->full_name has been approved.",
             ]);
 
         } else {
             $employee->user->notify(
                 new DateOfJoiningChangeRejectedNotification(
                     employeeName: $employee->first_name.' '.$employee->last_name,
-                    requestedDateOfJoining: $requestedJoiningDate
+                    requestedDateOfJoining: $requestedJoiningDate,
+                    isProposedDate: true
                 )
             );
 
@@ -63,7 +56,7 @@ class ApproveJoiningDateChangeAction
                 'performed_by_user_id' => auth()->user()->id,
                 'user_type' => 'hr',
                 'type' => 'update.dateofjoiningchange.rejected',
-                'title' => "Request to change the Date of Joining of $employee->full_name to $updatedJoiningDate has been rejected",
+                'title' => "Proposed Date of Joining of $updatedJoiningDate by $employee->full_name has been rejected",
             ]);
         }
     }

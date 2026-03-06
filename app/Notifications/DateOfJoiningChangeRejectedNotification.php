@@ -15,7 +15,11 @@ class DateOfJoiningChangeRejectedNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(public string $employeeName, public string $requestedDateOfJoining)
+    public function __construct(
+            public string $employeeName, 
+            public string $requestedDateOfJoining, 
+            public bool $isProposedDate = false
+        )
     {
         //
     }
@@ -30,11 +34,15 @@ class DateOfJoiningChangeRejectedNotification extends Notification
         return ['mail', 'database'];
     }
     
-    public function toDatabase($notifiable)
+    public function toDatabase($notifiable): array
     {
-        return [
-            'title' => 'Date of joining changed rejected.',
-            'message' => 'Date of joining changed rejected!',
+        return $this->isProposedDate ? [
+            'title' => 'Proposed date of joining - Rejected',
+            'message' => "We regret to inform you that your proposed date of joining, $this->requestedDateOfJoining has been declined. ",
+            'employee_id' => $notifiable->id
+        ] : [
+            'title' => 'Request to change date of joining - Rejected',
+            'message' => "We regret to inform you that your request to change the date of joining to $this->requestedDateOfJoining has been declined. ",
             'employee_id' => $notifiable->id
         ];
     }
@@ -44,13 +52,31 @@ class DateOfJoiningChangeRejectedNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        return $this->isProposedDate ? $this->mailMessageForProposedDate() : $this->mailMessageForRequestedDate();
+    }
+
+    private function mailMessageForProposedDate(): MailMessage{
+
         return (new MailMessage)
-            ->subject('Date of Joining Change Request - Rejected')
-            ->greeting(' ')
+            ->subject('Proposed date of joining - Rejected')
+            ->greeting(" ")
             ->line("Hello $this->employeeName,")
-            ->line("Your request to change the Date of Joining to $this->requestedDateOfJoining has been reviewed and is not approved at this time.")
-            ->line('Please continue with the originally scheduled Date of Joining as communicated earlier.')
-            ->line('If you need further clarification, feel free to contact the HR team.')
+            ->line("We regret to inform you that your proposed date of joining, $this->requestedDateOfJoining has been declined. ")
+            ->line('Kindly reach out to your POC (Recruiter) for further assistance.')
+            ->line('')
+            ->line('')
+            ->line(new HtmlString('Thanks,<br>BEO HR Team'))
+            ->salutation(' ');
+    }
+
+    private function mailMessageForRequestedDate(): MailMessage{
+
+        return (new MailMessage)
+            ->subject('Request to change date of joining - Rejected')
+            ->greeting(" ")
+            ->line("Hello $this->employeeName,")
+            ->line("We regret to inform you that your request to change the date of joining to $this->requestedDateOfJoining has been declined. ")
+            ->line('Kindly reach out to your POC (Recruiter) for further assistance.')
             ->line('')
             ->line('')
             ->line(new HtmlString('Thanks,<br>BEO HR Team'))

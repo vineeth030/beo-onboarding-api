@@ -4,13 +4,12 @@ namespace App\Mail;
 
 use App\Models\Employee;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class OfferAcceptanceAcknowledgementMail extends Mailable
+class WelcomeCandidateMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -38,7 +37,7 @@ class OfferAcceptanceAcknowledgementMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.offers.acknowledgement',
+            view: 'emails.offers.welcome-candidate',
             with: [
                 'employee' => $this->employee
             ],

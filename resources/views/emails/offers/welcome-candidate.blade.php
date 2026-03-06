@@ -32,8 +32,6 @@
                                 <p>
                                     A warm welcome in advance to BEO Software.
                                 </p>
-
-                                @if (str_contains($employee->joining_date, 'month'))
                                 <p>
                                     Your can join on <strong>{{ $employee->requested_joining_date }}</strong>. We will be in touch with you shortly regarding the next steps in the onboarding process.
                                 </p>
@@ -43,12 +41,6 @@
                                 <p>
                                     We look forward to having you on board.
                                 </p>
-                                @else
-                                <p>
-                                    We will be in touch with you soon regarding the next steps.
-                                </p>
-                                @endif
-
                                 <p>
                                     Thanks,<br>
                                     BEO HR Team

@@ -17,7 +17,7 @@ class DateOfJoiningChangeRequestedNotification extends Notification
      */
     public function __construct(
             public string $requestedDateOfJoining,
-            public string $requestedEmployeeName
+            public string $requestedEmployeeName,
         )
     {
         //
@@ -43,9 +43,9 @@ class DateOfJoiningChangeRequestedNotification extends Notification
             ->greeting(" ")
             ->line('Hello,')
             ->line(new HtmlString(
-                "The candidate, <strong>{$this->requestedEmployeeName}</strong> has requested a change to their Date of Joining to <strong>{$this->requestedDateOfJoining}</strong>."
+                "The candidate, <strong>{$this->requestedEmployeeName}</strong> has requested a change in the joining date to <strong>{$this->requestedDateOfJoining}</strong>."
             ))
-            ->line('Please log in to the onboarding portal to review the request and take the necessary action.')
+            ->line('Kindly take the necessary action in the onboarding portal. ')
             ->line('')
             ->line('')
             ->line(new HtmlString('Thanks,<br>BEO HR Team'))
@@ -55,8 +55,8 @@ class DateOfJoiningChangeRequestedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'A change in Date of joining is requested.',
-            'message' => "There has been a change in Date of joining request from $this->requestedEmployeeName. He wants to change the date to $this->requestedDateOfJoining.",
+            'title' => 'Request to change Date of Joining from candidate',
+            'message' => "The candidate, $this->requestedEmployeeName has requested a change in the joining date to $this->requestedDateOfJoining.",
             'employee_id' => $notifiable->id
         ];
     }

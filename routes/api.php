@@ -53,6 +53,10 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::post('employees/{employee}/background-verification/submit', [EmployeeBackgroundVerificationController::class, 'submit']);
     Route::post('employees/{employee}/background-verification/reopen', [EmployeeBackgroundVerificationController::class, 'reopen']);
 
+    Route::post('employees/{employee}/joining-date/propose', [EmployeeJoiningDateController::class, 'propose']);
+    Route::post('employees/{employee}/joining-date/approve-proposed-date', [EmployeeJoiningDateController::class, 'approveProposedDate']);
+    Route::post('employees/{employee}/joining-date/reject-proposed-date', [EmployeeJoiningDateController::class, 'rejectProposedDate']);
+
     Route::post('employees/{employee}/joining-date/request', [EmployeeJoiningDateController::class, 'request']);
     Route::post('employees/{employee}/joining-date/approve', [EmployeeJoiningDateController::class, 'approve']);
     Route::post('employees/{employee}/joining-date/reject', [EmployeeJoiningDateController::class, 'reject']);

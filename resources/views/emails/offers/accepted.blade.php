@@ -29,7 +29,7 @@
                                     This is to inform you that the candidate, <strong>{{ $employee->full_name }}</strong> has accepted the offer for the position of {{ $employee->designation?->name }}.
                                 </p>
 
-                                @if (str_contains($employee->joining_date, 'month'))
+                                @if ($employee->joining_date_type === \App\Enums\JoiningDateType::PROPOSED)
                                 <p>
                                     The proposed joining date is <strong>{{ $employee->requested_joining_date }}</strong>. Should there be any change to this date, the candidate will inform us in advance.
                                 </p>

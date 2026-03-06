@@ -8,23 +8,28 @@ use App\Notifications\DateOfJoiningChangeRequestedNotification;
 
 class RequestJoiningDateChangeAction
 {
-    public function execute(Employee $employee, string $requestedJoiningDate): void
+    public function execute(Employee $employee, string $requestedJoiningDate, bool $isProposedDate = false): void
     {
         $employee->update([
             'is_joining_date_update_approved' => null,
             'requested_joining_date' => $requestedJoiningDate,
         ]);
 
+        // When candidate proposes a joining date, no need to send email from here.
+        // Email will be send when candidate accepts offer with proposed joining date.
+        if($isProposedDate) return;
+
         if ($requestedJoiningDate) {
+            $hrEmailIds = config('app.hr_emails');
             
-            User::where('role', 'admin')->each(function ($admin) use ($requestedJoiningDate) {
+            User::whereIn('email', $hrEmailIds)->each(fn ($admin) => 
                 $admin->notify(
                     new DateOfJoiningChangeRequestedNotification(
-                        $requestedJoiningDate,
-                        auth()->user()->name
+                        requestedDateOfJoining: $requestedJoiningDate,
+                        requestedEmployeeName: auth()->user()->name,
                     )
-                );
-            });
+                )
+            );
         }
     }
 }
