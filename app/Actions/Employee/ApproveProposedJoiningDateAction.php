@@ -20,9 +20,10 @@ class ApproveProposedJoiningDateAction
                 'requested_joining_date' => null,
             ]);
 
-            $clientEmailIds = $employee->department?->emails->pluck('email')->toArray() ?? [];
+            //$clientEmailIds = $employee->department?->emails->pluck('email')->toArray() ?? [];
+            $clientEmailIds = $employee->activeOffer->client_emails;
 
-            $hrEmailIds = config('app.hr_emails');
+            $hrEmailIds = $employee->activeOffer->beo_emails;
 
             Mail::to($employee->email)
                 ->cc([...$hrEmailIds, ...$clientEmailIds])

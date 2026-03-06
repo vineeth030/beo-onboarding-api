@@ -27,7 +27,7 @@ class WelcomeCandidateMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Offer acceptance acknowledgement',
+            subject: 'Welcome to BEO Software',
         );
     }
 
