@@ -33,7 +33,7 @@
                                     A warm welcome in advance to BEO Software.
                                 </p>
                                 <p>
-                                    Your can join on <strong>{{ $employee->requested_joining_date }}</strong>. We will be in touch with you shortly regarding the next steps in the onboarding process.
+                                    Your can join on <strong>{{ $employee->updated_joining_date }}</strong>. We will be in touch with you shortly regarding the next steps in the onboarding process.
                                 </p>
                                 <p>
                                     Additionally, please share the resignation acceptance letter from your current employer once it becomes available.

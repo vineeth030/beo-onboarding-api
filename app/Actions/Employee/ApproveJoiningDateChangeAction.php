@@ -2,9 +2,7 @@
 
 namespace App\Actions\Employee;
 
-use App\Enums\JoiningDateType;
 use App\Mail\JoiningDateChangeApprovedMail;
-use App\Mail\WelcomeCandidateMail;
 use App\Models\Activity;
 use App\Models\Employee;
 use App\Notifications\DateOfJoiningChangeApprovedNotification;
@@ -29,9 +27,9 @@ class ApproveJoiningDateChangeAction
                 'requested_joining_date' => null,
             ]);
 
-            $clientEmailIds = $employee->department?->emails->pluck('email')->toArray() ?? [];
+            $clientEmailIds = $employee->activeOffer->client_emails;
 
-            $hrEmailIds = config('app.hr_emails');
+            $hrEmailIds = $employee->activeOffer->beo_emails;
 
             // Send email notification to hr & client email ids.
             Mail::to([...$hrEmailIds, ...$clientEmailIds])->send(new JoiningDateChangeApprovedMail(employee: $employee, updatedJoiningDate: $updatedJoiningDate));
