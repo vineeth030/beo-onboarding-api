@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\Employee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -9,16 +10,16 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class DateOfJoiningChangeRequestMail extends Mailable
+class JoiningDateChangeRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public Employee $employee, public string $requestedJoiningDate)
     {
-        //
+        $employee->loadMissing('designation', 'department');
     }
 
     /**
@@ -38,6 +39,10 @@ class DateOfJoiningChangeRequestMail extends Mailable
     {
         return new Content(
             view: 'emails.employees.joining-date-change-request',
+            with: [
+                'employee' => $this->employee,
+                'requestedJoiningDate' => $this->requestedJoiningDate,
+            ],
         );
     }
 

@@ -32,9 +32,16 @@
                                 <p>
                                     A warm welcome in advance to BEO Software.
                                 </p>
+                                @if ($employee->joining_date_type === \App\Enums\JoiningDateType::PRE_APPROVED)
+                                <p>
+                                    Your can join on <strong>{{ $employee->joining_date }}</strong>. We will be in touch with you shortly regarding the next steps in the onboarding process.
+                                </p>
+                                @else
                                 <p>
                                     Your can join on <strong>{{ $employee->updated_joining_date }}</strong>. We will be in touch with you shortly regarding the next steps in the onboarding process.
                                 </p>
+                                @endif
+                                
                                 <p>
                                     Additionally, please share the resignation acceptance letter from your current employer once it becomes available.
                                 </p>

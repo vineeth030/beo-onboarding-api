@@ -2,9 +2,11 @@
 
 namespace App\Actions\Employee;
 
+use App\Mail\JoiningDateChangeRequestMail;
 use App\Models\Employee;
 use App\Models\User;
 use App\Notifications\DateOfJoiningChangeRequestedNotification;
+use Illuminate\Support\Facades\Mail;
 
 class RequestJoiningDateChangeAction
 {
@@ -22,14 +24,19 @@ class RequestJoiningDateChangeAction
         if ($requestedJoiningDate) {
             $hrEmailIds = $employee->activeOffer->beo_emails;
             
-            User::whereIn('email', $hrEmailIds)->each(fn ($admin) => 
-                $admin->notify(
-                    new DateOfJoiningChangeRequestedNotification(
-                        requestedDateOfJoining: $requestedJoiningDate,
-                        requestedEmployeeName: auth()->user()->name,
-                    )
-                )
-            );
+            // User::whereIn('email', $hrEmailIds)->each(fn ($admin) => 
+            //     $admin->notify(
+            //         new DateOfJoiningChangeRequestedNotification(
+            //             requestedDateOfJoining: $requestedJoiningDate,
+            //             requestedEmployeeName: auth()->user()->name,
+            //         )
+            //     )
+            // );
+
+            Mail::to($hrEmailIds)->send(new JoiningDateChangeRequestMail(
+                employee: $employee,
+                requestedJoiningDate: $requestedJoiningDate
+            ));
         }
     }
 }

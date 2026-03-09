@@ -23,7 +23,7 @@
                                 </p>
 
                                 <p>
-                                    The updated joining date is <strong>{{ $updatedJoiningDate }}</strong>.
+                                    The updated joining date is <strong>{{ $requestedJoiningDate }}</strong>.
                                 </p>
 
                                 <p>
