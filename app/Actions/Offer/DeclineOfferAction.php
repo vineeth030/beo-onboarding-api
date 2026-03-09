@@ -10,9 +10,11 @@ use Illuminate\Support\Facades\Mail;
 
 class DeclineOfferAction
 {
-    public function execute(Offer $offer, String $declineReason): void
+    public function execute(Offer $offer, String $declineReason, string $name): void
     {
-        $offer->update(['status' => OfferStatus::REJECTED, 'decline_reason' => $declineReason, 'is_declined' => 1]);
+        $offer->update([
+            'status' => OfferStatus::REJECTED, 'decline_reason' => $declineReason, 'is_declined' => 1, 'name' => $name
+        ]);
 
         Activity::create([
             'employee_id' => $offer->employee->id,

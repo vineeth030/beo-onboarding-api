@@ -12,13 +12,14 @@ use Illuminate\Support\Facades\Mail;
 
 class AcceptOfferAction
 {
-    public function execute(Offer $offer, string $acceptComment, UploadedFile $signFile): void
+    public function execute(Offer $offer, string $acceptComment, UploadedFile $signFile, string $name): void
     {
         $path = $signFile->store("documents/{$offer->employee->employee_id}", 'public');
 
         $offer->update([
             'is_accepted' => true, 'status' => OfferStatus::ACCEPTED,
             'sign_file_path' => $path, 'comment' => $acceptComment,
+            'name' => $name
         ]);
 
         Activity::create([
