@@ -52,7 +52,7 @@ class ReportController extends Controller
         $pendingOffers = (clone $offerQuery)->where('status', OfferStatus::PENDING)->count();
 
         $backgroundVerificationPending = (clone $employeeQuery)->where('status', 1)->count();
-        $backgroundVerified = (clone $employeeQuery)->where('status', OfferStatus::REGISTERED_EMPLOYEE)->count();
+        $backgroundVerified = (clone $offerQuery)->where('status', OfferStatus::REGISTERED_EMPLOYEE)->count();
 
         return [
             'total_offers' => $totalOffers,

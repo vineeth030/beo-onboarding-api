@@ -19,15 +19,11 @@
                                 <p>Hello,</p>
 
                                 <p>
-                                    This is to inform you that the joining date change request for {{ $employee->full_name }}, {{ $employee->designation?->name }}, has been approved.
+                                    This is to inform you that, {{ $employee->full_name }} has requested a change in joining date.
                                 </p>
 
                                 <p>
-                                    The updated joining date is <strong>{{ $requestedJoiningDate }}</strong>.
-                                </p>
-
-                                <p>
-                                    Please take note of this change for your records and planning purposes.
+                                    The requested joining date is <strong>{{ $requestedJoiningDate }}</strong>.
                                 </p>
 
                                 <p>

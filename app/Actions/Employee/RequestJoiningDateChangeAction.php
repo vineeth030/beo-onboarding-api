@@ -23,15 +23,6 @@ class RequestJoiningDateChangeAction
 
         if ($requestedJoiningDate) {
             $hrEmailIds = $employee->activeOffer->beo_emails;
-            
-            // User::whereIn('email', $hrEmailIds)->each(fn ($admin) => 
-            //     $admin->notify(
-            //         new DateOfJoiningChangeRequestedNotification(
-            //             requestedDateOfJoining: $requestedJoiningDate,
-            //             requestedEmployeeName: auth()->user()->name,
-            //         )
-            //     )
-            // );
 
             Mail::to($hrEmailIds)->send(new JoiningDateChangeRequestMail(
                 employee: $employee,
