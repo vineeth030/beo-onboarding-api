@@ -14,6 +14,7 @@ use App\Models\Activity;
 use App\Models\Employee;
 use App\Models\Offer;
 use App\Notifications\OfferSendNotification;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -34,33 +35,41 @@ class OfferController extends Controller
      */
     public function store(StoreOfferRequest $request)
     {
-        $offer = Offer::create($request->validated());
+        $employee = Employee::select([
+            'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'
+        ])->with(['designation:id,name', 'user:id,name,email'])->where('id', $request->get('employee_id'))?->first();
 
-        $employee = Employee::select(['id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'])->where('id', $request->get('employee_id'))?->first();
         abort_if(! $employee, 404, 'Employee not found');
-
-        $employee->update(['designation_id' => $request->get('designation_id')]);
-        $offer->update(['status' => OfferStatus::PENDING]);
-
-        // To refresh designation relationship.
-        $employee->load(['designation:id,name', 'user:id,name,email']);
         abort_if(! $employee->user, 422, 'Employee has no associated user');
         abort_if(! $employee->designation, 422, 'Employee has no associated designation');
+        
+        $offer = DB::transaction(function() use ($request, $employee){
 
-        $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
+            $offer = Offer::create($request->validated());
 
-        $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee);
-        $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
+            $employee->update(['designation_id' => $request->get('designation_id')]);
+            $offer->update(['status' => OfferStatus::PENDING]);
 
-        $employee->user->notify(new OfferSendNotification);
+            Activity::create([
+                'employee_id' => $employee->id,
+                'performed_by_user_id' => auth()->user()->id,
+                'user_type' => 'hr',
+                'type' => 'add.candidate',
+                'title' => 'Offer created for '.$employee->full_name.' by '.auth()->user()->name,
+            ]);
 
-        Activity::create([
-            'employee_id' => $employee->id,
-            'performed_by_user_id' => auth()->user()->id,
-            'user_type' => 'hr',
-            'type' => 'add.candidate',
-            'title' => 'Offer created for '.$employee->full_name.' by '.auth()->user()->name,
-        ]);
+            return $offer;
+        });
+
+        DB::afterCommit(function() use ($offer, $employee, $request){
+            
+            $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
+
+            $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee);
+            $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
+
+            $employee->user->notify(new OfferSendNotification);
+        });
 
         return response()->json($offer, 201);
     }

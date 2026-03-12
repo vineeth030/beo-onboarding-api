@@ -19,6 +19,7 @@ use App\Notifications\AssignPocNotification;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -39,32 +40,35 @@ class EmployeeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreEmployeeRequest $request)
+    public function store(StoreEmployeeRequest $request): JsonResponse
     {
-        $randomPassword = Str::random(8);
+        return DB::transaction(function() use ($request){
 
-        $employeeUser = User::create([
-            'name' => $request->get('first_name').' '.$request->get('last_name'),
-            'email' => $request->get('email'),
-            'password' => Hash::make($randomPassword),
-            'role' => 'candidate',
-        ]);
+            $randomPassword = Str::random(8);
 
-        $employee = Employee::create($request->validated() + [
-            'user_id' => $employeeUser->id,
-            'password' => $randomPassword,
-            'department_id' => $request->get('department_id'),
-        ]);
+            $employeeUser = User::create([
+                'name' => $request->get('first_name').' '.$request->get('last_name'),
+                'email' => $request->get('email'),
+                'password' => Hash::make($randomPassword),
+                'role' => 'candidate',
+            ]);
 
-        Activity::create([
-            'employee_id' => $employeeUser->id,
-            'performed_by_user_id' => auth()->user()->id,
-            'user_type' => 'hr',
-            'type' => 'add.candidate',
-            'title' => 'New candidate '.$employeeUser->name.' added by '.auth()->user()->name,
-        ]);
+            $employee = Employee::create($request->validated() + [
+                'user_id' => $employeeUser->id,
+                'password' => $randomPassword,
+                'department_id' => $request->get('department_id'),
+            ]);
 
-        return response()->json($employee, 201);
+            Activity::create([
+                'employee_id' => $employeeUser->id,
+                'performed_by_user_id' => auth()->user()->id,
+                'user_type' => 'hr',
+                'type' => 'add.candidate',
+                'title' => 'New candidate '.$employeeUser->name.' added by '.auth()->user()->name,
+            ]);
+
+            return response()->json($employee, 201);
+        });
     }
 
     /**
