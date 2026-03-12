@@ -62,6 +62,7 @@ class OfferController extends Controller
 
         DB::afterCommit(function() use ($offer, $employee, $request){
 
+            $employee->load(['designation:id,name', 'user:id,name,email']);
             abort_if(! $employee->designation, 422, 'Employee has no associated designation');
             
             $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
