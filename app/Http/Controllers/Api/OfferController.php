@@ -41,7 +41,6 @@ class OfferController extends Controller
 
         abort_if(! $employee, 404, 'Employee not found');
         abort_if(! $employee->user, 422, 'Employee has no associated user');
-        abort_if(! $employee->designation, 422, 'Employee has no associated designation');
         
         $offer = DB::transaction(function() use ($request, $employee){
 
@@ -62,6 +61,8 @@ class OfferController extends Controller
         });
 
         DB::afterCommit(function() use ($offer, $employee, $request){
+
+            abort_if(! $employee->designation, 422, 'Employee has no associated designation');
             
             $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
