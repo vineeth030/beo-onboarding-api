@@ -937,7 +937,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"company_name\": \"Tech Solutions Inc\",\n    \"designation\": \"Software Developer\",\n    \"location\": \"Bangalore\",\n    \"mode_of_employment\": \"Full-time\",\n    \"start_date\": \"2020-07-01\",\n    \"is_current_org\": false\n}",
+              "raw": "{\n    \"company_name\": \"Tech Solutions Inc\",\n    \"designation\": \"Software Developer\",\n    \"location\": \"Bangalore\",\n    \"mode_of_employment\": \"Full-time\",\n    \"start_date\": \"2020-07-01\",\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1012,7 +1012,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"company_name\": \"Advanced Tech Solutions\",\n    \"designation\": \"Senior Software Developer\",\n    \"location\": \"Mumbai\",\n    \"mode_of_employment\": \"Full-time\",\n    \"start_date\": \"2020-07-01\",\n    \"is_current_org\": true\n}",
+              "raw": "{\n    \"company_name\": \"Advanced Tech Solutions\",\n    \"designation\": \"Senior Software Developer\",\n    \"location\": \"Mumbai\",\n    \"mode_of_employment\": \"Full-time\",\n    \"start_date\": \"2020-07-01\",\n}",
               "options": {
                 "raw": {
                   "language": "json"

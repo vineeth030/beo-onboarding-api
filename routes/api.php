@@ -50,6 +50,7 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::apiResource('employees.employments', EmploymentController::class)->shallow();
 
     // Employee workflow endpoints
+    Route::post('employees/{employee}/background-verification/start', [EmployeeBackgroundVerificationController::class, 'start']);
     Route::post('employees/{employee}/background-verification/submit', [EmployeeBackgroundVerificationController::class, 'submit']);
     Route::post('employees/{employee}/background-verification/reopen', [EmployeeBackgroundVerificationController::class, 'reopen']);
 

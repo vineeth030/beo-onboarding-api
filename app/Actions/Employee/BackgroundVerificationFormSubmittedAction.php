@@ -9,9 +9,11 @@ use App\Notifications\BackgroundVerificationFromSubmittedNotification;
 
 class BackgroundVerificationFormSubmittedAction
 {
-    public function execute(Employee $employee): void
+    public function execute(Employee $employee, int $bvgStatus): void
     {
-        $employee->update(['status' => 2]);
+        $employee->update(['status' => $bvgStatus]);
+
+        if ($bvgStatus == 1) return; // No emails needed for background verification started.
 
         $hrEmails = config('app.hr_emails', []);
 

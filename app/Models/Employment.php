@@ -24,7 +24,6 @@ class Employment extends Model
         'resignation_acceptance_letter_preview_url',
         'experience_letter_file',
         'experience_letter_preview_url',
-        'is_current_org',
         'is_serving_notice_period',
         'is_verified',
         'is_open'

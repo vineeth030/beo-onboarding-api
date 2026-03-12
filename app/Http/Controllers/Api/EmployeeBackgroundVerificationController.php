@@ -10,9 +10,18 @@ use Illuminate\Http\JsonResponse;
 
 class EmployeeBackgroundVerificationController extends Controller
 {
+    public function start(Employee $employee, BackgroundVerificationFormSubmittedAction $action): JsonResponse
+    {
+        $action->execute(employee: $employee, bvgStatus: 1);
+
+        return response()->json([
+            'message' => 'Background verification form submitted successfully.'
+        ], 200);
+    }
+
     public function submit(Employee $employee, BackgroundVerificationFormSubmittedAction $action): JsonResponse
     {
-        $action->execute(employee: $employee);
+        $action->execute(employee: $employee, bvgStatus: 2);
 
         return response()->json([
             'message' => 'Background verification form submitted successfully.'

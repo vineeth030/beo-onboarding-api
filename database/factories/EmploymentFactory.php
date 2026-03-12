@@ -28,8 +28,7 @@ class EmploymentFactory extends Factory
             'resignation_acceptance_letter_file' => $this->faker->optional()->filePath(),
             'resignation_acceptance_letter_preview_url' => $this->faker->optional()->url(),
             'experience_letter_file' => $this->faker->optional()->filePath(),
-            'experience_letter_preview_url' => $this->faker->optional()->url(),
-            'is_current_org' => $this->faker->boolean,
+            'experience_letter_preview_url' => $this->faker->optional()->url()
         ];
     }
 

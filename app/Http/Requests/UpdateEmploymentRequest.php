@@ -33,7 +33,6 @@ class UpdateEmploymentRequest extends FormRequest
             'employments.*.last_working_date' => ['nullable', 'date', 'after:employments.*.start_date'],
             'employments.*.resignation_acceptance_letter_file' => ['nullable'],
             'employments.*.experience_letter_file' => ['nullable'],
-            'employments.*.is_current_org' => ['boolean'],
             'employments.*.is_serving_notice_period' => ['boolean'],
             'employments.*.is_verified' => ['boolean'],
             'employments.*.is_open' => ['boolean'],
