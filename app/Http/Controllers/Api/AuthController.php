@@ -7,7 +7,6 @@ use App\Models\Activity;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -42,13 +41,13 @@ class AuthController extends Controller
 
         if ($emailDomain == 'beo.in' || empty($emailDomain)) {
 
-            $authResponse = $this->adminAuth($request->input('email'), $request->input('password'));
+            $result = $this->adminAuth($request->input('email'), $request->input('password'));
         } else {
 
-            $authResponse = $this->employeeAuth($request->input('email'), $request->input('password'));
+            $result = $this->employeeAuth($request->input('email'), $request->input('password'));
         }
 
-        return response()->json($authResponse);
+        return response()->json($result['data'], $result['status']);
     }
 
     private function employeeAuth($email, $password): array
@@ -57,9 +56,10 @@ class AuthController extends Controller
         $user = User::where('email', $email)->first();
 
         if (! $user || ! Hash::check($password, $user->password)) {
-            throw ValidationException::withMessages([
-                'login' => ['The provided credentials are not correct.'],
-            ]);
+            return [
+                'data' => ['message' => 'The provided credentials are invalid','token' => null],
+                'status' => 401
+            ];
         }
 
         // Check if the candidate has at least one active offer
@@ -67,7 +67,10 @@ class AuthController extends Controller
             $hasActiveOffer = $user->employee->offers()->where('is_revoked', false)->exists();
 
             if (! $hasActiveOffer) {
-                abort(403, 'No active offers found, please contact the HR team');
+                return [
+                    'data' => ['message' => 'No active offers found, please contact the HR team','token' => null],
+                    'status' => 403
+                ];
             }
         }
 
@@ -90,23 +93,33 @@ class AuthController extends Controller
             'user_id' => $user->id,
             'employee_id' => $user->employee?->id,
         ];
+        return [
+            'data' => [
+                'message' => 'Login successful',
+                'token' => $token,
+                'role' => $user->role,
+                'user_id' => $user->id,
+                'employee_id' => $user->employee?->id
+            ],
+            'status' => 200
+        ];
     }
 
     private function adminAuth($userName, $password): array
     {
         try {
-            [$sessionToken, $userIdCode, $message] = (new BEOSystemController)->login($userName, $password);
+            [$sessionToken, $userIdCode, $message, $status] = (new BEOSystemController)->login($userName, $password);
         } catch (\Throwable $th) {
             return [
-                'message' => $th->getMessage(),
-                'sessionToken' => null,
+                'data' => ['message' => $th->getMessage(),'sessionToken' => null],
+                'status' => 502
             ];
         }
 
         if ($sessionToken == null) {
             return [
-                'message' => $message,
-                'sessionToken' => null,
+                'data' => ['message' => $message,'sessionToken' => null],
+                'status' => 401,
             ];
         }
 
@@ -114,15 +127,15 @@ class AuthController extends Controller
             $adminDetails = (new BEOSystemController)->retrive($sessionToken, $userIdCode);
         } catch (\Throwable $th) {
             return [
-                'message' => $th->getMessage(),
-                'sessionToken' => null,
+                'data' => ['message' => $th->getMessage(),'sessionToken' => null],
+                'status' => 502,
             ];
         }
 
         if ($adminDetails['group'] != 'Human Resources') {
             return [
-                'message' => 'Unauthorised access.',
-                'sessionToken' => null,
+                'data' => ['message' => 'Unauthorised access.','sessionToken' => null],
+                'status' => 403,
             ];
         }
 
@@ -135,13 +148,16 @@ class AuthController extends Controller
         $token = $user->createToken($adminDetails['email'])->plainTextToken;
 
         return [
-            'message' => $adminDetails['message'],
-            'sessionToken' => $sessionToken,
-            'token' => $token,
-            'role' => 'admin',
-            'user_id' => $user->id,
-            'employee_id' => 0,
-            'userIdCode' => $userIdCode,
+            'data' => [
+                'message' => $adminDetails['message'],
+                'sessionToken' => $sessionToken,
+                'token' => $token,
+                'role' => 'admin',
+                'user_id' => $user->id,
+                'employee_id' => 0,
+                'userIdCode' => $userIdCode,
+            ],
+            'status' => 200
         ];
     }
 

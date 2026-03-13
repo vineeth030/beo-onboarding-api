@@ -14,6 +14,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class BEOSystemController extends Controller
@@ -26,7 +27,7 @@ class BEOSystemController extends Controller
 
     private const BEO_SYSTEM_LOGIN_SUCCESS_CODE = 104;
 
-    private const BEO_SYSTEM_INVALID_CREDENTIALS_CODE = 102;
+    private const BEO_SYSTEM_INVALID_CREDENTIALS_CODE = "102";
 
     private const BEO_SYSTEM_LOGIN_API_URL = '/api/Login/UserLoginForMobApp?deviceId=9e528a0c-2302-4474-b5be-8bf829b30e5a';
 
@@ -63,16 +64,16 @@ class BEOSystemController extends Controller
         $response = Http::post(config('beosystem.base_url').self::BEO_SYSTEM_LOGIN_API_URL, $requestBody)->throw();
 
         if ($response->failed()) {
-            return [null, 0, 'BEO system unavailable. Please try again later.'];
+            return [null, 0, 'BEO system unavailable. Please try again later.', 503];
         }
 
         $data = $response->json();
 
         if (($data['status'] ?? null) == self::BEO_SYSTEM_INVALID_CREDENTIALS_CODE) {
-            return [null, 'Invalid Credentials.'];
+            return [null, null, 'Invalid Credentials.', 401];
         }
 
-        return [$data['sessionToken'], $data['userIdCode'], 'Login success.'];
+        return [$data['sessionToken'], $data['userIdCode'], 'Login success.', 200];
     }
 
     public function countries(): array
