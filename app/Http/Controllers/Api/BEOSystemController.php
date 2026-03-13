@@ -204,7 +204,7 @@ class BEOSystemController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'New employee created successfully.', 'code' => 200]);
+        return response()->json(['message' => 'New employee created successfully.', 'code' => $data['status'], 'data' => [$data]]);
     }
 
     public function show(Request $request): JsonResponse
