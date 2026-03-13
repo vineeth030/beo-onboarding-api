@@ -87,13 +87,6 @@ class AuthController extends Controller
         }
 
         return [
-            'message' => 'Login successful',
-            'token' => $token,
-            'role' => $user->role,
-            'user_id' => $user->id,
-            'employee_id' => $user->employee?->id,
-        ];
-        return [
             'data' => [
                 'message' => 'Login successful',
                 'token' => $token,
