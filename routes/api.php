@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\OfferController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SalaryComponentController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,6 +38,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::get('/test', function () {
+
+    Mail::raw('This is a test email from Laravel', function ($message) {
+        $message->to('vineeth030@gmail.com')
+                ->subject('Laravel Mail Test');
+    });
+
     return response()->json(['Success! API works!']);
 });
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
