@@ -27,6 +27,7 @@ class Offer extends Model
         'is_declined',
         'decline_reason',
         'is_revoked',
+        'is_revised',
         'revoke_reason',
         'status',
         'last_reminder_sent_at',
