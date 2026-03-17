@@ -30,6 +30,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Employee::class);
+
         $employees = Employee::with(['offers', 'department', 'designation', 'activeOffer'])
             ->orderBy('id', 'desc')
             ->get();
@@ -42,7 +44,9 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request): JsonResponse
     {
-        return DB::transaction(function() use ($request){
+        $this->authorize('create', Employee::class);
+
+        return DB::transaction(function () use ($request) {
 
             $randomPassword = Str::random(8);
 
@@ -76,6 +80,8 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
+        $this->authorize('view', $employee);
+
         $employee->load([
             'activeOffer',
             'office',
@@ -107,6 +113,8 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee, UpdateEmployeeAction $updateEmployeeAction)
     {
+        $this->authorize('update', $employee);
+
         $dataForEmployeeUpdate = Arr::except(
             $request->validated(),
             ['is_joining_date_update_approved', 'updated_joining_date', 'requested_joining_date',
@@ -136,6 +144,8 @@ class EmployeeController extends Controller
 
     public function open(Employee $employee): JsonResponse
     {
+        $this->authorize('adminOnly', Employee::class);
+
         $employee->update(['is_open' => 1]);
 
         app(NotifyCandidateOnReopenAction::class)->execute(
@@ -151,6 +161,8 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
+        $this->authorize('delete', $employee);
+
         $employee->delete();
 
         $employee->user->delete();
@@ -163,6 +175,7 @@ class EmployeeController extends Controller
      */
     public function assignBuddy(Employee $employee, Request $request): JsonResponse
     {
+        $this->authorize('adminOnly', Employee::class);
 
         $employee->update([
             'buddy_id' => $request->get('beo_employee_id'),
@@ -186,6 +199,7 @@ class EmployeeController extends Controller
      */
     public function assignPocs(Employee $employee, Request $request): JsonResponse
     {
+        $this->authorize('adminOnly', Employee::class);
 
         $employee->update([
             'poc_1_id' => $request->get('beo_employee_1_id'),
