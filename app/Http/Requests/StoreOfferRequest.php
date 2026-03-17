@@ -29,7 +29,8 @@ class StoreOfferRequest extends FormRequest
             'department_id' => ['required', 'exists:departments,id'],
             'designation_id' => ['required', 'exists:designations,id'],
             'client_emails' => ['required', 'array'],
-            'beo_emails' => ['required', 'array']
+            'beo_emails' => ['required', 'array'],
+            'is_revised' => ['sometimes']
         ];
     }
 }
