@@ -20,6 +20,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -30,7 +31,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Employee::class);
+        Gate::authorize('viewAny', Employee::class);
 
         $employees = Employee::with(['offers', 'department', 'designation', 'activeOffer'])
             ->orderBy('id', 'desc')
@@ -44,7 +45,7 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request): JsonResponse
     {
-        $this->authorize('create', Employee::class);
+        Gate::authorize('create', Employee::class);
 
         return DB::transaction(function () use ($request) {
 
@@ -80,7 +81,7 @@ class EmployeeController extends Controller
      */
     public function show(Employee $employee)
     {
-        $this->authorize('view', $employee);
+        Gate::authorize('view', $employee);
 
         $employee->load([
             'activeOffer',
@@ -113,7 +114,7 @@ class EmployeeController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee, UpdateEmployeeAction $updateEmployeeAction)
     {
-        $this->authorize('update', $employee);
+        Gate::authorize('update', $employee);
 
         $dataForEmployeeUpdate = Arr::except(
             $request->validated(),
@@ -144,7 +145,7 @@ class EmployeeController extends Controller
 
     public function open(Employee $employee): JsonResponse
     {
-        $this->authorize('adminOnly', Employee::class);
+        Gate::authorize('adminOnly', Employee::class);
 
         $employee->update(['is_open' => 1]);
 
@@ -161,7 +162,7 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        $this->authorize('delete', $employee);
+        Gate::authorize('delete', $employee);
 
         $employee->delete();
 
@@ -175,7 +176,7 @@ class EmployeeController extends Controller
      */
     public function assignBuddy(Employee $employee, Request $request): JsonResponse
     {
-        $this->authorize('adminOnly', Employee::class);
+        Gate::authorize('adminOnly', Employee::class);
 
         $employee->update([
             'buddy_id' => $request->get('beo_employee_id'),
@@ -199,7 +200,7 @@ class EmployeeController extends Controller
      */
     public function assignPocs(Employee $employee, Request $request): JsonResponse
     {
-        $this->authorize('adminOnly', Employee::class);
+        Gate::authorize('adminOnly', Employee::class);
 
         $employee->update([
             'poc_1_id' => $request->get('beo_employee_1_id'),

@@ -15,6 +15,7 @@ use App\Models\Employee;
 use App\Models\Offer;
 use App\Notifications\OfferSendNotification;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -27,7 +28,7 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $this->authorize('viewAny', Offer::class);
+        Gate::authorize('viewAny', Offer::class);
 
         return Offer::with(['user', 'employee', 'client'])->orderBy('id', 'desc')->get();
     }
@@ -37,7 +38,7 @@ class OfferController extends Controller
      */
     public function store(StoreOfferRequest $request)
     {
-        $this->authorize('create', Offer::class);
+        Gate::authorize('create', Offer::class);
         $employee = Employee::select([
             'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id',
         ])->with(['designation:id,name', 'user:id,name,email'])->where('id', $request->get('employee_id'))?->first();
@@ -84,7 +85,7 @@ class OfferController extends Controller
      */
     public function show(Offer $offer)
     {
-        $this->authorize('view', $offer);
+        Gate::authorize('view', $offer);
         $offer->load(['user', 'employee', 'client']);
 
         $offer->content = stripslashes($offer->content);
@@ -97,7 +98,7 @@ class OfferController extends Controller
      */
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
-        $this->authorize('update', $offer);
+        Gate::authorize('update', $offer);
         $offerData = $request->validated();
 
         if ($request->boolean('is_accepted')) {
@@ -137,7 +138,7 @@ class OfferController extends Controller
      */
     public function destroy(Offer $offer)
     {
-        $this->authorize('delete', $offer);
+        Gate::authorize('delete', $offer);
         $offer->delete();
 
         return response()->json(null, 204);
