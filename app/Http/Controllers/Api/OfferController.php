@@ -27,6 +27,8 @@ class OfferController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Offer::class);
+
         return Offer::with(['user', 'employee', 'client'])->orderBy('id', 'desc')->get();
     }
 
@@ -35,14 +37,15 @@ class OfferController extends Controller
      */
     public function store(StoreOfferRequest $request)
     {
+        $this->authorize('create', Offer::class);
         $employee = Employee::select([
-            'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id'
+            'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id',
         ])->with(['designation:id,name', 'user:id,name,email'])->where('id', $request->get('employee_id'))?->first();
 
         abort_if(! $employee, 404, 'Employee not found');
         abort_if(! $employee->user, 422, 'Employee has no associated user');
-        
-        $offer = DB::transaction(function() use ($request, $employee){
+
+        $offer = DB::transaction(function () use ($request, $employee) {
 
             $offer = Offer::create($request->validated());
 
@@ -60,11 +63,11 @@ class OfferController extends Controller
             return $offer;
         });
 
-        DB::afterCommit(function() use ($offer, $employee, $request){
+        DB::afterCommit(function () use ($offer, $employee, $request) {
 
             $employee->load(['designation:id,name', 'user:id,name,email']);
             abort_if(! $employee->designation, 422, 'Employee has no associated designation');
-            
+
             $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
             $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee);
@@ -81,6 +84,7 @@ class OfferController extends Controller
      */
     public function show(Offer $offer)
     {
+        $this->authorize('view', $offer);
         $offer->load(['user', 'employee', 'client']);
 
         $offer->content = stripslashes($offer->content);
@@ -93,6 +97,7 @@ class OfferController extends Controller
      */
     public function update(UpdateOfferRequest $request, Offer $offer)
     {
+        $this->authorize('update', $offer);
         $offerData = $request->validated();
 
         if ($request->boolean('is_accepted')) {
@@ -101,7 +106,7 @@ class OfferController extends Controller
             }
 
             app(AcceptOfferAction::class)->execute(
-                offer: $offer, acceptComment: $request->get('comment', ''), 
+                offer: $offer, acceptComment: $request->get('comment', ''),
                 signFile: $request->file('sign_file_path'), name: $request->get('name')
             );
 
@@ -132,6 +137,7 @@ class OfferController extends Controller
      */
     public function destroy(Offer $offer)
     {
+        $this->authorize('delete', $offer);
         $offer->delete();
 
         return response()->json(null, 204);
