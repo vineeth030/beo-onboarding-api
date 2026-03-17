@@ -38,6 +38,7 @@ class Offer extends Model
         'is_accepted' => 'boolean',
         'is_declined' => 'boolean',
         'is_revoked' => 'boolean',
+        'is_revised' => 'boolean',
         'status' => OfferStatus::class,
         'last_reminder_sent_at' => 'datetime',
     ];

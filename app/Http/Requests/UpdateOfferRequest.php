@@ -32,6 +32,7 @@ class UpdateOfferRequest extends FormRequest
             'is_accepted' => ['sometimes'],
             'is_declined' => ['sometimes'],
             'is_revoked' => ['sometimes'],
+            'is_revised' => ['sometimes'],
             'decline_reason' => ['sometimes'],
             'revoke_reason' => ['sometimes', 'string'],
         ];
