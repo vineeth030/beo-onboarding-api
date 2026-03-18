@@ -19,11 +19,11 @@ class OfferLetterSendMail extends Mailable
      * Create a new message instance.
      */
     public function __construct(
+        private string $subjectLine,
         private string $offerLetterFilePath = "",
         private bool $isClient = false,
         private string $content = "",
         public ?Employee $employee = null,
-        private string $subjectLine
     ){}
 
     /**
