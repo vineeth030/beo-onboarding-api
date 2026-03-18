@@ -53,7 +53,7 @@ class SendBackgroundVerificationReminders extends Command
         $dispatchedCount = 0;
         foreach ($offers as $offer) {
 
-            SendBackgroundVerificationReminderEmail::dispatch($offer->employee?->id);
+            SendBackgroundVerificationReminderEmail::dispatch($offer);
             $dispatchedCount++;
 
             $this->line("- Queued reminder for Employee #{$offer->employee?->id} ({$offer->employee?->full_name})");

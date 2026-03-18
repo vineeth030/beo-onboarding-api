@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Mail\BackgroundVerificationReminderMail;
 use App\Models\Activity;
 use App\Models\Employee;
+use App\Models\Offer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -33,7 +34,7 @@ class SendBackgroundVerificationReminderEmail implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $employeeId)
+    public function __construct(public Offer $offer)
     {
         // Pass only the ID, not the full model, to avoid serialization issues
     }
@@ -43,10 +44,10 @@ class SendBackgroundVerificationReminderEmail implements ShouldQueue
      */
     public function handle(): void
     {
-        $employee = Employee::with(['designation', 'activeOffer'])->find($this->employeeId);
+        $employee = Employee::with(['designation', 'activeOffer'])->find($this->offer->employee->id);
 
-        if ($employee->activeOffer && ($employee->activeOffer->is_revoked || $employee->activeOffer->is_declined)) {
-            Log::info("Employee #{$this->employeeId} offer revoked/declined. Skipping reminder.");
+        if ($this->offer->is_revoked || $this->offer->is_declined) {
+            Log::info("Employee #{$employee->id} offer revoked/declined. Skipping reminder.");
 
             return;
         }
@@ -54,7 +55,7 @@ class SendBackgroundVerificationReminderEmail implements ShouldQueue
         try {
             Mail::to($employee->email)->send(new BackgroundVerificationReminderMail($employee));
 
-            $employee->update([
+            $this->offer->update([
                 'last_background_verification_reminder_sent_at' => now(),
             ]);
 
@@ -66,10 +67,10 @@ class SendBackgroundVerificationReminderEmail implements ShouldQueue
                 'title' => "A background verification reminder email has been sent to $employee->full_name.",
             ]);
 
-            Log::info("BV reminder sent successfully for Employee #{$this->employeeId} to {$employee->email}");
+            Log::info("BV reminder sent successfully for Employee #{$employee->id} to {$employee->email}");
         } catch (\Exception $e) {
             // Log error and allow job to retry (based on $tries)
-            Log::error("Failed to send BV reminder for Employee #{$this->employeeId}: {$e->getMessage()}");
+            Log::error("Failed to send BV reminder for Employee #{$employee->id}: {$e->getMessage()}");
 
             throw $e;
         }
