@@ -7,12 +7,14 @@ use App\Http\Requests\StoreBEOEmployeeRequest;
 use App\Models\BeoEmployee;
 use App\Models\Department;
 use App\Models\Designation;
+use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -188,6 +190,8 @@ class BEOSystemController extends Controller
      */
     public function store(StoreBEOEmployeeRequest $request): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $requestBody = $this->prepareStoreUserPayload($request->validated());
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken')]])
@@ -210,6 +214,8 @@ class BEOSystemController extends Controller
 
     public function show(Request $request): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $validated = $request->validate([
             'sessionToken' => ['required', 'string'],
             'user_id_code_of_hr' => ['required', 'integer'],
@@ -244,6 +250,7 @@ class BEOSystemController extends Controller
      */
     public function storeBEOEmployeesToOnboarding(Request $request): array
     {
+        Gate::authorize('adminOnly', Employee::class);
 
         $response = Http::withOptions(['query' => ['sessionToken' => $request->get('sessionToken'), 'userIdCode' => $request->get('userIdCode')]])
             ->post(config('beosystem.base_url').self::BEO_SYSTEM_EMPLOYEE_DETAILS_API_URL)->throw();
@@ -347,12 +354,14 @@ class BEOSystemController extends Controller
 
     public function getBEOEmployees(): Collection
     {
-
+        Gate::authorize('adminOnly', Employee::class);
+        
         return BeoEmployee::all();
     }
 
     public function getSingleBEOEmployee($employee_id): BeoEmployee
     {
+        Gate::authorize('adminOnly', Employee::class);
 
         return BeoEmployee::where('employee_id', $employee_id)->first();
     }

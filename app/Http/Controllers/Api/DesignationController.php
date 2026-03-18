@@ -7,10 +7,12 @@ use App\Http\Requests\StoreDesignationRequest;
 use App\Http\Requests\SyncDesignationRequest;
 use App\Http\Requests\UpdateDesignationRequest;
 use App\Models\Designation;
+use App\Models\Employee;
 use App\Services\DesignationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class DesignationController extends Controller
@@ -22,6 +24,8 @@ class DesignationController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         return response()->json(Designation::select('id', 'name')->get());
     }
 
@@ -30,6 +34,8 @@ class DesignationController extends Controller
      */
     public function store(StoreDesignationRequest $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $validated = $request->validated();
 
         $result = $this->designationService->createDesignation(

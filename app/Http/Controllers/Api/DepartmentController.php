@@ -8,10 +8,12 @@ use App\Http\Requests\SyncDepartmentRequest;
 use App\Http\Requests\UpdateDepartmentRequest;
 use App\Http\Resources\DepartmentResource;
 use App\Models\Department;
+use App\Models\Employee;
 use App\Services\DepartmentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
 
 class DepartmentController extends Controller
@@ -23,6 +25,8 @@ class DepartmentController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         return DepartmentResource::collection(
             Department::with('emails:id,department_id,email')->get()
         );
@@ -34,6 +38,8 @@ class DepartmentController extends Controller
      */
     public function store(StoreDepartmentRequest $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $validated = $request->validated();
 
         $result = $this->departmentService->createDepartment(
@@ -81,6 +87,8 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         return new DepartmentResource(
             $department->load('emails')
         );
@@ -91,6 +99,8 @@ class DepartmentController extends Controller
      */
     public function update(UpdateDepartmentRequest $request, Department $department)
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $validated = $request->validated();
 
         $result = $this->departmentService->updateDepartment(
@@ -141,6 +151,8 @@ class DepartmentController extends Controller
      */
     public function destroy(Department $department)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $department->delete();
 
         return response()->json(null, 204);
@@ -151,6 +163,8 @@ class DepartmentController extends Controller
      */
     public function sync(SyncDepartmentRequest $request): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $validated = $request->validated();
 
         $result = $this->departmentService->syncDepartments(

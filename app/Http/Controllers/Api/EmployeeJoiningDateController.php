@@ -11,11 +11,14 @@ use App\Http\Requests\RejectJoiningDateRequest;
 use App\Http\Requests\RequestJoiningDateRequest;
 use App\Models\Employee;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Gate;
 
 class EmployeeJoiningDateController extends Controller
 {
     public function propose(RequestJoiningDateRequest $request, Employee $employee, RequestJoiningDateChangeAction $action): Response
     {
+        Gate::authorize('update', $employee);
+
         $action->execute(
             employee: $employee,
             requestedJoiningDate: $request->validated('requested_joining_date'),
@@ -27,6 +30,8 @@ class EmployeeJoiningDateController extends Controller
 
     public function approveProposedDate(ApproveJoiningDateRequest $request, Employee $employee, ApproveProposedJoiningDateAction $action): Response
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $action->execute(
             employee: $employee,
             isJoiningDateUpdateApproved: 1,
@@ -39,6 +44,8 @@ class EmployeeJoiningDateController extends Controller
 
     public function rejectProposedDate(ApproveJoiningDateRequest $request, Employee $employee, ApproveProposedJoiningDateAction $action): Response
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $action->execute(
             employee: $employee,
             isJoiningDateUpdateApproved: 0,
@@ -51,6 +58,8 @@ class EmployeeJoiningDateController extends Controller
 
     public function request(RequestJoiningDateRequest $request, Employee $employee, RequestJoiningDateChangeAction $action): Response
     {
+        Gate::authorize('update', $employee);
+
         $action->execute(
             employee: $employee,
             requestedJoiningDate: $request->validated('requested_joining_date'),
@@ -61,6 +70,8 @@ class EmployeeJoiningDateController extends Controller
 
     public function approve(ApproveJoiningDateRequest $request, Employee $employee, ApproveJoiningDateChangeAction $action): Response
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $action->execute(
             employee: $employee,
             isJoiningDateUpdateApproved: 1,
@@ -73,6 +84,8 @@ class EmployeeJoiningDateController extends Controller
 
     public function reject(RejectJoiningDateRequest $request, Employee $employee, ApproveJoiningDateChangeAction $action): Response
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $action->execute(
             employee: $employee,
             isJoiningDateUpdateApproved: 0,

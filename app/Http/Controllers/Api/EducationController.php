@@ -13,16 +13,20 @@ use App\Models\Employee;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Gate;
 
 class EducationController extends Controller
 {
     public function index(Employee $employee)
     {
+        Gate::authorize('view', $employee);
+
         return $employee->educations;
     }
 
     public function store(StoreEducationRequest $request, Employee $employee)
     {
+        Gate::authorize('update', $employee);
         $educations = [];
 
         foreach ($request->validated()['educations'] as $educationData) {
@@ -43,12 +47,16 @@ class EducationController extends Controller
 
     public function show(Employee $employee, Education $education)
     {
+        Gate::authorize('view', $employee);
+
         return $education;
     }
 
     public function update(UpdateEducationRequest $request, $employee_id)
     {
         $employee = Employee::where('id', $employee_id)->first();
+
+        Gate::authorize('update', $employee);
 
         $wasAnyEducationOpen = $employee->educations()->where('is_open', 1)->exists();
 
@@ -92,6 +100,7 @@ class EducationController extends Controller
 
     public function verify(Education $education, Request $request): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
 
         $validated = $request->validate([
             'is_verified' => ['required', 'boolean'],
@@ -104,6 +113,8 @@ class EducationController extends Controller
 
     public function open(Education $education): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $education->update(['is_open' => 1]);
 
         app(NotifyCandidateOnReopenAction::class)->execute(
@@ -116,6 +127,8 @@ class EducationController extends Controller
 
     public function destroy(Employee $employee, Education $education)
     {
+        Gate::authorize('update', $employee);
+
         $education->delete();
 
         return response()->json(null, 204);

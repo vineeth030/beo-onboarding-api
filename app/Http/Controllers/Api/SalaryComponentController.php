@@ -3,25 +3,33 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Employee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 
 class SalaryComponentController extends Controller
 {
     public function index()
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         return DB::table('salary_components')->first();
     }
 
     // $id is set to one since there is only one record.
     public function show($id = 1)
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         return DB::table('salary_components')->where('id', $id)->first();
     }
 
     public function update(Request $request, $id = 1)
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $validator = Validator::make($request->all(), [
             'basic_percentage' => 'sometimes|numeric',
             'da_percentage' => 'sometimes|numeric',
@@ -52,6 +60,8 @@ class SalaryComponentController extends Controller
 
     public function store(Request $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $validator = Validator::make($request->all(), [
             'basic_percentage' => 'required|numeric',
             'da_percentage' => 'required|numeric',

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreActivityRequest;
 use App\Http\Requests\UpdateActivityRequest;
 use App\Models\Activity;
+use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ActivityController extends Controller
 {
@@ -15,6 +17,8 @@ class ActivityController extends Controller
      */
     public function index(Request $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $query = Activity::query()->with([
             'employee:id,first_name,last_name',
             'performedBy:id,name'
@@ -69,6 +73,8 @@ class ActivityController extends Controller
      */
     public function show(Activity $activity)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         return $activity->load(['employee', 'performedBy']);
     }
 
@@ -87,6 +93,8 @@ class ActivityController extends Controller
      */
     public function destroy(Activity $activity)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $activity->delete();
         return response()->json(null, 204);
     }

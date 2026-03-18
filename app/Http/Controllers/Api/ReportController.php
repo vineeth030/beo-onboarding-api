@@ -11,11 +11,14 @@ use Dflydev\DotAccessData\Data;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Gate;
 
 class ReportController extends Controller
 {
     public function index(Request $request)
     {
+        Gate::authorize('adminOnly', Employee::class);
+        
         $request->validate([
             'from_date' => 'sometimes|date',
             'to_date' => 'sometimes|date'    

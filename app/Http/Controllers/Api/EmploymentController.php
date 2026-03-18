@@ -12,17 +12,21 @@ use App\Models\Employee;
 use App\Models\Employment;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class EmploymentController extends Controller
 {
     public function index(Employee $employee)
     {
+        Gate::authorize('view', $employee);
+
         return $employee->employments()->with('salarySlips')->get();
     }
 
     public function store(StoreEmploymentRequest $request, Employee $employee)
     {
+        Gate::authorize('update', $employee);
         $validatedData = $request->validated();
         $employments = [];
 
@@ -61,12 +65,16 @@ class EmploymentController extends Controller
 
     public function show(Employee $employee, Employment $employment)
     {
+        Gate::authorize('view', $employee);
+
         return $employment->load('salarySlips');
     }
 
     public function update(UpdateEmploymentRequest $request, $employee_id)
     {
         $employee = Employee::where('id', $employee_id)->first();
+
+        Gate::authorize('update', $employee);
 
         $wasAnyEmploymentOpen = $employee->employments()->where('is_open', 1)->exists();
 
@@ -131,6 +139,7 @@ class EmploymentController extends Controller
 
     public function verify(Employment $employment, Request $request): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
 
         $validated = $request->validate([
             'is_verified' => ['required', 'boolean'],
@@ -143,6 +152,8 @@ class EmploymentController extends Controller
 
     public function open(Employment $employment): JsonResponse
     {
+        Gate::authorize('adminOnly', Employee::class);
+
         $employment->update(['is_open' => 1]);
 
         app(NotifyCandidateOnReopenAction::class)->execute(
@@ -155,6 +166,8 @@ class EmploymentController extends Controller
 
     public function destroy(Employee $employee, Employment $employment)
     {
+        Gate::authorize('update', $employee);
+
         $employment->delete();
 
         return response()->json(null, 204);

@@ -92,8 +92,8 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::apiResource('designations', DesignationController::class);
     Route::post('designations-sync', [DesignationController::class, 'sync']);
 
-    Route::get('offices', [OfferController::class, 'index']);
-    Route::get('offices/{office}', [OfferController::class, 'show']);
+    #Route::get('offices', [OfferController::class, 'index']);
+    #Route::get('offices/{office}', [OfferController::class, 'show']);
 
     // Offers routes
     Route::apiResource('offers', OfferController::class);
