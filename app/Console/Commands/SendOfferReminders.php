@@ -29,15 +29,16 @@ class SendOfferReminders extends Command
     {
         $this->info('Starting offer reminder process...');
 
-        $twoDaysAgo = now()->subDays(2);
+        $fourDaysAgo = now()->subDays(4);
 
         $offers = Offer::query()
             ->with(['employee']) // Eager load employee for job processing
             ->where('is_accepted', false)
             ->where('is_declined', false)
             ->where('is_revoked', false)
-            ->where(function ($query) use ($twoDaysAgo) {
-                $query->where('last_reminder_sent_at', '<=', $twoDaysAgo)
+            ->where('created_at', '<=', $fourDaysAgo)
+            ->where(function ($query) use ($fourDaysAgo) {
+                $query->where('last_reminder_sent_at', '<=', $fourDaysAgo)
                         ->orWhereNull('last_reminder_sent_at');
             })
             ->get();

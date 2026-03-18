@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\BackgroundVerificationReminderMail;
+use App\Models\Activity;
 use App\Models\Employee;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -55,6 +56,14 @@ class SendBackgroundVerificationReminderEmail implements ShouldQueue
 
             $employee->update([
                 'last_background_verification_reminder_sent_at' => now(),
+            ]);
+
+            Activity::create([
+                'employee_id' => $employee->id,
+                'performed_by_user_id' => 0,
+                'user_type' => 'hr',
+                'type' => 'update.backgroundverification.reminder.sent',
+                'title' => "A background verification reminder email has been sent to $employee->full_name.",
             ]);
 
             Log::info("BV reminder sent successfully for Employee #{$this->employeeId} to {$employee->email}");

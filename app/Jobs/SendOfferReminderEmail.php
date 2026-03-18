@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Mail\OfferReminderMail;
+use App\Models\Activity;
 use App\Models\Offer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -65,6 +66,15 @@ class SendOfferReminderEmail implements ShouldQueue
             $offer->update([
                 'last_reminder_sent_at' => now(),
             ]);
+
+            Activity::create([
+                'employee_id' => $offer->employee->id,
+                'performed_by_user_id' => 0,
+                'user_type' => 'hr',
+                'type' => 'update.offer-accept.reminder.sent',
+                'title' => "An offer acceptance reminder email has been sent to {$offer->employee->full_name}.",
+            ]);
+            
 
             Log::info("Reminder sent successfully for Offer #{$this->offerId} to {$offer->employee->email}");
         } catch (\Exception $e) {
