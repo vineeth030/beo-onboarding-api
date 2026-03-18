@@ -22,7 +22,8 @@ class OfferLetterSendMail extends Mailable
         private string $offerLetterFilePath = "",
         private bool $isClient = false,
         private string $content = "",
-        public ?Employee $employee = null
+        public ?Employee $employee = null,
+        private string $subjectLine
     ){}
 
     /**
@@ -31,7 +32,7 @@ class OfferLetterSendMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Offer from BEO Software',
+            subject: $this->subjectLine,
         );
     }
 

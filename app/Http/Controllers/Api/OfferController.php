@@ -39,6 +39,7 @@ class OfferController extends Controller
     public function store(StoreOfferRequest $request)
     {
         Gate::authorize('create', Offer::class);
+
         $employee = Employee::select([
             'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id',
         ])->with(['designation:id,name', 'user:id,name,email'])->where('id', $request->get('employee_id'))?->first();
@@ -71,8 +72,14 @@ class OfferController extends Controller
 
             $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
-            $this->sendOfferLetterEmailsToClientAndBeo($clientAndBEOEmails, $offer->email_attachment_content_for_client, $employee);
-            $this->sendOfferLetterEmailToEmployee($employee->email, $offer->email_content_for_employee);
+            $this->sendOfferLetterEmailsToClientAndBeo(
+                $clientAndBEOEmails, $offer->email_attachment_content_for_client, 
+                $offer->is_revised, $employee
+            );
+
+            $this->sendOfferLetterEmailToEmployee(
+                $employee->email, $offer->email_content_for_employee, $offer->is_revised
+            );
 
             $employee->user->notify(new OfferSendNotification);
         });
@@ -144,7 +151,7 @@ class OfferController extends Controller
         return response()->json(null, 204);
     }
 
-    private function sendOfferLetterEmailsToClientAndBeo(array $emails, string $emailAttachmentContent, Employee $employee)
+    private function sendOfferLetterEmailsToClientAndBeo(array $emails, string $emailAttachmentContent, bool $is_revised, Employee $employee)
     {
 
         if (is_string($emailAttachmentContent)) {
@@ -167,10 +174,14 @@ class OfferController extends Controller
 
         Mail::to($emails)->send(new OfferLetterSendMail(
             offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
-            isClient: true, content: '', employee: $employee));
+            isClient: true, 
+            content: '', 
+            employee: $employee,
+            subjectLine: $is_revised ? 'Revised offer send from BEO Software' : 'Offer send from BEO Software'
+        ));
     }
 
-    private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent)
+    private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent, bool $is_revised)
     {
 
         if (is_string($offerLetterEmailContent) && str_starts_with($offerLetterEmailContent, '"')) {
@@ -185,6 +196,10 @@ class OfferController extends Controller
 
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
-        Mail::to($email)->send(new OfferLetterSendMail(content: $html, employee: null));
+        Mail::to($email)->send(new OfferLetterSendMail(
+            content: $html, 
+            employee: null,
+            subjectLine: $is_revised ? 'Revised offer from BEO Software' : 'Offer from BEO Software'
+        ));
     }
 }
