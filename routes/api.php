@@ -93,7 +93,7 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::post('designations-sync', [DesignationController::class, 'sync']);
 
     #Route::get('offices', [OfferController::class, 'index']);
-    #Route::get('offices/{office}', [OfferController::class, 'show']);
+    Route::get('offices/{office}', [OfferController::class, 'show']);
 
     // Offers routes
     Route::apiResource('offers', OfferController::class);
@@ -117,7 +117,7 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     // Route::post('/store-designations-to-onboarding', [BEOSystemController::class, 'storeDesignationsToOnboarding']);
 
     Route::get('/get-all-beo-employees', [BEOSystemController::class, 'getBEOEmployees']);
-    Route::get('/get-single-beo-employee/{employee_id}', [BEOSystemController::class, 'getSingleBEOEmployee']);
+    Route::get('/employees/{employee}/get-single-beo-employee/{beo_employee_id}', [BEOSystemController::class, 'getSingleBEOEmployee']);
     Route::post('/employees/{employee}/assign-buddy-to-employee', [EmployeeController::class, 'assignBuddy']);
     Route::post('/employees/{employee}/assign-pocs-to-employee', [EmployeeController::class, 'assignPocs']);
 

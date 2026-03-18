@@ -359,11 +359,19 @@ class BEOSystemController extends Controller
         return BeoEmployee::all();
     }
 
-    public function getSingleBEOEmployee($employee_id): BeoEmployee
+    public function getSingleBEOEmployee(Employee $employee, $beo_employee_id): BeoEmployee
     {
-        Gate::authorize('adminOnly', Employee::class);
+        $beo_employee_ids = [
+            $employee->poc_1_id,
+            $employee->poc_2_id,
+            $employee->buddy_id,
+        ];
 
-        return BeoEmployee::where('employee_id', $employee_id)->first();
+        if (!in_array($beo_employee_id, $beo_employee_ids)) {
+            abort(403, 'Forbidden');
+        }
+
+        return BeoEmployee::where('employee_id', $beo_employee_id)->first();
     }
 
     private function prepareLoginPayload($userName, $password)
