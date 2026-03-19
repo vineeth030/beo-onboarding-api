@@ -177,7 +177,7 @@ class OfferController extends Controller
             isClient: true, 
             content: '', 
             employee: $employee,
-            subjectLine: $is_revised ? 'Revised offer send from BEO Software' : 'Offer send from BEO Software'
+            subjectLine: $is_revised ? 'Revised offer sent from BEO Software' : 'Offer sent from BEO Software'
         ));
     }
 

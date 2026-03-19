@@ -39,7 +39,7 @@ class AcceptOfferAction
 
         if ($offer->employee->joining_date_type === \App\Enums\JoiningDateType::PRE_APPROVED) {
             Mail::to($offer->employee->email)
-                ->cc([...$hrEmailIds, ...$clientEmailIds])
+                ->bcc([...$hrEmailIds, ...$clientEmailIds])
                 ->send(new WelcomeCandidateMail(employee: $offer->employee));
         }
     }

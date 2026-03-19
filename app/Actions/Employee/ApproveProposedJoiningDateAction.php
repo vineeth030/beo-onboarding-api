@@ -26,7 +26,7 @@ class ApproveProposedJoiningDateAction
             $hrEmailIds = $employee->activeOffer->beo_emails;
 
             Mail::to($employee->email)
-                ->cc([...$hrEmailIds, ...$clientEmailIds])
+                ->bcc([...$hrEmailIds, ...$clientEmailIds])
                 ->send(new WelcomeCandidateMail(employee: $employee));
 
             Activity::create([
