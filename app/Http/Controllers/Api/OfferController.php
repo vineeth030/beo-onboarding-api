@@ -41,7 +41,7 @@ class OfferController extends Controller
         Gate::authorize('create', Offer::class);
 
         $employee = Employee::select([
-            'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'designation_id',
+            'id', 'user_id', 'first_name', 'last_name', 'email', 'joining_date', 'joining_date_type', 'designation_id',
         ])->with(['designation:id,name', 'user:id,name,email'])->where('id', $request->get('employee_id'))?->first();
 
         abort_if(! $employee, 404, 'Employee not found');
