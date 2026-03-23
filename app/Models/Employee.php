@@ -122,6 +122,11 @@ class Employee extends Model
 
     public function setUpdatedJoiningDateAttribute($value)
     {
+        if (empty($value) || is_null($value)) {
+            $this->attributes['updated_joining_date'] = null;
+            return;
+        }
+
         $this->attributes['updated_joining_date'] =
             Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
     }
@@ -135,6 +140,11 @@ class Employee extends Model
 
     public function setRequestedJoiningDateAttribute($value)
     {
+        if (empty($value) || is_null($value)) {
+            $this->attributes['requested_joining_date'] = null;
+            return;
+        }
+
         $this->attributes['requested_joining_date'] =
             Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
     }
