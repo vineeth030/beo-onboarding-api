@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\JoiningDateType;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -117,6 +118,32 @@ class Employee extends Model
             self::CATEGORY_INTERN => 'INTERN',
             default => 'unknown',
         };
+    }
+
+    public function setUpdatedJoiningDateAttribute($value)
+    {
+        $this->attributes['updated_joining_date'] =
+            Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    }
+
+    public function getUpdatedJoiningDateAttribute($value)
+    {
+        return $value
+            ? Carbon::parse($value)->format('d-m-Y')
+            : null;
+    }
+
+    public function setRequestedJoiningDateAttribute($value)
+    {
+        $this->attributes['requested_joining_date'] =
+            Carbon::createFromFormat('d-m-Y', $value)->format('Y-m-d');
+    }
+
+    public function getRequestedJoiningDateAttribute($value)
+    {
+        return $value
+            ? Carbon::parse($value)->format('d-m-Y')
+            : null;
     }
 
     public function getFullNameAttribute(): string
