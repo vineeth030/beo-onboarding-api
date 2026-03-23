@@ -25,19 +25,9 @@ class ActivityController extends Controller
         ])
         ->select('id', 'title', 'employee_id', 'performed_by_user_id', 'created_at');
 
-        // Filter by employee_id
-        if ($request->has('employee_id')) {
-            $query->where('employee_id', $request->employee_id);
-        }
-
-        // Filter by type
-        if ($request->has('type')) {
-            $query->where('type', $request->type);
-        }
-
-        // Filter by user_type
-        if ($request->has('user_type')) {
-            $query->where('user_type', $request->user_type);
+        // Filter by title
+        if ($request->has('title')) {
+            $query->where('title', 'LIKE', '%' . $request->title . '%');
         }
 
         // Order by most recent first
