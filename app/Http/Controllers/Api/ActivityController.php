@@ -25,12 +25,10 @@ class ActivityController extends Controller
         ])
         ->select('id', 'title', 'employee_id', 'performed_by_user_id', 'created_at');
 
-        // Filter by title
         if ($request->has('title')) {
             $query->where('title', 'LIKE', '%' . $request->title . '%');
         }
 
-        // Order by most recent first
         $query->orderBy('id', 'desc');
 
         $activities = $query->paginate($request->get('per_page', 15));
