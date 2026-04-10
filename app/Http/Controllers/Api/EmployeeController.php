@@ -122,6 +122,12 @@ class EmployeeController extends Controller
                 'is_open', 'is_pre_joining_form_downloaded', 'is_day_one_ticket_assigned', 'is_onboarded']
         );
 
+        if ( $request->filled('email') && $employee->user->email !== $request->email) {
+            $employee->user->update([
+                'email' => $request->email
+            ]);
+        }
+
         $updatedEmployee = $updateEmployeeAction->execute(
             employee: $employee, data: $dataForEmployeeUpdate, file: $request->file('file')
         );

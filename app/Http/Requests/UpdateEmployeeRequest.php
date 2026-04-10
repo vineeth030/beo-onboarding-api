@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Enums\JoiningDateType;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Enum;
 
 class UpdateEmployeeRequest extends FormRequest
@@ -23,7 +24,9 @@ class UpdateEmployeeRequest extends FormRequest
      */
     public function rules(): array
     {
+        $employee = $this->route('employee');
         $employeeId = $this->route('employee')->id;
+        $userId = $employee?->user_id;
 
         return [
             'first_name' => ['sometimes', 'required', 'string', 'max:255'],
@@ -38,7 +41,10 @@ class UpdateEmployeeRequest extends FormRequest
             'marital_status' => ['sometimes', 'required', 'string'],
             'nationality' => ['sometimes', 'required', 'integer'],
             'place_of_birth' => ['sometimes', 'required', 'string'],
-            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:employees,email,'.$employeeId],
+            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 
+                Rule::unique('employees', 'email')->ignore($employeeId),
+                Rule::unique('users', 'email')->ignore($userId),
+            ],
             'mobile' => ['sometimes', 'required', 'string', 'max:255', 'unique:employees,mobile,'.$employeeId],
             'blood_group' => ['sometimes', 'integer', 'in:0,1,2,3,4,5,6,7'],
             'status' => ['sometimes', 'integer', 'in:0,1,2,3,4'],
