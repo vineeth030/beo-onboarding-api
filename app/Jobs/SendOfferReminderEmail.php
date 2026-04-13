@@ -30,6 +30,14 @@ class SendOfferReminderEmail implements ShouldQueue
      */
     public $backoff = 60;
 
+    public $uniqueFor = 300;
+
+    public function uniqueId(): string
+    {
+        return (string) $this->offerId;
+    }
+
+
     /**
      * Create a new job instance.
      */
