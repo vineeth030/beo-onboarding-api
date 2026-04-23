@@ -42,7 +42,7 @@ class EmployeeJoiningDateController extends Controller
         return response()->noContent();
     }
 
-    public function rejectProposedDate(ApproveJoiningDateRequest $request, Employee $employee, ApproveProposedJoiningDateAction $action): Response
+    public function rejectProposedDate(RejectJoiningDateRequest $request, Employee $employee, ApproveProposedJoiningDateAction $action): Response
     {
         Gate::authorize('adminOnly', Employee::class);
 
