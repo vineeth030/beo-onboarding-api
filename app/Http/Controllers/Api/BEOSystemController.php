@@ -198,7 +198,7 @@ class BEOSystemController extends Controller
             ->post(config('beosystem.base_url').self::BEO_SYSTEM_CREATE_USER_API_URL, $requestBody)->throw();
 
         if ($response->failed()) {
-            return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 503]);
+            return response()->json(['message' => 'BEO system unavailable. Please try again later.', 'code' => 503], 500);
         }
 
         $data = $response->json();
@@ -206,7 +206,7 @@ class BEOSystemController extends Controller
         if (($data['status'] ?? null) != 200) {
             return response()->json([
                 'message' => 'Internal Server Error', 'error_message' => $data['errorMessage'], 'result' => $data['result'], 'code' => $data['status'],
-            ]);
+            ], 500);
         }
 
         return response()->json(['message' => 'New employee created successfully.', 'code' => $data['status'], 'data' => [$data]], $data['status']);
