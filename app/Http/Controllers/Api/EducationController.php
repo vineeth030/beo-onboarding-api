@@ -125,9 +125,9 @@ class EducationController extends Controller
         return response()->json(null, 200);
     }
 
-    public function destroy(Employee $employee, Education $education)
+    public function destroy(Education $education)
     {
-        Gate::authorize('update', $employee);
+        Gate::authorize('update', $education->employee);
 
         $education->delete();
 

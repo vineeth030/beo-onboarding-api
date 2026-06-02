@@ -57,9 +57,9 @@ class AddressController extends Controller
         return response()->json($addresses);
     }
 
-    public function destroy(Employee $employee, Address $address)
+    public function destroy(Address $address)
     {
-        Gate::authorize('update', $employee);
+        Gate::authorize('update', $address->employee);
 
         $address->delete();
 

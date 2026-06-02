@@ -63,9 +63,9 @@ class DocumentController extends Controller
         return response()->json($document);
     }
 
-    public function destroy(Employee $employee, Document $document)
+    public function destroy(Document $document)
     {
-        Gate::authorize('update', $employee);
+        Gate::authorize('update', $document->employee);
 
         $document->delete();
 

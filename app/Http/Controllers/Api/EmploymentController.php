@@ -164,9 +164,9 @@ class EmploymentController extends Controller
         return response()->json(null, 200);
     }
 
-    public function destroy(Employee $employee, Employment $employment)
+    public function destroy(Employment $employment)
     {
-        Gate::authorize('update', $employee);
+        Gate::authorize('update', $employment->employee);
 
         $employment->delete();
 
