@@ -95,7 +95,7 @@ class DepartmentService
      */
     public function updateDepartment(int $departmentId, array $data, string $sessionToken): array
     {
-        Log::info('dataaa: ', [$data]);
+        Log::info('updateDepartment dataa: ', [$data]);
         try {
             $response = Http::withOptions(['query' => ['sessionToken' => $sessionToken]])
                 ->post(config('beosystem.base_url').self::UPDATE_DEPARTMENT_API_URL, [
