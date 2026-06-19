@@ -61,6 +61,7 @@ class OfferLetterSendMail extends Mailable
         if ($this->hasAttachments()) {
             return [
                 Attachment::fromPath($this->offerLetterFilePath)
+                    ->as("Offer-Letter.pdf")
                     ->withMime('application/pdf')
             ];
         }
