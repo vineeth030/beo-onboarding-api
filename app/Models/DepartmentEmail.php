@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DepartmentEmail extends Model
 {
-    protected $fillable = ['department_id', 'email'];
+    protected $fillable = ['department_id', 'email', 'name'];
 
     public function department()
     {

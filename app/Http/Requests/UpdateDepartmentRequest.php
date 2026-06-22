@@ -30,7 +30,10 @@ class UpdateDepartmentRequest extends FormRequest
             'is_support_staff_required' => ['sometimes', 'boolean'],
             'sessionToken' => ['required', 'string'],
             'userIdCode' => ['required', 'integer'],
-            'emails' => ['sometimes', 'array']
+            'emails' => ['sometimes', 'array'],
+            'emails.*' => ['array'],
+            'emails.*.email' => ['required', 'email', 'max:255'],
+            'emails.*.name' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

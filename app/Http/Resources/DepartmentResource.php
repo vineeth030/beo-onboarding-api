@@ -21,7 +21,10 @@ class DepartmentResource extends JsonResource
             'is_support_staff_required' => $this->is_support_staff_required,
             'is_outsource' => $this->is_outsource,
             'is_single_swipe' => $this->is_single_swipe,
-            'emails' => $this->emails->pluck('email'),
+            'emails' => $this->emails->map(fn ($email) => [
+                'name' => $email->name,
+                'email' => $email->email,
+            ]),
         ];
     }
 }

@@ -32,7 +32,9 @@ class StoreDepartmentRequest extends FormRequest
             'sessionToken' => ['required', 'string'],
             'userIdCode' => ['required', 'integer'],
             'emails' => ['sometimes', 'array'],
-            'emails.*' => ['email', 'max:255'],
+            'emails.*' => ['array'],
+            'emails.*.email' => ['required', 'email', 'max:255'],
+            'emails.*.name' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

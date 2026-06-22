@@ -26,9 +26,9 @@ class DepartmentController extends Controller
     public function index(Request $request)
     {
         Gate::authorize('adminOnly', Employee::class);
-        
+
         return DepartmentResource::collection(
-            Department::with('emails:id,department_id,email')->get()
+            Department::with('emails:id,department_id,email,name')->get()
         );
 
     }
@@ -73,7 +73,7 @@ class DepartmentController extends Controller
 
         if (! empty($validated['emails'])) {
             $emails = collect($validated['emails'])->map(function ($email) {
-                return ['email' => $email];
+                return ['email' => $email['email'], 'name' => $email['name'] ?? null];
             });
 
             $department->emails()->createMany($emails);
@@ -137,7 +137,7 @@ class DepartmentController extends Controller
             $department->emails()->delete();
 
             $emails = collect($validated['emails'])->map(function ($email) {
-                return ['email' => $email];
+                return ['email' => $email['email'], 'name' => $email['name'] ?? null];
             });
 
             $department->emails()->createMany($emails);
@@ -152,7 +152,7 @@ class DepartmentController extends Controller
     public function destroy(Department $department)
     {
         Gate::authorize('adminOnly', Employee::class);
-        
+
         $department->delete();
 
         return response()->json(null, 204);
@@ -214,7 +214,7 @@ class DepartmentController extends Controller
                     // Sync emails
                     if (! empty($department['emails'])) {
                         $model->emails()->delete();
-                        $emails = collect($department['emails'])->map(fn ($email) => ['email' => $email]);
+                        $emails = collect($department['emails'])->map(fn ($email) => ['email' => $email['email'], 'name' => $email['name'] ?? null]);
                         $model->emails()->createMany($emails);
                     }
 
