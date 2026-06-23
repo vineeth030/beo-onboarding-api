@@ -29,8 +29,27 @@ class StoreOfferRequest extends FormRequest
             'department_id' => ['required', 'exists:departments,id'],
             'designation_id' => ['required', 'exists:designations,id'],
             'client_emails' => ['required', 'array'],
+            'client_emails.*' => ['required', 'array:email,name'],
+            'client_emails.*.email' => ['required', 'email'],
+            'client_emails.*.name' => ['required', 'string'],
             'beo_emails' => ['required', 'array'],
-            'is_revised' => ['sometimes']
+            'beo_emails.*' => ['required', 'array:email,name'],
+            'beo_emails.*.email' => ['required', 'email'],
+            'beo_emails.*.name' => ['required', 'string'],
+            'is_revised' => ['sometimes'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'client_emails.*.name.required' => 'Each email must have a name.',
+            'beo_emails.*.name.required' => 'Each email must have a name.',
         ];
     }
 }

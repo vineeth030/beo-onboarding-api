@@ -72,6 +72,11 @@ class OfferController extends Controller
 
             $clientAndBEOEmails = array_merge($request->get('beo_emails'), $request->get('client_emails'));
 
+            /*
+             Expected data structure for beo_emails & client_emails
+             [{"email":"client1@gmail.com","name":"Client One"},{"email":"client2@gmail.com","name":"Client Two"}]
+             */
+
             $this->sendOfferLetterEmailsToClientAndBeo(
                 $clientAndBEOEmails, $offer->email_attachment_content_for_client, 
                 $offer->is_revised, $employee
