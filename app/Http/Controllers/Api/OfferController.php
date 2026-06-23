@@ -78,7 +78,7 @@ class OfferController extends Controller
              */
 
             $this->sendOfferLetterEmailsToClientAndBeo(
-                $clientAndBEOEmails, $offer->email_attachment_content_for_client, 
+                $clientAndBEOEmails, $offer->email_attachment_content_for_client,
                 $offer->is_revised, $employee
             );
 
@@ -179,8 +179,8 @@ class OfferController extends Controller
 
         // Mail::to($emails)->send(new OfferLetterSendMail(
         //     offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
-        //     isClient: true, 
-        //     content: '', 
+        //     isClient: true,
+        //     content: '',
         //     employee: $employee,
         //     subjectLine: $is_revised ? 'Revised offer sent from BEO Software' : 'Offer sent from BEO Software'
         // ));
@@ -188,14 +188,14 @@ class OfferController extends Controller
         foreach ($emails as $recipient) {
             Mail::to([
                 'email' => $recipient['email'],
-                'name' => $recipient['name'],
+                'name' => $recipient['name'] ?? '',
             ])->send(
                 new OfferLetterSendMail(
-                    offerLetterFilePath: storage_path('app/public/' . $offerLetterFilePath),
+                    offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
                     isClient: true,
                     content: '',
                     employee: $employee,
-                    recipientName: $recipient['name'],
+                    recipientName: $recipient['name'] ?? '',
                     subjectLine: $is_revised
                         ? 'Revised offer sent from BEO Software'
                         : 'Offer sent from BEO Software'
@@ -220,7 +220,7 @@ class OfferController extends Controller
         $html = view('pdf.offer-letter-template', ['htmlContent' => $htmlContent])->render();
 
         Mail::to($email)->send(new OfferLetterSendMail(
-            content: $html, 
+            content: $html,
             employee: null,
             subjectLine: $is_revised ? 'Revised offer from BEO Software' : 'Offer from BEO Software'
         ));
