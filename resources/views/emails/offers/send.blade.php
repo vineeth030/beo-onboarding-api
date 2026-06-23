@@ -22,7 +22,7 @@
                         <!-- Content -->
                         <tr>
                             <td style="padding:30px;color:#333333;">
-                                <p>Hello,</p>
+                                <p>Hello {{ $recipientName ?? "" }},</p>
 
                                 <p>
                                     We would like to inform you that the offer letter for the candidate, <strong>{{ $employee->full_name }}</strong> for the position of <strong>{{ $employee->designation->name }}</strong> has been sent.

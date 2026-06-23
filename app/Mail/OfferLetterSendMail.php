@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Employee;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
@@ -20,11 +19,12 @@ class OfferLetterSendMail extends Mailable
      */
     public function __construct(
         private string $subjectLine,
-        private string $offerLetterFilePath = "",
+        private string $offerLetterFilePath = '',
         private bool $isClient = false,
-        private string $content = "",
+        private string $content = '',
+        public string $recipientName = '',
         public ?Employee $employee = null,
-    ){}
+    ) {}
 
     /**
      * Get the message envelope.
@@ -46,7 +46,7 @@ class OfferLetterSendMail extends Mailable
             with: [
                 'isClient' => $this->isClient,
                 'content' => $this->content,
-                'employee' => $this->employee
+                'employee' => $this->employee,
             ],
         );
     }
@@ -61,8 +61,8 @@ class OfferLetterSendMail extends Mailable
         if ($this->hasAttachments()) {
             return [
                 Attachment::fromPath($this->offerLetterFilePath)
-                    ->as("Offer-Letter.pdf")
-                    ->withMime('application/pdf')
+                    ->as('Offer-Letter.pdf')
+                    ->withMime('application/pdf'),
             ];
         }
 
@@ -71,12 +71,10 @@ class OfferLetterSendMail extends Mailable
 
     /**
      * Check if there are any attachments.
-     *
-     * @return bool
      */
     private function hasAttachments(): bool
     {
         // Check if the offer letter file path is set
-        return !empty($this->offerLetterFilePath);
+        return ! empty($this->offerLetterFilePath);
     }
 }

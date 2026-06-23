@@ -172,13 +172,31 @@ class OfferController extends Controller
             ->setNpmBinary(env('NPM_BINARY_PATH'))
             ->noSandbox()->save(storage_path('app/public/'.$offerLetterFilePath));
 
-        Mail::to($emails)->send(new OfferLetterSendMail(
-            offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
-            isClient: true, 
-            content: '', 
-            employee: $employee,
-            subjectLine: $is_revised ? 'Revised offer sent from BEO Software' : 'Offer sent from BEO Software'
-        ));
+        // Mail::to($emails)->send(new OfferLetterSendMail(
+        //     offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
+        //     isClient: true, 
+        //     content: '', 
+        //     employee: $employee,
+        //     subjectLine: $is_revised ? 'Revised offer sent from BEO Software' : 'Offer sent from BEO Software'
+        // ));
+
+        foreach ($emails as $recipient) {
+            Mail::to([
+                'email' => $recipient['email'],
+                'name' => $recipient['name'],
+            ])->send(
+                new OfferLetterSendMail(
+                    offerLetterFilePath: storage_path('app/public/' . $offerLetterFilePath),
+                    isClient: true,
+                    content: '',
+                    employee: $employee,
+                    recipientName: $recipient['name'],
+                    subjectLine: $is_revised
+                        ? 'Revised offer sent from BEO Software'
+                        : 'Offer sent from BEO Software'
+                )
+            );
+        }
     }
 
     private function sendOfferLetterEmailToEmployee(string $email, string $offerLetterEmailContent, bool $is_revised)
