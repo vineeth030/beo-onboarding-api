@@ -186,10 +186,7 @@ class OfferController extends Controller
         // ));
 
         foreach ($emails as $recipient) {
-            Mail::to([
-                'email' => $recipient['email'],
-                'name' => $recipient['name'] ?? '',
-            ])->send(
+            Mail::to($recipient['email'])->send(
                 new OfferLetterSendMail(
                     offerLetterFilePath: storage_path('app/public/'.$offerLetterFilePath),
                     isClient: true,
