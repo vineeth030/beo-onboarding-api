@@ -124,6 +124,7 @@ class Employee extends Model
     {
         if (empty($value) || is_null($value)) {
             $this->attributes['updated_joining_date'] = null;
+
             return;
         }
 
@@ -142,6 +143,7 @@ class Employee extends Model
     {
         if (empty($value) || is_null($value)) {
             $this->attributes['requested_joining_date'] = null;
+
             return;
         }
 
@@ -179,6 +181,11 @@ class Employee extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    public function bankDetail(): HasOne
+    {
+        return $this->hasOne(EmployeeBankDetail::class);
     }
 
     public function educations(): HasMany

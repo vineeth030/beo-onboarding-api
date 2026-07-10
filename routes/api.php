@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\DesignationController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\EducationController;
 use App\Http\Controllers\Api\EmployeeBackgroundVerificationController;
+use App\Http\Controllers\Api\EmployeeBankDetailController;
 use App\Http\Controllers\Api\EmployeeController;
 use App\Http\Controllers\Api\EmployeeDayOneTicketController;
 use App\Http\Controllers\Api\EmployeeJoiningDateController;
@@ -41,7 +42,7 @@ Route::get('/test', function () {
 
     Mail::raw('This is a test email from Laravel', function ($message) {
         $message->to('vineeth030@gmail.com')
-                ->subject('Laravel Mail Test');
+            ->subject('Laravel Mail Test');
     });
 
     return response()->json(['Success! API works!']);
@@ -55,6 +56,12 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::apiResource('employees.documents', DocumentController::class)->shallow();
     Route::apiResource('employees.educations', EducationController::class)->shallow();
     Route::apiResource('employees.employments', EmploymentController::class)->shallow();
+
+    // Employee bank detail routes (one bank record per employee)
+    Route::get('employees/{employee}/bank-detail', [EmployeeBankDetailController::class, 'show']);
+    Route::post('employees/{employee}/bank-detail', [EmployeeBankDetailController::class, 'store']);
+    Route::put('employees/{employee}/bank-detail', [EmployeeBankDetailController::class, 'update']);
+    Route::delete('employees/{employee}/bank-detail', [EmployeeBankDetailController::class, 'destroy']);
 
     // Employee workflow endpoints
     Route::post('employees/{employee}/background-verification/start', [EmployeeBackgroundVerificationController::class, 'start']);
@@ -92,7 +99,7 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
     Route::apiResource('designations', DesignationController::class);
     Route::post('designations-sync', [DesignationController::class, 'sync']);
 
-    #Route::get('offices', [OfferController::class, 'index']);
+    // Route::get('offices', [OfferController::class, 'index']);
     Route::get('offices/{office}', [OfferController::class, 'show']);
 
     // Offers routes
