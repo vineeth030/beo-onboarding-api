@@ -93,6 +93,7 @@ class EmployeeController extends Controller
             'designation',
             'employments.salarySlips',
             'offers',
+            'bankDetail'
         ]);
 
         return new EmployeeResource($employee);
