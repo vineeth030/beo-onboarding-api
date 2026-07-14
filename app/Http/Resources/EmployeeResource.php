@@ -58,6 +58,7 @@ class EmployeeResource extends JsonResource
             'educations' => $this->whenLoaded('educations'),
             'employments' => $this->whenLoaded('employments'),
             'offers' => $this->whenLoaded('offers'),
+            'bank_detail' => $this->whenLoaded('bankDetail')
         ];
     }
 }
