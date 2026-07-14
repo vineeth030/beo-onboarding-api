@@ -80,13 +80,13 @@ Route::middleware(['auth:sanctum', 'active.offer'])->group(function () {
 
     Route::post('employees/{employee}/onboard', [EmployeeOnboardingController::class, 'onboard']);
 
-    Route::post('employees/{employee}', [EmployeeController::class, 'verify']);
+    //Route::post('employees/{employee}', [EmployeeController::class, 'verify']);
     Route::post('employments/{employment}/verify', [EmploymentController::class, 'verify']);
     Route::post('educations/{education}/verify', [EducationController::class, 'verify']);
-    Route::post('profile/{employee}/open', [EmployeeController::class, 'open']);
-    Route::post('documents/{document}/open', [DocumentController::class, 'open']);
-    Route::post('employments/{employment}/open', [EmploymentController::class, 'open']);
-    Route::post('educations/{education}/open', [EducationController::class, 'open']);
+    // Route::post('profile/{employee}/open', [EmployeeController::class, 'open']);
+    // Route::post('documents/{document}/open', [DocumentController::class, 'open']);
+    // Route::post('employments/{employment}/open', [EmploymentController::class, 'open']);
+    // Route::post('educations/{education}/open', [EducationController::class, 'open']);
 
     // Client routes
     Route::apiResource('clients', ClientController::class);

@@ -19,6 +19,7 @@ class EmployeeBankDetail extends Model
         'branch_name',
         'ifsc_code',
         'proof_document_path',
+        'is_verified',
     ];
 
     public function employee(): BelongsTo

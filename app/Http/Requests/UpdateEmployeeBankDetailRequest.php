@@ -28,6 +28,7 @@ class UpdateEmployeeBankDetailRequest extends FormRequest
             'branch_name' => ['sometimes', 'required', 'string', 'max:255'],
             'ifsc_code' => ['sometimes', 'required', 'string', 'regex:/^[A-Z]{4}0[A-Z0-9]{6}$/'],
             'proof_document' => ['sometimes', 'required', 'file', 'mimes:pdf,jpg,png', 'max:2048'],
+            'is_verified' => ['sometimes', 'boolean'],
         ];
     }
 
